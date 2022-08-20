@@ -12,6 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.util.converter.LocalDateStringConverter;
+import javafx.util.converter.LocalDateTimeStringConverter;
 import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.action.Action;
 import org.w3c.dom.Text;
@@ -21,6 +23,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.Locale;
 
 public class HelloController {
@@ -44,15 +47,16 @@ public class HelloController {
     @FXML
     public ToggleButton requestBt;
     //Add Artwork Use Case elements elements
-    public TextField adArtTitleTf;
-    public TextField addArtDateTf;
     public TextField addArtTypeTf;
     public TextField addArtStyleTf;
     public TextField addArtInspirationTf;
     public TextField addArtPriceTf;
-    public ChoiceBox addArtOnDisplayCb;
+    public CheckBox addArtOnDisplayCb;
     public Button addArtCancelBt;
     public Button addArtConfirmBt;
+    public ChoiceBox addArtStatusCb;
+    public DatePicker addArtDate;
+    public TextField addArtTitleTf;
     //
     private Pane curContent;
     private TextField artSearchTf;
@@ -144,6 +148,8 @@ public class HelloController {
         // addArtBt = (Button) parentBox.lookup("addArtBt");
 //        try {
             switchInner("Manager/AddArtwork.fxml", "addArtContent",event);
+            addArtStatusCb.getItems().add("Sold");
+            addArtStatusCb.getItems().add("Test");
 //        }
 //        catch (Exception e){
 //            System.out.println("Error loading the page");
@@ -397,6 +403,32 @@ public class HelloController {
     }
     @FXML
     protected void onAddArtConfirm(ActionEvent event){
-        
+        if(checkContentTf() && addArtDate.getValue() != null){
+            int artID = artworks.size();
+            String title = addArtTitleTf.getText();
+            LocalDate date = addArtDate.getValue();
+            String type = addArtTypeTf.getText();
+            String style = addArtStyleTf.getText();
+            String interpretation = addArtInspirationTf.getText();
+            Double price = Double.parseDouble(addArtPriceTf.getText());
+            Boolean displayStatus = addArtOnDisplayCb.isSelected();
+            String artStatus = addArtOnDisplayCb.getText();
+            int artistID = artists.size();
+            int purchaseID = purchases.size();
+            Art newArt = new Art(artID,title,date.toString(),type,style,interpretation,
+                    displayStatus,artStatus,price,artistID,purchaseID);
+            //Create a method to add stuff to database and take it form there
+
+        }
+    }
+    private boolean checkContentTf(TextField... textFields){
+        boolean hasValue = true;
+        for(TextField curTf:textFields){
+            if(curTf.getText() == null || curTf.getText()==""){
+                hasValue = false;
+                break;
+            }
+        }
+        return hasValue;
     }
 }
