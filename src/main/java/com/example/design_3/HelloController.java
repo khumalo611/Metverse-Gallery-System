@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.util.converter.NumberStringConverter;
+import org.controlsfx.control.action.Action;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
@@ -42,6 +43,17 @@ public class HelloController {
     public ToggleButton clientBt;
     @FXML
     public ToggleButton requestBt;
+    //Add Artwork Use Case elements elements
+    public TextField adArtTitleTf;
+    public TextField addArtDateTf;
+    public TextField addArtTypeTf;
+    public TextField addArtStyleTf;
+    public TextField addArtInspirationTf;
+    public TextField addArtPriceTf;
+    public ChoiceBox addArtOnDisplayCb;
+    public Button addArtCancelBt;
+    public Button addArtConfirmBt;
+    //
     private Pane curContent;
     private TextField artSearchTf;
     private Button addArtBt;
@@ -60,6 +72,7 @@ public class HelloController {
     public Label viewArtistPseudonym;
     @FXML
     public Label viewArtistDYear;
+    //Tables to store data in
     ObservableList <Artist> artists = FXCollections.observableArrayList();
     ObservableList <Art> artworks = FXCollections.observableArrayList();
     ObservableList <Manager> managers = FXCollections.observableArrayList();
@@ -69,7 +82,7 @@ public class HelloController {
     ObservableList <Purchase> purchases = FXCollections.observableArrayList();
     ObservableList <Request> requests = FXCollections.observableArrayList();
     ObservableList <Viewing> viewings = FXCollections.observableArrayList();
-    private Artist curArtist;
+    //private Artist curArtist;
 
     public HelloController(){
         //connectToDB();
@@ -372,7 +385,7 @@ public class HelloController {
 
 
         //Testing to view Artist from observable list in the window using arbitrary artist.
-        curArtist = artists.get(2);
+        Artist curArtist = artists.get(2);
         viewArtistFName.setText(curArtist.getArtistFName().getValue());
         viewArtistLName.setText(curArtist.getArtistLName().getValue());
         viewArtistPseudonym.setText(curArtist.getArtistPseudonym().getValue());
@@ -381,5 +394,9 @@ public class HelloController {
         viewArtistBYear.setText(String.valueOf(curArtist.getArtistBYear().getValue()));
         viewArtistDYear.setText(String.valueOf(curArtist.getArtistDYear().getValue()));
 
+    }
+    @FXML
+    protected void onAddArtConfirm(ActionEvent event){
+        
     }
 }
