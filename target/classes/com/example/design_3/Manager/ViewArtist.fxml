@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="542.0" prefWidth="696.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.design_3.HelloController">
+    <children>
+        <Pane prefHeight="80.0" prefWidth="696.0" style="-fx-background-color: #00968a;">
+            <children>
+                <Label layoutX="316.0" layoutY="30.0" text="View Artist" textFill="#fafafa">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Label>
+            </children>
+        </Pane>
+        <HBox alignment="CENTER" layoutX="153.0" layoutY="480.0" prefHeight="25.0" prefWidth="390.0" spacing="20.0" style="-fx-background-color: #00968;">
+            <children>
+                <Button fx:id="cancel" mnemonicParsing="false" onAction="#onViewArtistClick" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Cancel" textFill="#fafafa">
+                    <font>
+                        <Font name="MS Reference Sans Serif" size="12.0" />
+                    </font>
+                </Button>
+            </children></HBox>
+        <TableView fx:id="viewArtworksTable" layoutX="238.0" layoutY="351.0" prefHeight="101.0" prefWidth="225.0">
+            <columns>
+                <TableColumn fx:id="viewArtNameCol" prefWidth="114.66665649414062" text="Name" />
+                <TableColumn fx:id="viewArtYearCol" prefWidth="109.33331298828125" text="Year" />
+            </columns>
+        </TableView>
+        <Label layoutX="320.0" layoutY="321.0" style="-fx-font-weight: bold;" text="Artworks:" underline="true" />
+      <GridPane layoutX="247.0" layoutY="98.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+                <Label text="Name:">
+                    <font>
+                        <Font name="MS Reference Sans Serif" size="12.0" />
+                    </font>
+                </Label>
+                <Label fx:id="viewArtistFName" style="-fx-font-weight: bold;" text="'Artist Name'" GridPane.columnIndex="1">
+                    <font>
+                        <Font name="MS Reference Sans Serif" size="12.0" />
+                    </font>
+                </Label>
+                <Label text="Surname:" GridPane.rowIndex="1">
+                    <font>
+                        <Font name="MS Reference Sans Serif" size="12.0" />
+                    </font>
+                </Label>
+                <Label fx:id="viewArtistLName" style="-fx-font-weight: bold;" text="'Artist Surname'" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <font>
+                        <Font name="Microsoft Sans Serif" size="12.0" />
+                    </font>
+                </Label>
+                <Label text="Email:" GridPane.rowIndex="3">
+                    <font>
+                        <Font name="MS Reference Sans Serif" size="12.0" />
+                    </font>
+                </Label>
+                <Label fx:id="viewArtistEmail" style="-fx-font-weight: bold;" text="'Artist Email'" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                    <font>
+                        <Font name="MS Reference Sans Serif" size="12.0" />
+                    </font>
+                </Label>
+                <Label text="Country" GridPane.rowIndex="4">
+                    <font>
+                        <Font name="MS Reference Sans Serif" size="12.0" />
+                    </font>
+                </Label>
+                <Label fx:id="viewArtistCountry" style="-fx-font-weight: bold;" text="'Artist Country'" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                    <font>
+                        <Font name="Microsoft Sans Serif" size="12.0" />
+                    </font>
+                </Label>
+                <Label text="Birth Year:" GridPane.rowIndex="5">
+                    <font>
+                        <Font name="MS Reference Sans Serif" size="12.0" />
+                    </font>
+                </Label>
+                <Label fx:id="viewArtistBYear" style="-fx-font-weight: bold;" text="'Artist Birth Year'" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                    <font>
+                        <Font name="Microsoft Sans Serif" size="12.0" />
+                    </font>
+                </Label>
+            <Label text="Pseudonym:" GridPane.rowIndex="2">
+               <font>
+                  <Font name="MS Reference Sans Serif" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="viewArtistPseudonym" style="-fx-font-weight: bold;" text="'Artist Pseudonym'" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <font>
+                  <Font name="Microsoft Sans Serif" size="12.0" />
+               </font>
+            </Label>
+            <Label text="Death Year:" GridPane.rowIndex="6">
+               <font>
+                  <Font name="MS Reference Sans Serif" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="viewArtistDYear" text="'Artist Death Year'" GridPane.columnIndex="1" GridPane.rowIndex="6">
+               <font>
+                  <Font name="MS Reference Sans Serif" size="12.0" />
+               </font>
+            </Label>
+         </children>
+      </GridPane>
+    </children>
+</Pane>

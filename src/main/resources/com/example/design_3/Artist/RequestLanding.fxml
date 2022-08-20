@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="696.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.design_3.ArtistController">
+   <children>
+      <Pane fx:id="requestLanding" prefHeight="542.0" prefWidth="696.0">
+         <children>
+            <Pane prefHeight="80.0" prefWidth="696.0" style="-fx-background-color: #00968a;">
+               <children>
+                  <Label layoutX="318.0" layoutY="30.0" text="Requests" textFill="#fafafa">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <Button layoutX="281.0" layoutY="324.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="134.0" style="-fx-background-color: #00968a;" text="Request Meeting" textFill="#fafafa" />
+            <Button layoutX="281.0" layoutY="225.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="134.0" style="-fx-background-color: #00968a;" text="Request Status" textFill="#fafafa" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

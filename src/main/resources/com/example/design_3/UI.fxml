@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="542.0" prefWidth="894.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.design_3.HelloController">
+    <children>
+        <VBox alignment="CENTER" layoutY="79.0" prefHeight="463.0" prefWidth="200.0" style="-fx-background-color: #33334c;">
+            <children>
+                <Button fx:id="myButton" mnemonicParsing="false" prefHeight="46.0" prefWidth="206.0" style="-fx-background-color: #33334c;" text="Navigation Panel" textFill="#fafafa">
+                    <font>
+                        <Font name="Microsoft Sans Serif" size="12.0" />
+                    </font>
+                </Button>
+            </children>
+        </VBox>
+        <Pane layoutX="199.0" prefHeight="80.0" prefWidth="696.0" style="-fx-background-color: #00968a;">
+            <children>
+                <Label layoutX="315.0" layoutY="30.0" text="Page Header" textFill="#fafafa">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Label>
+            </children>
+        </Pane>
+        <Pane prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #27273a;">
+            <children>
+                <Label layoutX="40.0" layoutY="31.0" text="Company Name" textFill="#fafafa">
+                    <font>
+                        <Font name="MS Reference Sans Serif" size="15.0" />
+                    </font>
+                </Label>
+            </children>
+        </Pane>
+        <HBox alignment="CENTER" layoutX="577.0" layoutY="475.0" prefHeight="25.0" prefWidth="390.0" spacing="20.0" style="-fx-background-color: #00968;">
+            <children>
+                <Button mnemonicParsing="false" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Button 2" textFill="#fafafa">
+                    <font>
+                        <Font name="MS Reference Sans Serif" size="12.0" />
+                    </font>
+                </Button>
+            <Button mnemonicParsing="false" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Button1" textFill="#fafafa">
+               <font>
+                  <Font name="MS Reference Sans Serif" size="12.0" />
+               </font>
+            </Button>
+            </children></HBox>
+      <Label layoutX="533.0" layoutY="254.0" text="Content">
+         <font>
+            <Font name="MS Reference Sans Serif" size="12.0" />
+         </font>
+      </Label>
+    </children>
+</Pane>

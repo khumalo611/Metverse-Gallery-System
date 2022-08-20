@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox fx:id="parentBox" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.design_3.ArtistController">
+   <children>
+      <VBox prefHeight="542.0" prefWidth="200.0" style="-fx-background-color: #33334c;">
+         <children>
+            <Pane prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #27273a;">
+               <children>
+                  <Label layoutX="49.0" layoutY="31.0" text="The MetVerse" textFill="#fafafa">
+                     <font>
+                        <Font name="MS Reference Sans Serif" size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <ToggleButton fx:id="homeBt" mnemonicParsing="false" onAction="#onHomeBtClick" prefHeight="46.0" prefWidth="200.0" styleClass="panelButton" stylesheets="@../ButtonStyles.CSS" text="Home" />
+            <ToggleButton fx:id="artStatusBt" mnemonicParsing="false" onAction="#onArtStatusBtClick" prefHeight="46.0" prefWidth="200.0" styleClass="panelButton" stylesheets="@../ButtonStyles.CSS" text="Art Status" />
+            <ToggleButton fx:id="requestsBt" mnemonicParsing="false" onAction="#onRequestsBtClick" prefHeight="46.0" prefWidth="200.0" styleClass="panelButton" stylesheets="@../ButtonStyles.CSS" text="Requests" />
+         </children>
+      </VBox>
+      <Pane fx:id="contentPn" prefHeight="542.0" prefWidth="696.0">
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Pane>
+   </children>
+</HBox>
