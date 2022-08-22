@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -17,6 +18,7 @@ import javafx.util.converter.LocalDateTimeStringConverter;
 import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.action.Action;
 import org.w3c.dom.Text;
+import javafx.util.*;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -57,9 +59,16 @@ public class HelloController {
     public ChoiceBox addArtStatusCb;
     public DatePicker addArtDate;
     public TextField addArtTitleTf;
+
     //
     private Pane curContent;
+    // Search artwork use case elements
+    @FXML
     private TextField artSearchTf;
+    public Button artSearchBt;
+    public TableView artSearchTable;
+    //
+    @FXML
     private Button addArtBt;
     //View Artist Use Case
     @FXML
@@ -76,6 +85,8 @@ public class HelloController {
     public Label viewArtistPseudonym;
     @FXML
     public Label viewArtistDYear;
+    public TableColumn artNamesTb;
+
     //Tables to store data in
     ObservableList <Artist> artists = FXCollections.observableArrayList();
     ObservableList <Art> artworks = FXCollections.observableArrayList();
@@ -109,11 +120,15 @@ public class HelloController {
     }
     @FXML
     protected void onArtBtClick(ActionEvent event) throws IOException{
-        FXMLLoader artPage = new FXMLLoader(HelloApplication.class.getResource("Manager/ArtworkLanding.fxml"));
-        Scene testScene = new Scene(artPage.load());
-        curContent = (Pane)testScene.lookup("#artworkLanding");
-        parentBox.getChildren().remove(1);
-        parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
+        switchContent("Manager/ArtworkLanding.fxml", "artworkLanding");
+        //Setting up the table on the landing page.
+        updateTable("Select * From Art", "Art");
+        curContent = (Pane) parentBox.getChildren().get(1);
+        artSearchTable = (TableView) curContent.lookup("#artSearchTable");
+        artNamesTb = new TableColumn<>("Name");
+        artNamesTb.setCellValueFactory(new PropertyValueFactory<Art,String>("artTitle"));
+        artSearchTable.getColumns().add(artNamesTb);
+        artSearchTable.setItems(artworks);
     }
     @FXML
     protected void onArtistBtClick(ActionEvent event) throws IOException{
@@ -137,11 +152,7 @@ public class HelloController {
         //This line will replace the commented out paragraph, both do the same thing, but this is obviously cleaner.
         switchContent("Manager/RequestLanding.fxml", "requestLanding");
     }
-    protected void connectToUI (Pane nextPane){
-        // Was just using this to test something, will become the method to connect to all buttons and stuff we need.
-        artSearchTf = (TextField) parentBox.lookup("#artSearchTf");
-        artSearchTf.setText("Yasho!");
-    }
+
     @FXML
     //Still working on this one
     protected void onAddArtClickBt(ActionEvent event) throws IOException{
@@ -341,6 +352,7 @@ public class HelloController {
         }
         catch (Exception e){
             System.out.println("Connection failed.");
+            System.out.println(e.getMessage());
         }
     }
 
@@ -419,6 +431,28 @@ public class HelloController {
 //                    displayStatus,artStatus,price,artistID,purchaseID);
 
         }
+    }
+    @FXML
+    protected void onSearchArt(ActionEvent event){
+        //Will add functionality for when enter is pressed
+        if(artSearchTf.getText() == ""){
+            artSearchTf.getStyleClass().add("searchBarError");
+            artSearchTf.setPromptText("Can't be blank!");
+        }
+        else{
+            String searchItem = "'*" + artSearchTf.getText() + "*'";
+            String sqlString = "Select * From Art Where Art_Title Like " + searchItem;
+            updateTable(sqlString,"Art" );
+            artSearchTable.setItems(artworks);
+
+        }
+        artSearchTf.focusedProperty().addListener((observable,oldValue,newValue) ->{
+            if(newValue){
+                artSearchTf.getStyleClass().remove(artSearchTf.getStyleClass().size()-1);
+                artSearchTf.setPromptText("Enter artwork name");
+            }
+        });
+
     }
     private boolean checkContentTf(TextField... textFields){
         boolean hasValue = true;

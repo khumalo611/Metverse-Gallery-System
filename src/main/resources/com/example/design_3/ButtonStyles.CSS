@@ -14,3 +14,7 @@
 .generalButtons{
     
 }
+.searchBarError{
+    -fx-border-color: red, red;
+    -fx-border-radius:3,2;
+}
