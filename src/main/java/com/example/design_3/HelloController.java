@@ -176,7 +176,7 @@ public class HelloController {
         parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
     }
 
-    private void updateTable(String sqlString, String tableName )
+    private void updateTable(String sqlString, String tableName)
     // Method to update the table based on sql query
     {
         try {
@@ -415,9 +415,8 @@ public class HelloController {
             String artStatus = addArtOnDisplayCb.getText();
             int artistID = artists.size();
             int purchaseID = purchases.size();
-            Art newArt = new Art(artID,title,date.toString(),type,style,interpretation,
-                    displayStatus,artStatus,price,artistID,purchaseID);
-            //Create a method to add stuff to database and take it form there
+//            Art newArt = new Art(artID,title,date.toString(),type,style,interpretation,
+//                    displayStatus,artStatus,price,artistID,purchaseID);
 
         }
     }

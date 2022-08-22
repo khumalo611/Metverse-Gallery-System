@@ -1,6 +1,7 @@
 package com.example.design_3;
 
 import javafx.beans.property.*;
+import javafx.scene.image.Image;
 
 import java.util.Date;
 
@@ -16,6 +17,7 @@ public class Art {
     DoubleProperty artPrice = new SimpleDoubleProperty();
     IntegerProperty artistID = new SimpleIntegerProperty();
     IntegerProperty purchaseID = new SimpleIntegerProperty();
+    //Image artImage;
 
     public Art(int artID, String artTitle, String artDate,
                String artType, String artStyle, String artInterpretation,
@@ -33,6 +35,7 @@ public class Art {
         this.artPrice.setValue(artPrice);
         this.artistID.setValue(artistID);
         this.purchaseID.setValue(purchaseID);
+        //this.artImage = artImage;
     }
 
     public int getArtID() {
