@@ -27,7 +27,7 @@
             </TableView>
             <HBox spacing="8.0">
                <children>
-                  <TextField fx:id="artSearchTf" prefHeight="25.0" prefWidth="280.0" promptText="Enter artwork name" stylesheets="@../ButtonStyles.CSS" />
+                  <TextField fx:id="artSearchTf" onAction="#onSearchArt" prefHeight="25.0" prefWidth="280.0" promptText="Enter artwork name" stylesheets="@../ButtonStyles.CSS" />
                   <Button fx:id="artSearchBt" mnemonicParsing="false" onAction="#onSearchArt" prefHeight="25.0" prefWidth="103.0" style="-fx-background-color: #00968a; -fx-border-radius: 0;" text="Search" textFill="#fafafa" />
                </children>
             </HBox>

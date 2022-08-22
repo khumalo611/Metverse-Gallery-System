@@ -3,6 +3,7 @@ package com.example.design_3;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -10,6 +11,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -101,7 +104,7 @@ public class HelloController {
 
     public HelloController(){
         //connectToDB();
-        updateTable("Select * From Artist;", "Artist");
+        //updateTable("Select * From Artist;", "Artist");
     }
 
     // Manager Page Methods
@@ -433,26 +436,25 @@ public class HelloController {
         }
     }
     @FXML
-    protected void onSearchArt(ActionEvent event){
-        //Will add functionality for when enter is pressed
-        if(artSearchTf.getText() == ""){
+    protected void onSearchArt(Event event)
+    // Handles the search for art use-case
+    {
+        if (artSearchTf.getText() == "") {
             artSearchTf.getStyleClass().add("searchBarError");
             artSearchTf.setPromptText("Can't be blank!");
-        }
-        else{
+        } else {
             String searchItem = "'*" + artSearchTf.getText() + "*'";
             String sqlString = "Select * From Art Where Art_Title Like " + searchItem;
-            updateTable(sqlString,"Art" );
+            updateTable(sqlString, "Art");
             artSearchTable.setItems(artworks);
 
         }
-        artSearchTf.focusedProperty().addListener((observable,oldValue,newValue) ->{
-            if(newValue){
-                artSearchTf.getStyleClass().remove(artSearchTf.getStyleClass().size()-1);
+        artSearchTf.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                artSearchTf.getStyleClass().remove(artSearchTf.getStyleClass().size() - 1);
                 artSearchTf.setPromptText("Enter artwork name");
             }
         });
-
     }
     private boolean checkContentTf(TextField... textFields){
         boolean hasValue = true;
