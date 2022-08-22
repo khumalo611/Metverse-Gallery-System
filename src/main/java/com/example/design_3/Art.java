@@ -3,6 +3,7 @@ package com.example.design_3;
 import javafx.beans.property.*;
 import javafx.scene.image.Image;
 
+import java.awt.image.BufferedImage;
 import java.util.Date;
 
 public class Art {
@@ -17,12 +18,17 @@ public class Art {
     DoubleProperty artPrice = new SimpleDoubleProperty();
     IntegerProperty artistID = new SimpleIntegerProperty();
     IntegerProperty purchaseID = new SimpleIntegerProperty();
+    BufferedImage artImage;
     //Image artImage;
+
+    public BufferedImage getArtImage() {
+        return artImage;
+    }
 
     public Art(int artID, String artTitle, String artDate,
                String artType, String artStyle, String artInterpretation,
-               boolean displayStatus,String artSaleStatus, Double artPrice, int artistID,
-               int purchaseID){
+               boolean displayStatus, String artSaleStatus, Double artPrice, int artistID,
+               int purchaseID, BufferedImage artImage){
 
         this.artID.setValue(artID);
         this.artTitle.setValue(artTitle);
@@ -35,7 +41,7 @@ public class Art {
         this.artPrice.setValue(artPrice);
         this.artistID.setValue(artistID);
         this.purchaseID.setValue(purchaseID);
-        //this.artImage = artImage;
+        this.artImage = artImage;
     }
 
     public int getArtID() {
@@ -157,6 +163,6 @@ public class Art {
     public String toString(){
         return String.format("%s    %s    %s    %s    %s    %s    %s    %s    %s    %s    %s",
                 getArtID(),getArtTitle(),getArtDate(),getArtType(),getArtStyle(),getArtInterpretation(),isDisplayStatus(),
-                getArtSaleStatus(),getArtPrice(),getArtID(),getPurchaseID());
+                getArtSaleStatus(),getArtPrice(),getArtID(),getPurchaseID(),getArtImage());
     }
 }

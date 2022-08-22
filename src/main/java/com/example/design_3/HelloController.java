@@ -6,30 +6,23 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.util.converter.LocalDateStringConverter;
-import javafx.util.converter.LocalDateTimeStringConverter;
-import javafx.util.converter.NumberStringConverter;
-import org.controlsfx.control.action.Action;
-import org.w3c.dom.Text;
-import javafx.util.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
+
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDate;
-import java.util.Locale;
 
 public class HelloController {
 
@@ -63,6 +56,10 @@ public class HelloController {
     public DatePicker addArtDate;
     public TextField addArtTitleTf;
 
+    //Add Artwork use case elements
+    public Button addArtDialogueBt;
+    public Label addArtSelectedLb;
+
     //
     private Pane curContent;
     // Search artwork use case elements
@@ -89,6 +86,7 @@ public class HelloController {
     @FXML
     public Label viewArtistDYear;
     public TableColumn artNamesTb;
+    private File curFile;
 
     //Tables to store data in
     ObservableList <Artist> artists = FXCollections.observableArrayList();
@@ -162,8 +160,9 @@ public class HelloController {
         // addArtBt = (Button) parentBox.lookup("addArtBt");
 //        try {
             switchInner("Manager/AddArtwork.fxml", "addArtContent",event);
-            addArtStatusCb.getItems().add("Sold");
-            addArtStatusCb.getItems().add("Test");
+
+//            addArtStatusCb.getItems().add("Sold");
+//            addArtStatusCb.getItems().add("Test");
 //        }
 //        catch (Exception e){
 //            System.out.println("Error loading the page");
@@ -222,8 +221,9 @@ public class HelloController {
                     Double artPrice = allNodes.getDouble("Price");
                     int artistID = allNodes.getInt("Artist_ID");
                     int purchaseID = allNodes.getInt("Purchase_ID");
+                    BufferedImage artImage = ImageIO.read(new ByteArrayInputStream(allNodes.getBytes("Image")));
                     Art newArt = new Art(artID, artTitle,artDate,artType,artStyle,
-                            artInterpretation,artDisplayStatus,artSaleStatus,artPrice,artistID,purchaseID);
+                            artInterpretation,artDisplayStatus,artSaleStatus,artPrice,artistID,purchaseID,artImage);
                     artworks.add(newArt);
                     System.out.println(newArt);//Debugging
                 }
@@ -417,6 +417,12 @@ public class HelloController {
 
     }
     @FXML
+    protected void onChooseImage(ActionEvent event){
+        FileChooser fileCh = new FileChooser();
+        curFile = fileCh.showOpenDialog(new Stage());
+        addArtSelectedLb.setText(curFile.getName());
+    }
+    @FXML
     protected void onAddArtConfirm(ActionEvent event){
         if(checkContentTf() && addArtDate.getValue() != null){
             int artID = artworks.size();
@@ -430,6 +436,7 @@ public class HelloController {
             String artStatus = addArtOnDisplayCb.getText();
             int artistID = artists.size();
             int purchaseID = purchases.size();
+            BufferedImage image;
 //            Art newArt = new Art(artID,title,date.toString(),type,style,interpretation,
 //                    displayStatus,artStatus,price,artistID,purchaseID);
 
