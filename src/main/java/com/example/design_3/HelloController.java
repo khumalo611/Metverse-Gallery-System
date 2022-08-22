@@ -18,11 +18,15 @@ import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.Base64;
 
 public class HelloController {
 
@@ -221,7 +225,8 @@ public class HelloController {
                     Double artPrice = allNodes.getDouble("Price");
                     int artistID = allNodes.getInt("Artist_ID");
                     int purchaseID = allNodes.getInt("Purchase_ID");
-                    BufferedImage artImage = ImageIO.read(new ByteArrayInputStream(allNodes.getBytes("Image")));
+                    byte[] curBlob = allNodes.getBytes("Image");
+                    BufferedImage artImage = ImageIO.read(new ByteArrayInputStream(curBlob));
                     Art newArt = new Art(artID, artTitle,artDate,artType,artStyle,
                             artInterpretation,artDisplayStatus,artSaleStatus,artPrice,artistID,purchaseID,artImage);
                     artworks.add(newArt);
@@ -417,10 +422,16 @@ public class HelloController {
 
     }
     @FXML
-    protected void onChooseImage(ActionEvent event){
+    protected void onChooseImage(ActionEvent event) throws IOException {
         FileChooser fileCh = new FileChooser();
         curFile = fileCh.showOpenDialog(new Stage());
         addArtSelectedLb.setText(curFile.getName());
+        BufferedImage curImage = ImageIO.read(curFile);
+        WritableRaster imageRaster = curImage.getRaster();
+        DataBufferByte imageBuffByte = (DataBufferByte) imageRaster.getDataBuffer();
+        byte[] imageData = imageBuffByte.getData();
+
+        System.out.println(Base64.getEncoder().encodeToString(imageData));
     }
     @FXML
     protected void onAddArtConfirm(ActionEvent event){
@@ -439,7 +450,6 @@ public class HelloController {
             BufferedImage image;
 //            Art newArt = new Art(artID,title,date.toString(),type,style,interpretation,
 //                    displayStatus,artStatus,price,artistID,purchaseID);
-
         }
     }
     @FXML
