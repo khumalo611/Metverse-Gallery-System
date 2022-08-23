@@ -13,7 +13,9 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.FXPermission;
 
 import javax.imageio.ImageIO;
 
@@ -23,6 +25,7 @@ import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.time.LocalDate;
@@ -89,6 +92,9 @@ public class HelloController {
     public Label viewArtistPseudonym;
     @FXML
     public Label viewArtistDYear;
+    @FXML
+    public TableView artistSearchTable;
+    public TableColumn artistNames;
     public TableColumn artNamesTb;
     private File curFile;
 
@@ -137,12 +143,24 @@ public class HelloController {
     }
     @FXML
     protected void onArtistBtClick(ActionEvent event) throws IOException{
+
+        //switchContent("Manager/ArtistLanding.fxml","#artistLanding" );
         FXMLLoader artPage = new FXMLLoader(HelloApplication.class.getResource("Manager/ArtistLanding.fxml"));
         Scene testScene = new Scene(artPage.load());
         curContent = (Pane)testScene.lookup("#artistLanding");
         parentBox.getChildren().remove(1);
         parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
+        //Setting up the table on the landing page.
+        updateTable("Select * From Artist", "Artist");
+        curContent = (Pane) parentBox.getChildren().get(1);
+        artistSearchTable = (TableView) curContent.lookup("#artistSearchTable");
+        artNamesTb = new TableColumn<>("Name");
+        artNamesTb.setCellValueFactory(new PropertyValueFactory<Artist,String>("artistFName"));
+        artistSearchTable.getColumns().add(artNamesTb);
+        artistSearchTable.setItems(artworks);
     }
+
+//    }
     @FXML
     protected void onClientBtCLick(ActionEvent event) throws IOException{
         FXMLLoader artPage = new FXMLLoader(HelloApplication.class.getResource("Manager/ClientLanding.fxml"));
@@ -164,9 +182,6 @@ public class HelloController {
         // addArtBt = (Button) parentBox.lookup("addArtBt");
 //        try {
             switchInner("Manager/AddArtwork.fxml", "addArtContent",event);
-
-//            addArtStatusCb.getItems().add("Sold");
-//            addArtStatusCb.getItems().add("Test");
 //        }
 //        catch (Exception e){
 //            System.out.println("Error loading the page");
@@ -225,8 +240,8 @@ public class HelloController {
                     Double artPrice = allNodes.getDouble("Price");
                     int artistID = allNodes.getInt("Artist_ID");
                     int purchaseID = allNodes.getInt("Purchase_ID");
-                    byte[] curBlob = allNodes.getBytes("Image");
-                    BufferedImage artImage = ImageIO.read(new ByteArrayInputStream(curBlob));
+                    File imageFile = new File(allNodes.getString("Image"));
+                    BufferedImage artImage = ImageIO.read(imageFile);
                     Art newArt = new Art(artID, artTitle,artDate,artType,artStyle,
                             artInterpretation,artDisplayStatus,artSaleStatus,artPrice,artistID,purchaseID,artImage);
                     artworks.add(newArt);
@@ -288,7 +303,6 @@ public class HelloController {
                     managers.add(newManager);
                     System.out.println(newManager);
                 }
-
                 break;
             case "Viewer":
                 viewers.clear();
@@ -421,35 +435,66 @@ public class HelloController {
         viewArtistDYear.setText(String.valueOf(curArtist.getArtistDYear().getValue()));
 
     }
-    @FXML
-    protected void onChooseImage(ActionEvent event) throws IOException {
-        FileChooser fileCh = new FileChooser();
-        curFile = fileCh.showOpenDialog(new Stage());
-        addArtSelectedLb.setText(curFile.getName());
+    private void imageToBytes(String filePath, String fileName) throws IOException
+    // take image from 'filePath' and converts it into a byte array stored in 'fileName', in this case, on my desktop
+    // Used for debugging
+    {
         BufferedImage curImage = ImageIO.read(curFile);
         WritableRaster imageRaster = curImage.getRaster();
         DataBufferByte imageBuffByte = (DataBufferByte) imageRaster.getDataBuffer();
         byte[] imageData = imageBuffByte.getData();
 
         System.out.println(Base64.getEncoder().encodeToString(imageData));
+        File newFile = new File("C:\\Users\\Lwando Macakati\\Desktop\\" + fileName + ".txt");
+        if(newFile.createNewFile()){
+            PrintWriter newWriter = new PrintWriter("C:\\Users\\Lwando Macakati\\Desktop\\" + fileName + ".txt");
+            newWriter.write(Base64.getEncoder().encodeToString(imageData));
+            newWriter.close();
+            System.out.println("Written to text file");
+        }
+        else{
+            System.out.println("Couldn't work right");
+        }
     }
     @FXML
-    protected void onAddArtConfirm(ActionEvent event){
+    protected void onChooseImage(ActionEvent event) throws IOException {
+        FileChooser fileCh = new FileChooser();
+        Stage fileExplorer = new Stage();
+        fileExplorer.initOwner(((Button)event.getSource()).getScene().getWindow());
+        fileExplorer.initModality(Modality.APPLICATION_MODAL);
+        curFile = fileCh.showOpenDialog(fileExplorer);
+        addArtSelectedLb.setText(curFile.getName());
+        //imageToBytes(curFile.getName(),"Image1");
+    }
+    @FXML
+    protected void fillElements(){
+        if(addArtStatusCb.getItems().size() == 0) {
+            addArtStatusCb.getItems().add("Sold");
+            addArtStatusCb.getItems().add("Test");
+        }
+    }
+    @FXML
+    protected void onAddArtConfirm(ActionEvent event) throws IOException, SQLException
+    //Caters for the addition of new artwork in the database when confirm button is clicked on the add Artwork page
+    {
         if(checkContentTf() && addArtDate.getValue() != null){
-            int artID = artworks.size();
             String title = addArtTitleTf.getText();
-            LocalDate date = addArtDate.getValue();
-            String type = addArtTypeTf.getText();
+            String date = (addArtDate.getValue()).toString();
+            String type = addArtTypeTf.getText() ;
             String style = addArtStyleTf.getText();
             String interpretation = addArtInspirationTf.getText();
             Double price = Double.parseDouble(addArtPriceTf.getText());
             Boolean displayStatus = addArtOnDisplayCb.isSelected();
             String artStatus = addArtOnDisplayCb.getText();
-            int artistID = artists.size();
-            int purchaseID = purchases.size();
-            BufferedImage image;
-//            Art newArt = new Art(artID,title,date.toString(),type,style,interpretation,
-//                    displayStatus,artStatus,price,artistID,purchaseID);
+            String artistID = "4";//Need to add functionality to search for artist
+            String purchaseID = "1";
+            String imagePath = curFile.getPath();
+            String sqlString =String.format("Insert into Art (Art_Title, Art_Date, Art_type, Art_Style, Interpretation, Display_Status, Sale_Status, Price, Artist_ID, Purchase_ID, Image)\n" +
+                    "Values ('%s', #%s#, '%s', '%s', '%s', '%s', '%s', %s, %s, %s, '%s');",title,date,type,style,interpretation,displayStatus,
+                    artStatus, price, artistID,purchaseID,imagePath);
+            ConnectToDB addArt = new ConnectToDB();
+            addArt.addToDB(sqlString);
+            addArt.close();
         }
     }
     @FXML
@@ -458,7 +503,7 @@ public class HelloController {
     {
         if (artSearchTf.getText() == "") {
             artSearchTf.getStyleClass().add("searchBarError");
-            artSearchTf.setPromptText("Can't be blank!");
+            artSearchTf.setPromptText("Please enter name of artwork");
         } else {
             String searchItem = "'*" + artSearchTf.getText() + "*'";
             String sqlString = "Select * From Art Where Art_Title Like " + searchItem;

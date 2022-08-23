@@ -1,9 +1,6 @@
 package com.example.design_3;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 public class ConnectToDB {
     Statement sqlStatement;
@@ -22,15 +19,18 @@ public class ConnectToDB {
         }
     }
 
-    public void addToDB(String sqlString, String tableName) {
+    public void addToDB(String sqlString) {
         try {
             sqlStatement.executeQuery(sqlString);
         }
         catch (Exception e){
             System.out.println("Couldn't add to database");
+            System.out.println(e.getMessage());
         }
     }
-
+    public void close() throws SQLException {
+        newConnection.close();
+    }
     public Statement getSqlStatement() {
         return sqlStatement;
     }
