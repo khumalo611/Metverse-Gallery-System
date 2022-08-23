@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="panelArtistReg" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="542.0" prefWidth="696.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.design_3.HelloController">
+   <children>
+      <Pane prefHeight="80.0" prefWidth="696.0" style="-fx-background-color: #00968a;">
+         <children>
+            <Label layoutX="231.0" layoutY="21.0" text="Register As Artist" textFill="#fafafa">
+               <font>
+                  <Font name="Maiandra GD" size="32.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Button fx:id="btnARegister" layoutX="460.0" layoutY="470.0" mnemonicParsing="false" onAction="#AConfirmRegBtClick" prefHeight="30.0" prefWidth="90.0" style="-fx-background-color: #00968a;" text="Register" textFill="#fafafa" />
+      <Button fx:id="btnACancel" layoutX="570.0" layoutY="470.0" mnemonicParsing="false" onAction="#ACancelRegBtClick" prefHeight="30.0" prefWidth="90.0" style="-fx-background-color: #00968a;" text="Cancel" textFill="#fafafa" />
+      <TextField fx:id="txtAFName" layoutX="281.0" layoutY="134.0" prefHeight="25.0" prefWidth="200.0" />
+      <TextField fx:id="txtALName" layoutX="281.0" layoutY="174.0" prefHeight="25.0" prefWidth="200.0" />
+      <TextField fx:id="txtANumber" layoutX="281.0" layoutY="214.0" prefHeight="25.0" prefWidth="200.0" />
+      <TextField fx:id="txtACountry" layoutX="281.0" layoutY="254.0" prefHeight="25.0" prefWidth="200.0" />
+      <TextField fx:id="txtABirthYear" layoutX="281.0" layoutY="294.0" prefHeight="25.0" prefWidth="200.0" />
+      <TextField fx:id="txtAEmail" layoutX="281.0" layoutY="334.0" prefHeight="25.0" prefWidth="200.0" />
+      <TextField fx:id="txtAPassword" layoutX="281.0" layoutY="374.0" prefHeight="25.0" prefWidth="200.0" />
+      <TextField fx:id="txtACPassword" layoutX="281.0" layoutY="414.0" prefHeight="25.0" prefWidth="200.0" />
+      <Label layoutX="75.0" layoutY="138.0" text="First Name :" />
+      <Label layoutX="75.0" layoutY="178.0" text="Last Name :" />
+      <Label layoutX="75.0" layoutY="218.0" text="Contact Number :" />
+      <Label layoutX="75.0" layoutY="258.0" text="Country :" />
+      <Label layoutX="75.0" layoutY="298.0" text="Year Of Birth :" />
+      <Label layoutX="75.0" layoutY="338.0" text="Email :" />
+      <Label layoutX="75.0" layoutY="378.0" text="Password :" />
+      <Label layoutX="75.0" layoutY="418.0" text="Confirm Password :" />
+      <Label fx:id="txtARegAlert" layoutX="75.0" layoutY="453.0" prefHeight="17.0" prefWidth="283.0" text="Label" textFill="TRANSPARENT" />
+   </children>
+</Pane>
