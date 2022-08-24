@@ -75,6 +75,8 @@ public class HelloController {
     public Button viewArtistBt;
     public Button removeArtistBt;
     public Button addArtistBt;
+    public TextField clientSearchTf;
+    public Button btnSearchClient;
 
 
     //
@@ -578,6 +580,29 @@ public class HelloController {
             }
         });
     }
+
+    @FXML
+    protected void onSearchClient(Event event)
+    // Handles the search for art use-case
+    {
+        if (clientSearchTf.getText() == "") {
+            clientSearchTf.getStyleClass().add("searchBarError");
+            clientSearchTf.setPromptText("Please enter name of artwork");
+        } else {
+            String searchItem = "'*" + clientSearchTf.getText() + "*'";
+            String sqlString = "Select * From Viewer Where First_Name Like " + searchItem;
+            updateTable(sqlString, "Viewer");
+            clientSearchTable.setItems(viewers);
+
+        }
+        clientSearchTf.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                clientSearchTf.getStyleClass().remove(clientSearchTf.getStyleClass().size() - 1);
+                clientSearchTf.setPromptText("Enter artwork name");
+            }
+        });
+    }
+
     private boolean checkContentTf(TextField... textFields){
         boolean hasValue = true;
         for(TextField curTf:textFields){
