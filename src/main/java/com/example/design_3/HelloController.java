@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -87,6 +88,9 @@ public class HelloController {
     public ToggleButton requestBt;
     private TextField artSearchTf;
     private Button addArtBt;
+    public TableView artSearchTable;
+    public TableColumn artNamesTb;
+
     //View Artist Use Case
     @FXML
     public Label viewArtistFName;
@@ -139,6 +143,13 @@ public class HelloController {
         curContent = (Pane)testScene.lookup("#artworkLanding");
         parentBox.getChildren().remove(1);
         parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
+        updateTable("Select * From Artist", "Artist");
+        curContent = (Pane) parentBox.getChildren().get(1);
+        artistSearchTable = (TableView) curContent.lookup("#artistSearchTable");
+        artNamesTb = new TableColumn<>("Name");
+        artNamesTb.setCellValueFactory(new PropertyValueFactory<Artist,String>("artistFName"));
+        artistSearchTable.getColumns().add(artNamesTb);
+        artistSearchTable.setItems(artworks);
     }
     @FXML
     protected void onArtistBtClick(ActionEvent event) throws IOException{
