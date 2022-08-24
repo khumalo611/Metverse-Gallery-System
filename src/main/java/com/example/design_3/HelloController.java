@@ -76,6 +76,10 @@ public class HelloController {
     public Button removeArtistBt;
     public Button addArtistBt;
 
+    // View on display use case
+    public Button viewOnDisplayBt;
+    public TableView onDisplayTable;
+
 
     //
     private Pane curContent;
@@ -589,7 +593,21 @@ public class HelloController {
         return hasValue;
     }
 
-
+    @FXML
+    protected void onGoHome(ActionEvent event) throws IOException {
+        switchInner("Manager/HomePage.fxml", "homecontent", event);
+    }
+    @FXML
+    protected void onViewOnDisplay(ActionEvent event) throws IOException {
+        switchInner("OnDisplay.fxml", "onDisplayContent",event);
+        updateTable("Select * From Art Where Display_Status = true", "Art");
+        curContent = (Pane) parentBox.getChildren().get(1);
+        onDisplayTable = (TableView) curContent.lookup("#onDisplayTable");
+        artNamesTb = new TableColumn<>("Name");
+        artNamesTb.setCellValueFactory(new PropertyValueFactory<Art,String>("artTitle"));
+        onDisplayTable.getColumns().add(artNamesTb);
+        onDisplayTable.setItems(artworks);
+    }
     private void updateTableView(String sqlString, String tableName, String tableFxId, String tableColumnName, String attributeName){
         updateTable(sqlString, tableName);
         curContent = (Pane)parentBox.getChildren().get(1);
