@@ -88,6 +88,8 @@ public class HelloController {
     public ToggleButton requestBt;
     private TextField artSearchTf;
     private Button addArtBt;
+
+    @FXML
     public TableView artSearchTable;
     public TableColumn artNamesTb;
 
