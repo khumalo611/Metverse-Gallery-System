@@ -447,9 +447,18 @@ public class HelloController {
     @FXML
     protected void onViewArtistClick(ActionEvent event) throws IOException {
         //Will still enter the code to connect table selection to selected/ curArtist below
+        parentBox = (HBox)((Button)event.getSource()).getScene().getRoot();
         switchInner("Manager/ViewArtist.fxml", "viewArtistContent", event);
         Artist curArtist = (Artist) artistSearchTable.getSelectionModel().selectedItemProperty().getValue();
         if(curArtist!=null){
+            Pane viewArtist = (Pane)parentBox.getChildren().get(1);
+            viewArtistFName = (Label) viewArtist.lookup("#viewArtistFName");
+            viewArtistLName = (Label) viewArtist.lookup("#viewArtistLName");
+            viewArtistPseudonym = (Label) viewArtist.lookup("#viewArtistPseudonym");
+            viewArtistEmail = (Label) viewArtist.lookup("#viewArtistEmail");
+            viewArtistCountry = (Label) viewArtist.lookup("#viewArtistCountry");
+            viewArtistBYear = (Label) viewArtist.lookup("#viewArtistBYear");
+            viewArtistDYear = (Label) viewArtist.lookup("#viewArtistDYear");
             //Testing to view Artist from observable list in the window using arbitrary artist.
             viewArtistFName.setText(curArtist.getArtistFName().getValue());
             viewArtistLName.setText(curArtist.getArtistLName().getValue());
