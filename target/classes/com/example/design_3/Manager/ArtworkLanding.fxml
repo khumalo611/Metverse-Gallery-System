@@ -20,7 +20,7 @@
                   <Button fx:id="viewArtBt" disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="View" textFill="#fafafa" />
                </children>
             </HBox>
-            <TableView fx:id="artSearchTable" layoutY="35.0" prefHeight="141.0" prefWidth="390.0">
+            <TableView fx:id="artSearchTable" layoutY="35.0" onMouseClicked="#enableButtons" prefHeight="141.0" prefWidth="390.0">
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>

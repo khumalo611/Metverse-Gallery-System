@@ -1,5 +1,6 @@
 package com.example.design_3;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -66,6 +67,15 @@ public class HelloController {
     //Add Artwork use case elements
     public Button addArtDialogueBt;
     public Label addArtSelectedLb;
+    // View client Use case
+    public TableView clientSearchTable;
+    public Button viewClientBt;
+    public TableView artistSearchTable;
+    public Button updateArtistBt;
+    public Button viewArtistBt;
+    public Button removeArtistBt;
+    public Button addArtistBt;
+
 
     //
     private Pane curContent;
@@ -74,6 +84,9 @@ public class HelloController {
     private TextField artSearchTf;
     public Button artSearchBt;
     public TableView artSearchTable;
+    public Button removeArtBt;
+    public Button updateArtBt;
+    public Button viewArtBt;
     //
     @FXML
     private Button addArtBt;
@@ -92,8 +105,7 @@ public class HelloController {
     public Label viewArtistPseudonym;
     @FXML
     public Label viewArtistDYear;
-    @FXML
-    public TableView artistSearchTable;
+
     public TableColumn artistNames;
     public TableColumn artNamesTb;
     private File curFile;
@@ -143,24 +155,27 @@ public class HelloController {
     }
     @FXML
     protected void onArtistBtClick(ActionEvent event) throws IOException{
-
-        //switchContent("Manager/ArtistLanding.fxml","#artistLanding" );
-        FXMLLoader artPage = new FXMLLoader(HelloApplication.class.getResource("Manager/ArtistLanding.fxml"));
-        Scene testScene = new Scene(artPage.load());
-        curContent = (Pane)testScene.lookup("#artistLanding");
-        parentBox.getChildren().remove(1);
-        parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
-        //Setting up the table on the landing page.
-        updateTable("Select * From Artist", "Artist");
-        curContent = (Pane) parentBox.getChildren().get(1);
-        artistSearchTable = (TableView) curContent.lookup("#artistSearchTable");
-        artNamesTb = new TableColumn<>("Name");
-        artNamesTb.setCellValueFactory(new PropertyValueFactory<Artist,String>("artistFName"));
-        artistSearchTable.getColumns().add(artNamesTb);
-        artistSearchTable.setItems(artworks);
+        try {
+            //switchContent("Manager/ArtistLanding.fxml","#artistLanding" );
+            FXMLLoader artPage = new FXMLLoader(HelloApplication.class.getResource("Manager/ArtistLanding.fxml"));
+            Scene testScene = new Scene(artPage.load());
+            curContent = (Pane) testScene.lookup("#artistLanding");
+            parentBox.getChildren().remove(1);
+            parentBox.getChildren().add(parentBox.getChildren().size(), curContent);
+            //Setting up the table on the landing page.
+            updateTable("Select * From Artist", "Artist");
+            curContent = (Pane) parentBox.getChildren().get(1);
+            artistSearchTable = (TableView) curContent.lookup("#artistSearchTable");
+            artNamesTb = new TableColumn<>("Name");
+            artNamesTb.setCellValueFactory(new PropertyValueFactory<Artist, String>("artistFName"));
+            artistSearchTable.getColumns().add(artNamesTb);
+            artistSearchTable.setItems(artists);
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
-//    }
     @FXML
     protected void onClientBtCLick(ActionEvent event) throws IOException{
         FXMLLoader artPage = new FXMLLoader(HelloApplication.class.getResource("Manager/ClientLanding.fxml"));
@@ -168,6 +183,14 @@ public class HelloController {
         curContent = (Pane)testScene.lookup("#clientLanding");
         parentBox.getChildren().remove(1);
         parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
+        //Setting up the table on the landing page.
+        updateTable("Select * From Client", "Client");
+        curContent = (Pane) parentBox.getChildren().get(1);
+        clientSearchTable = (TableView) curContent.lookup("#clientSearchTable");
+        artNamesTb = new TableColumn<>("Name");
+        artNamesTb.setCellValueFactory(new PropertyValueFactory<Client,String>("viewerFName"));
+        clientSearchTable.getColumns().add(artNamesTb);
+        clientSearchTable.setItems(clients);
     }
     @FXML
     protected void onRequestsBtClick(ActionEvent event) throws IOException
@@ -268,6 +291,7 @@ public class HelloController {
                 break;
             case "Client":
                 clients.clear();
+                updateTable("Select * From Viewer", "Viewer");
                 if(viewers.isEmpty()){
                     System.out.println("No viewers in system, i.e, no clients either");
                 }
@@ -282,7 +306,8 @@ public class HelloController {
                             if (viewerID == curViewerID)
                                 break;
                         }
-                        Client newClient = (Client) curViewer;
+                        Client newClient = new Client(curViewer.getViewerID(),curViewer.getViewerType(),curViewer.getViewerPassword(),
+                                curViewer.getViewerFName(),curViewer.getViewerLName(),curViewer.getViewerEmail(),curViewer.getViewerPhone());
                         newClient.setClientAddress(clientAddress);
                         clients.add(newClient);
                         System.out.println(newClient);
@@ -420,20 +445,20 @@ public class HelloController {
     // Artist Page Methods
 
     @FXML
-    protected void onViewArtistClick(ActionEvent event){
+    protected void onViewArtistClick(ActionEvent event) throws IOException {
         //Will still enter the code to connect table selection to selected/ curArtist below
-
-
-        //Testing to view Artist from observable list in the window using arbitrary artist.
-        Artist curArtist = artists.get(2);
-        viewArtistFName.setText(curArtist.getArtistFName().getValue());
-        viewArtistLName.setText(curArtist.getArtistLName().getValue());
-        viewArtistPseudonym.setText(curArtist.getArtistPseudonym().getValue());
-        viewArtistEmail.setText(curArtist.getArtistEmail().getValue());
-        viewArtistCountry.setText(curArtist.artistCountry.getValue());
-        viewArtistBYear.setText(String.valueOf(curArtist.getArtistBYear().getValue()));
-        viewArtistDYear.setText(String.valueOf(curArtist.getArtistDYear().getValue()));
-
+        switchInner("Manager/ViewArtist.fxml", "viewArtistContent", event);
+        Artist curArtist = (Artist) artistSearchTable.getSelectionModel().selectedItemProperty().getValue();
+        if(curArtist!=null){
+            //Testing to view Artist from observable list in the window using arbitrary artist.
+            viewArtistFName.setText(curArtist.getArtistFName().getValue());
+            viewArtistLName.setText(curArtist.getArtistLName().getValue());
+            viewArtistPseudonym.setText(curArtist.getArtistPseudonym().getValue());
+            viewArtistEmail.setText(curArtist.getArtistEmail().getValue());
+            viewArtistCountry.setText(curArtist.artistCountry.getValue());
+            viewArtistBYear.setText(String.valueOf(curArtist.getArtistBYear().getValue()));
+            viewArtistDYear.setText(String.valueOf(curArtist.getArtistDYear().getValue()));
+        }
     }
     private void imageToBytes(String filePath, String fileName) throws IOException
     // take image from 'filePath' and converts it into a byte array stored in 'fileName', in this case, on my desktop
@@ -467,10 +492,36 @@ public class HelloController {
         //imageToBytes(curFile.getName(),"Image1");
     }
     @FXML
-    protected void fillElements(){
-        if(addArtStatusCb.getItems().size() == 0) {
+    protected void fillElements(Event event){
+        boolean accessed = false;
+        if(addArtStatusCb.getItems().size() == 0 ) {
             addArtStatusCb.getItems().add("Sold");
             addArtStatusCb.getItems().add("Test");
+        }
+
+    }
+    @FXML
+    protected void onViewClient(ActionEvent event){
+        Client curClient = (Client) clientSearchTable.getSelectionModel().selectedItemProperty().getValue();
+        if(curClient!=null){
+            //TBC
+        }
+    }
+
+    @FXML
+    protected void enableButtons(Event event){
+        if(viewClientBt!=null){
+            viewClientBt.disableProperty().bind(Bindings.isEmpty(clientSearchTable.getSelectionModel().getSelectedItems()));
+        }
+        else if(artistSearchTable != null){
+            viewArtistBt.disableProperty().bind(Bindings.isEmpty((artistSearchTable.getSelectionModel().getSelectedItems())));
+            removeArtistBt.disableProperty().bind(Bindings.isEmpty((artistSearchTable.getSelectionModel().getSelectedItems())));
+            updateArtistBt.disableProperty().bind(Bindings.isEmpty((artistSearchTable.getSelectionModel().getSelectedItems())));
+        }
+        else if(artSearchTable != null){
+            viewArtBt.disableProperty().bind(Bindings.isEmpty(artSearchTable.getSelectionModel().getSelectedItems()));
+            removeArtBt.disableProperty().bind(Bindings.isEmpty(artSearchTable.getSelectionModel().getSelectedItems()));
+            updateArtBt.disableProperty().bind(Bindings.isEmpty(artSearchTable.getSelectionModel().getSelectedItems()));
         }
     }
     @FXML
@@ -527,5 +578,16 @@ public class HelloController {
             }
         }
         return hasValue;
+    }
+
+
+    private void updateTableView(String sqlString, String tableName, String tableFxId, String tableColumnName, String attributeName){
+        updateTable(sqlString, tableName);
+        curContent = (Pane)parentBox.getChildren().get(1);
+        artistSearchTable = (TableView) curContent.lookup("#" + tableFxId);
+        artNamesTb = new TableColumn<>(tableColumnName);
+        artNamesTb.setCellValueFactory(new PropertyValueFactory<Artist,String>(attributeName));
+        artistSearchTable.getColumns().add(artNamesTb);
+        artistSearchTable.setItems(artists);
     }
 }
