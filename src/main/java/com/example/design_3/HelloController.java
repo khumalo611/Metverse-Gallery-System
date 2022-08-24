@@ -603,6 +603,15 @@ public class HelloController {
         });
     }
 
+    @FXML
+    void onRemoveArtwork(ActionEvent event) {
+        Art selectedItem = (Art) artSearchTable.getSelectionModel().getSelectedItem();
+        artSearchTable.getItems().remove(selectedItem);
+        artSearchTable.refresh();
+
+
+    }
+
     private boolean checkContentTf(TextField... textFields){
         boolean hasValue = true;
         for(TextField curTf:textFields){
