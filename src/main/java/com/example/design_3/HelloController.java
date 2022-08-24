@@ -509,7 +509,7 @@ public class HelloController {
         boolean accessed = false;
         if(addArtStatusCb.getItems().size() == 0 ) {
             addArtStatusCb.getItems().add("Sold");
-            addArtStatusCb.getItems().add("Test");
+            addArtStatusCb.getItems().add("In-Stock");
         }
 
     }
