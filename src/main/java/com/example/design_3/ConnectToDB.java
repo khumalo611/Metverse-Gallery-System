@@ -21,7 +21,7 @@ public class ConnectToDB {
 
     public void addToDB(String sqlString) {
         try {
-            sqlStatement.executeQuery(sqlString);
+            sqlStatement.executeUpdate(sqlString);
         }
         catch (Exception e){
             System.out.println("Couldn't add to database");
