@@ -23,10 +23,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.time.LocalDate;
@@ -473,36 +470,47 @@ public class HelloController {
             viewArtistDYear.setText(String.valueOf(curArtist.getArtistDYear().getValue()));
         }
     }
-    private void imageToBytes(String filePath, String fileName) throws IOException
-    // take image from 'filePath' and converts it into a byte array stored in 'fileName', in this case, on my desktop
+    private void imageToBytes()
+    // take image from 'filePath' and converts it into a byte array stored in 'fileName' txt file, in this case, on my desktop
     // Used for debugging
     {
-        BufferedImage curImage = ImageIO.read(curFile);
-        WritableRaster imageRaster = curImage.getRaster();
-        DataBufferByte imageBuffByte = (DataBufferByte) imageRaster.getDataBuffer();
-        byte[] imageData = imageBuffByte.getData();
+        try {
+            BufferedImage curImage = ImageIO.read(curFile);
+            WritableRaster imageRaster = curImage.getRaster();
+            DataBufferByte imageBuffByte = (DataBufferByte) imageRaster.getDataBuffer();
+            byte[] imageData = imageBuffByte.getData();
 
-        System.out.println(Base64.getEncoder().encodeToString(imageData));
-        File newFile = new File("C:\\Users\\Lwando Macakati\\Desktop\\" + fileName + ".txt");
-        if(newFile.createNewFile()){
-            PrintWriter newWriter = new PrintWriter("C:\\Users\\Lwando Macakati\\Desktop\\" + fileName + ".txt");
-            newWriter.write(Base64.getEncoder().encodeToString(imageData));
-            newWriter.close();
-            System.out.println("Written to text file");
+            System.out.println(Base64.getEncoder().encodeToString(imageData));
+
+            File newCopy = new File("src/main/resources/com/example/design_3/Images/" + curFile.getName());
+            FileOutputStream streamImage = new FileOutputStream(newCopy.getPath());
+            streamImage.write(imageData);
+            curFile = newCopy;
+
+            // Code below creates new Text file and writes it out to the text file.
+//        File newFile = new File("C:\\Users\\Lwando Macakati\\Desktop\\" + fileName + ".txt");
+//        if(newFile.createNewFile()){
+//            PrintWriter newWriter = new PrintWriter("C:\\Users\\Lwando Macakati\\Desktop\\" + fileName + ".txt");
+//            newWriter.write(Base64.getEncoder().encodeToString(imageData));
+//            newWriter.close();
+//            System.out.println("Written to text file");
+//        }
+//        else{
+//            System.out.println("Couldn't work right");
+//        }
         }
-        else{
-            System.out.println("Couldn't work right");
+        catch (Exception e){
+            System.out.println(e.getMessage());
         }
     }
     @FXML
     protected void onChooseImage(ActionEvent event) throws IOException {
         FileChooser fileCh = new FileChooser();
-        Stage fileExplorer = new Stage();
-        fileExplorer.initOwner(((Button)event.getSource()).getScene().getWindow());
-        fileExplorer.initModality(Modality.APPLICATION_MODAL);
-        curFile = fileCh.showOpenDialog(fileExplorer);
+        Stage curStage = (Stage) ((Button)event.getSource()).getScene().getWindow();
+        fileCh.setTitle("Choose image to upload");
+        curFile = fileCh.showOpenDialog(curStage);
         addArtSelectedLb.setText(curFile.getName());
-        //imageToBytes(curFile.getName(),"Image1");
+        imageToBytes();
     }
     @FXML
     protected void fillElements(Event event){
@@ -553,13 +561,16 @@ public class HelloController {
             String artistID = "4";//Need to add functionality to search for artist
             String purchaseID = "1";
             String imagePath = curFile.getPath();
-            String sqlString =String.format("Insert into Art (Art_Title, Art_Date, Art_type, Art_Style, Interpretation, Display_Status, Sale_Status, Price, Artist_ID, Purchase_ID, Image)\n" +
+            String sqlString =String.format("Insert Into [Art] (Art_Title, Art_Date, Art_type, Art_Style, Interpretation, Display_Status, Sale_Status, Price, Artist_ID, Purchase_ID, Image)\n" +
                     "Values ('%s', #%s#, '%s', '%s', '%s', '%s', '%s', %s, %s, %s, '%s');",title,date,type,style,interpretation,displayStatus,
                     artStatus, price, artistID,purchaseID,imagePath);
             ConnectToDB addArt = new ConnectToDB();
             addArt.addToDB(sqlString);
             addArt.close();
         }
+    }
+    private void uploadFile(File curFile){
+        //File newFile = curFile.copyFile()
     }
     @FXML
     protected void onSearchArt(Event event)
@@ -593,10 +604,6 @@ public class HelloController {
         return hasValue;
     }
 
-    @FXML
-    protected void onGoHome(ActionEvent event) throws IOException {
-        switchInner("Manager/HomePage.fxml", "homecontent", event);
-    }
     @FXML
     protected void onViewOnDisplay(ActionEvent event) throws IOException {
         switchInner("OnDisplay.fxml", "onDisplayContent",event);
