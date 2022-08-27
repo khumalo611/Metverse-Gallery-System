@@ -11,6 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
@@ -482,10 +484,12 @@ public class HelloController {
 
             System.out.println(Base64.getEncoder().encodeToString(imageData));
 
+            InputStream curStream = new BufferedInputStream(new FileInputStream(curFile));
             File newCopy = new File("src/main/resources/com/example/design_3/Images/" + curFile.getName());
             FileOutputStream streamImage = new FileOutputStream(newCopy.getPath());
-            streamImage.write(imageData);
+            streamImage.write(imageData, 0,curStream.read(imageData));
             curFile = newCopy;
+            streamImage.close();
 
             // Code below creates new Text file and writes it out to the text file.
 //        File newFile = new File("C:\\Users\\Lwando Macakati\\Desktop\\" + fileName + ".txt");
@@ -512,6 +516,14 @@ public class HelloController {
         addArtSelectedLb.setText(curFile.getName());
         imageToBytes();
     }
+//    @FXML
+//    protected void changeFocus(KeyEvent event){
+//        if(event.getCode() == KeyCode.TAB && ((TextField)event.getSource()).getId() == "addArtPriceTf" ){
+//        }
+//        else if(event.getCode() == KeyCode.TAB && ((TextField)event.getSource()).getId() == "addArtTitleTf" ){
+//
+//        }
+//    }
     @FXML
     protected void fillElements(Event event){
         boolean accessed = false;
@@ -519,6 +531,7 @@ public class HelloController {
             addArtStatusCb.getItems().add("Sold");
             addArtStatusCb.getItems().add("In-Stock");
         }
+        //else if(addArtPriceTf.)
 
     }
     @FXML
