@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import javafx.util.FXPermission;
 
 import javax.imageio.ImageIO;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
@@ -510,6 +511,8 @@ public class HelloController {
     @FXML
     protected void onChooseImage(ActionEvent event) throws IOException {
         FileChooser fileCh = new FileChooser();
+        FileChooser.ExtensionFilter imagesOnly = new FileChooser.ExtensionFilter("Image Files ", "*.png", "*.gif", "*.jpeg", "*.jpg");
+        fileCh.getExtensionFilters().addAll(imagesOnly);
         Stage curStage = (Stage) ((Button)event.getSource()).getScene().getWindow();
         fileCh.setTitle("Choose image to upload");
         curFile = fileCh.showOpenDialog(curStage);
@@ -527,11 +530,16 @@ public class HelloController {
     @FXML
     protected void fillElements(Event event){
         boolean accessed = false;
-        if(addArtStatusCb.getItems().size() == 0 ) {
-            addArtStatusCb.getItems().add("Sold");
+        if(addArtOnDisplayCb.isSelected() == true) {
+            addArtStatusCb.getItems().removeAll();
             addArtStatusCb.getItems().add("In-Stock");
         }
-        //else if(addArtPriceTf.)
+        else if (addArtOnDisplayCb.isSelected() == false) {
+            addArtStatusCb.getItems().removeAll();
+            addArtStatusCb.getItems().add("Sold");
+            addArtStatusCb.getItems().add("In-Stock");
+
+        }
 
     }
     @FXML
@@ -636,5 +644,29 @@ public class HelloController {
         artNamesTb.setCellValueFactory(new PropertyValueFactory<Artist,String>(attributeName));
         artistSearchTable.getColumns().add(artNamesTb);
         artistSearchTable.setItems(artists);
+    }
+
+    // Methods for retuning back to relavant landing page
+
+    @FXML
+    protected void goHome(ActionEvent event){
+        try {
+            switchInner("Manager/HomePage.fxml", "homeContent", event);
+        }
+        catch (Exception e){
+            System.out.printf("Error switching to home screen");
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @FXML
+    protected void goArtist(ActionEvent event){
+        try {
+            switchInner("Manager/ArtistLanding.fxml", "artistLanding", event);
+        }
+        catch (Exception e){
+            System.out.printf("Error switching to home screen");
+            System.out.println(e.getMessage());
+        }
     }
 }
