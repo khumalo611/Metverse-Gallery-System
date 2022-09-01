@@ -473,7 +473,7 @@ public class HelloController {
             viewArtistDYear.setText(String.valueOf(curArtist.getArtistDYear().getValue()));
         }
     }
-    private void imageToBytes()
+    private void imageToBytes(File curFile)
     // take image from 'filePath' and converts it into a byte array stored in 'fileName' txt file, in this case, on my desktop
     // Used for debugging
     {
@@ -511,13 +511,13 @@ public class HelloController {
     @FXML
     protected void onChooseImage(ActionEvent event) throws IOException {
         FileChooser fileCh = new FileChooser();
-        FileChooser.ExtensionFilter imagesOnly = new FileChooser.ExtensionFilter("Image Files ", "*.png", "*.gif", "*.jpeg", "*.jpg");
+        FileChooser.ExtensionFilter imagesOnly = new FileChooser.ExtensionFilter("Image Files ", "*.png", "*.gif", "*.jpeg", "*.jpg", "*.webp");
         fileCh.getExtensionFilters().addAll(imagesOnly);
         Stage curStage = (Stage) ((Button)event.getSource()).getScene().getWindow();
         fileCh.setTitle("Choose image to upload");
         curFile = fileCh.showOpenDialog(curStage);
         addArtSelectedLb.setText(curFile.getName());
-        imageToBytes();
+//        imageToBytes();
     }
 //    @FXML
 //    protected void changeFocus(KeyEvent event){
@@ -570,6 +570,7 @@ public class HelloController {
     protected void onAddArtConfirm(ActionEvent event) throws IOException, SQLException
     //Caters for the addition of new artwork in the database when confirm button is clicked on the add Artwork page
     {
+        imageToBytes(curFile);
         if(checkContentTf() && addArtDate.getValue() != null){
             String title = addArtTitleTf.getText();
             String date = (addArtDate.getValue()).toString();
