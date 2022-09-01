@@ -79,6 +79,7 @@ public class HelloController {
     // View on display use case
     public Button viewOnDisplayBt;
     public TableView onDisplayTable;
+    public Label reqLabel;
 
 
     //
@@ -489,7 +490,7 @@ public class HelloController {
             File newCopy = new File("src/main/resources/com/example/design_3/Images/" + curFile.getName());
             FileOutputStream streamImage = new FileOutputStream(newCopy.getPath());
             streamImage.write(imageData, 0,curStream.read(imageData));
-            curFile = newCopy;
+            this.curFile = newCopy;
             streamImage.close();
 
             // Code below creates new Text file and writes it out to the text file.
@@ -511,7 +512,7 @@ public class HelloController {
     @FXML
     protected void onChooseImage(ActionEvent event) throws IOException {
         FileChooser fileCh = new FileChooser();
-        FileChooser.ExtensionFilter imagesOnly = new FileChooser.ExtensionFilter("Image Files ", "*.png", "*.gif", "*.jpeg", "*.jpg", "*.webp");
+        FileChooser.ExtensionFilter imagesOnly = new FileChooser.ExtensionFilter("Image Files ", "*.png", "*.gif", "*.jpeg", "*.jpg");
         fileCh.getExtensionFilters().addAll(imagesOnly);
         Stage curStage = (Stage) ((Button)event.getSource()).getScene().getWindow();
         fileCh.setTitle("Choose image to upload");
@@ -529,18 +530,13 @@ public class HelloController {
 //    }
     @FXML
     protected void fillElements(Event event){
-        boolean accessed = false;
-        if(addArtOnDisplayCb.isSelected() == true) {
-            addArtStatusCb.getItems().removeAll();
-            addArtStatusCb.getItems().add("In-Stock");
-        }
-        else if (addArtOnDisplayCb.isSelected() == false) {
+        if(addArtStatusCb.getItems().size() == 0)
+        {
             addArtStatusCb.getItems().removeAll();
             addArtStatusCb.getItems().add("Sold");
             addArtStatusCb.getItems().add("In-Stock");
-
+            reqLabel.setTooltip(new Tooltip("All fields marked (*) are required"));
         }
-
     }
     @FXML
     protected void onViewClient(ActionEvent event){
@@ -590,6 +586,7 @@ public class HelloController {
             addArt.addToDB(sqlString);
             addArt.close();
         }
+
     }
     private void uploadFile(File curFile){
         //File newFile = curFile.copyFile()
