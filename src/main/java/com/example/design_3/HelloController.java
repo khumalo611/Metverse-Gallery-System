@@ -81,6 +81,15 @@ public class HelloController {
     public TableView onDisplayTable;
     public Label reqLabel;
 
+    //View Client Use case
+    public Pane viewClientPn;
+    public TableView clientPurchTable;
+    public Label viewClientName;
+    public Label viewClientSurname;
+    public Label viewClientEmail;
+    public Label viewClientPhone;
+    public Label viewClientAddress;
+
 
     //
     private Pane curContent;
@@ -539,7 +548,9 @@ public class HelloController {
         }
     }
     @FXML
-    protected void onViewClient(ActionEvent event){
+    protected void onViewClient(ActionEvent event) throws IOException{
+        parentBox = (HBox) ((Button)event.getSource()).getScene().getRoot();
+        switchInner("Manager/ViewClient.fxml","viewClientPn", event);
         Client curClient = (Client) clientSearchTable.getSelectionModel().selectedItemProperty().getValue();
         if(curClient!=null){
             //TBC
@@ -661,6 +672,13 @@ public class HelloController {
     protected void goArtist(ActionEvent event){
         try {
             switchInner("Manager/ArtistLanding.fxml", "artistLanding", event);
+            updateTable("Select * From Artist", "Artist");
+            curContent = (Pane) parentBox.getChildren().get(1);
+            artistSearchTable = (TableView) curContent.lookup("#artistSearchTable");
+            artNamesTb = new TableColumn<>("Name");
+            artNamesTb.setCellValueFactory(new PropertyValueFactory<Artist, String>("artistFName"));
+            artistSearchTable.getColumns().add(artNamesTb);
+            artistSearchTable.setItems(artists);
         }
         catch (Exception e){
             System.out.printf("Error switching to home screen");

@@ -156,7 +156,7 @@
       </GridPane>
       <HBox alignment="CENTER_RIGHT" layoutX="248.0" layoutY="502.0" prefHeight="25.0" prefWidth="200.0" spacing="10.0">
          <children>
-            <Button fx:id="addArtCancelBt" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Cancel" textFill="#fafafa" />
+            <Button fx:id="addArtCancelBt" mnemonicParsing="false" onAction="#onArtBtClick" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Cancel" textFill="#fafafa" />
             <Button fx:id="addArtConfirmBt" mnemonicParsing="false" onAction="#onAddArtConfirm" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Confirm" textFill="#fafafa" />
          </children>
       </HBox>
