@@ -1,6 +1,5 @@
 .panelButton:hover{
      -fx-background-color: #3b3b57;
-     -fx-border-color: #fafafa;
 }
 .panelButton:pressed{
     -fx-background-color: #27273a;
