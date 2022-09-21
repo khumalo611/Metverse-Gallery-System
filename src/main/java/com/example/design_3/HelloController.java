@@ -96,6 +96,8 @@ public class HelloController {
     public Label viewClientPhone;
     public Label viewClientAddress;
     public Pane notificationPage;
+    //Confirmation page
+    public Label confirmText;
 
 
     //

@@ -5,7 +5,7 @@ module com.example.design_3 {
     requires org.controlsfx.controls;
     requires java.sql;
     requires java.desktop;
-    requires javafx.swt;
+    //requires javafx.swt;
 
     opens com.example.design_3 to javafx.fxml;
     exports com.example.design_3;
