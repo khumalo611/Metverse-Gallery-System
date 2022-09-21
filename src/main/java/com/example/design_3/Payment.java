@@ -33,4 +33,10 @@ public class Payment {
     public void setCardOwner(String cardOwner) {
         this.cardOwner.set(cardOwner);
     }
+
+    public boolean isEqual(Payment compPayment){
+        if(compPayment.getPurchaseID() == this.getPurchaseID())
+            return true;
+        return false;
+    }
 }

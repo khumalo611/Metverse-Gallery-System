@@ -110,5 +110,11 @@ public class Viewer {
                 getViewerType(),getViewerPassword(),getViewerFName(),getViewerLName(),getViewerEmail(),
                 getViewerPhone());
     }
+
+    public boolean isEqual(Viewer compViewer){
+        if(compViewer.getViewerID() == this.getViewerID())
+            return true;
+        return false;
+    }
 }
 

@@ -24,4 +24,10 @@ public class Client extends Viewer{
                 getViewerType(),getViewerPassword(),getViewerFName(),getViewerLName(),getViewerEmail(),
                 getViewerPhone(),getClientAddress());
     }
+
+    public boolean isEqual(Client otherClient){
+        if(otherClient.getViewerID() == this.getViewerID())
+            return true;
+        return false;
+    }
 }

@@ -23,7 +23,7 @@
          <children>
               <HBox alignment="CENTER" layoutY="239.0" prefHeight="25.0" prefWidth="390.0" spacing="20.0">
                   <children>
-                      <Button fx:id="viewClientBt" disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="View" textFill="#fafafa" />
+                      <Button fx:id="viewClientBt" disable="true" mnemonicParsing="false" onAction="#onViewClient" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="View" textFill="#fafafa" />
                   </children>
               </HBox>
               <TableView fx:id="clientSearchTable" layoutY="35.0" onMouseClicked="#enableButtons" prefHeight="141.0" prefWidth="390.0">

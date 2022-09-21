@@ -24,6 +24,14 @@ public class Viewing {
         this.artID.setValue(artID);
     }
 
+    public int getViewingID() {
+        return viewingID.get();
+    }
+
+    public IntegerProperty viewingIDProperty() {
+        return viewingID;
+    }
+
     public int getViewerID() {
         return viewerID.get();
     }
@@ -62,5 +70,11 @@ public class Viewing {
 
     public void setViewCapacity(int viewCapacity) {
         this.viewCapacity.set(viewCapacity);
+    }
+
+    public boolean isEqual(Viewing compViewing){
+        if(compViewing.getViewingID() == this.getViewingID())
+            return true;
+        return false;
     }
 }

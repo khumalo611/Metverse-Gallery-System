@@ -165,4 +165,10 @@ public class Art {
                 getArtID(),getArtTitle(),getArtDate(),getArtType(),getArtStyle(),getArtInterpretation(),isDisplayStatus(),
                 getArtSaleStatus(),getArtPrice(),getArtID(),getPurchaseID(),getArtImage());
     }
+
+    public boolean isEqual(Art compArt){
+        if(compArt.getArtID() == this.getArtID())
+            return true;
+        return false;
+    }
 }

@@ -44,4 +44,10 @@ public class Purchase {
     public void setPurchaseAmount(double purchaseAmount) {
         this.purchaseAmount.set(purchaseAmount);
     }
+
+    public boolean isEqual(Purchase compPurchase){
+        if(compPurchase.getPurchaseID() == this.getPurchaseID())
+            return true;
+        return false;
+    }
 }

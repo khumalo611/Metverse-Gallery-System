@@ -11,7 +11,8 @@
     -fx-font-family: sans-serif;
 }
 .generalButtons{
-    
+    -fx-background-color:  #00968a;
+    -fx-width: 80;
 }
 .searchBarError{
     -fx-border-color: red, red;

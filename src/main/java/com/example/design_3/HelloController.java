@@ -7,6 +7,8 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -15,8 +17,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.FXPermission;
 
@@ -27,6 +31,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
 import java.io.*;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.time.LocalDate;
@@ -67,6 +72,7 @@ public class HelloController {
     //Add Artwork use case elements
     public Button addArtDialogueBt;
     public Label addArtSelectedLb;
+    public CheckBox addArtNewArtist;
     // View client Use case
     public TableView clientSearchTable;
     public Button viewClientBt;
@@ -89,6 +95,7 @@ public class HelloController {
     public Label viewClientEmail;
     public Label viewClientPhone;
     public Label viewClientAddress;
+    public Pane notificationPage;
 
 
     //
@@ -547,15 +554,6 @@ public class HelloController {
             reqLabel.setTooltip(new Tooltip("All fields marked (*) are required"));
         }
     }
-    @FXML
-    protected void onViewClient(ActionEvent event) throws IOException{
-        parentBox = (HBox) ((Button)event.getSource()).getScene().getRoot();
-        switchInner("Manager/ViewClient.fxml","viewClientPn", event);
-        Client curClient = (Client) clientSearchTable.getSelectionModel().selectedItemProperty().getValue();
-        if(curClient!=null){
-            //TBC
-        }
-    }
 
     @FXML
     protected void enableButtons(Event event){
@@ -577,25 +575,89 @@ public class HelloController {
     protected void onAddArtConfirm(ActionEvent event) throws IOException, SQLException
     //Caters for the addition of new artwork in the database when confirm button is clicked on the add Artwork page
     {
-        imageToBytes(curFile);
-        if(checkContentTf() && addArtDate.getValue() != null){
-            String title = addArtTitleTf.getText();
-            String date = (addArtDate.getValue()).toString();
-            String type = addArtTypeTf.getText() ;
-            String style = addArtStyleTf.getText();
-            String interpretation = addArtInspirationTf.getText();
-            Double price = Double.parseDouble(addArtPriceTf.getText());
-            Boolean displayStatus = addArtOnDisplayCb.isSelected();
-            String artStatus = addArtOnDisplayCb.getText();
-            String artistID = "4";//Need to add functionality to search for artist
-            String purchaseID = "1";
-            String imagePath = curFile.getPath();
-            String sqlString =String.format("Insert Into [Art] (Art_Title, Art_Date, Art_type, Art_Style, Interpretation, Display_Status, Sale_Status, Price, Artist_ID, Purchase_ID, Image)\n" +
-                    "Values ('%s', #%s#, '%s', '%s', '%s', '%s', '%s', %s, %s, %s, '%s');",title,date,type,style,interpretation,displayStatus,
-                    artStatus, price, artistID,purchaseID,imagePath);
-            ConnectToDB addArt = new ConnectToDB();
-            addArt.addToDB(sqlString);
-            addArt.close();
+        try {
+            imageToBytes(curFile);
+            if (checkContentTf() && addArtDate.getValue() != null) {
+                String title = addArtTitleTf.getText();
+                String date = (addArtDate.getValue()).toString();
+                String type = addArtTypeTf.getText();
+                String style = addArtStyleTf.getText();
+                String interpretation = addArtInspirationTf.getText();
+                Double price = Double.parseDouble(addArtPriceTf.getText());
+                Boolean displayStatus = addArtOnDisplayCb.isSelected();
+                String artStatus = addArtOnDisplayCb.getText();
+                Boolean newArtist = addArtNewArtist.isSelected();
+                if (!newArtist) {
+                    updateTable("Select * From Artist", "Artist");
+                    Popup tablePop = new Popup();
+                    VBox popupRoot = new VBox();
+                    popupRoot.setPadding(new Insets(5));
+                    popupRoot.setSpacing(5);
+                    popupRoot.setStyle("-fx-background-color: #fafafa;" +
+                            "-fx-border-radius: 30px");
+                    popupRoot.setAlignment(Pos.CENTER);
+                    Label windowName = new Label("Who does this art belong to ?");
+                    windowName.setStyle("-fx-background-color: #00968a;" +
+                            "-fx-text-fill: #fafafa;" +
+                            "-fx-border-width: 80px;");
+                    TableView curArtists = new TableView();
+                    curArtists.setPrefHeight(200);
+                    curArtists.setMinWidth(80);
+                    curArtists.getColumns().removeAll();
+                    artNamesTb = new TableColumn<>("Name");
+                    artNamesTb.setPrefWidth(80);
+                    artNamesTb.setCellValueFactory(new PropertyValueFactory<Artist, String>("artistFName"));
+                    curArtists.getColumns().add(artNamesTb);
+                    curArtists.setItems(artists);
+                    Button cancelBt = new Button("Cancel");
+                    Button continueBt = new Button("Continue");
+                    HBox buttonsHb = new HBox();
+                    buttonsHb.setSpacing(10);
+                    buttonsHb.setAlignment(Pos.CENTER);
+                    buttonsHb.getChildren().addAll(cancelBt,continueBt);
+                    continueBt.getStyleClass().add("generalButtons");
+                    Label errorMessage = new Label("");
+                    errorMessage.setStyle("-fx-text-fill: red;");
+                    popupRoot.getChildren().addAll(windowName, curArtists,errorMessage, buttonsHb);
+                    tablePop.getContent().add(popupRoot);
+                    tablePop.show(((Button)event.getSource()).getScene().getWindow(),250,200);
+                    continueBt.setOnAction(event1 -> {
+                        Artist curArtist = (Artist) curArtists.getSelectionModel().selectedItemProperty().getValue();
+                        if(curArtist !=null){
+                            String artistID = "" + curArtist.getArtistID();
+                            String purchaseID = "0";
+                            String imagePath = curFile.getPath();
+                            String sqlString = String.format("Insert Into [Art] (Art_Title, Art_Date, Art_type, Art_Style, Interpretation, Display_Status, Sale_Status, Price, Artist_ID, Purchase_ID, Image)\n" +
+                                            "Values ('%s', #%s#, '%s', '%s', '%s', '%s', '%s', %s, %s, %s, '%s');", title, date, type, style, interpretation, displayStatus,
+                                    artStatus, price, artistID, purchaseID, imagePath);
+                            ConnectToDB addArt = new ConnectToDB();
+                            addArt.addToDB(sqlString);
+                            tablePop.hide();
+                            try {
+                                switchInner("Notifications.fxml","notificationPage", event);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else{
+                            errorMessage.setText("Please select an artist before continuing.");
+                            curArtists.focusedProperty().addListener((observable, oldValue, newValue) ->{
+                                if(newValue)
+                                    errorMessage.setText("");
+                            });
+                        }
+                    });
+                    cancelBt.setOnAction(event1 -> {
+                        tablePop.hide();
+                    });
+                }
+                //Need to add functionality to search for artist
+
+
+            }
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
         }
 
     }
@@ -684,5 +746,226 @@ public class HelloController {
             System.out.printf("Error switching to home screen");
             System.out.println(e.getMessage());
         }
+    }
+
+    private int compareItems(Object Comparator, ObservableList objectList ){
+        String objectType = Comparator.getClass().getSimpleName();
+        int index = -1;
+        switch(objectType){
+            case "Art":
+                Art compArt = (Art) Comparator;
+                Art curArt = null;
+                for(int i = 0; i<artworks.size();i++){
+                    if(compArt.isEqual(curArt))
+                        index = i;
+                }
+                break;
+            case "Artist":
+                Artist compArtist = (Artist) Comparator;
+                Artist curArtist = null;
+                for(int i = 0; i<artists.size();i++){
+                    if(compArtist.isEqual(curArtist))
+                        index = i;
+                }
+                break;
+            case "Client":
+                Client compClient = (Client) Comparator;
+                Client curClient = null;
+                for(int i = 0; i<clients.size();i++){
+                    if(compClient.isEqual(curClient))
+                        index = i;
+                }
+                break;
+            case "Payment":
+                Payment compPayment = (Payment) Comparator;
+                Payment curPayment = null;
+                for(int i = 0; i<payments.size();i++){
+                    if(curPayment.isEqual(compPayment))
+                        index = i;
+                }
+                break;
+            case "Purchase":
+                Purchase compPurchase = (Purchase) Comparator;
+                Purchase curPurchase = null;
+                for(int i = 0; i<purchases.size();i++){
+                    if(compPurchase.isEqual(curPurchase))
+                        index = i;
+                }
+                break;
+            case "Request":
+                Request compRequest = (Request) Comparator;
+                Request curRequest = null;
+                for(int i = 0; i<requests.size();i++){
+                    if(compRequest.isEqual(curRequest))
+                        index = i;
+                }
+                break;
+            case "Viewer":
+                Viewer compViewer = (Viewer) Comparator;
+                Viewer curViewer = null;
+                for(int i = 0; i<viewers.size();i++){
+                    if(compViewer.isEqual(curViewer))
+                        index = i;
+                }
+                break;
+            case "Viewing":
+                Viewing compViewing = (Viewing) Comparator;
+                Viewing curViewing = null;
+                for(int i = 0; i<viewings.size();i++){
+                    if(compViewing.isEqual(curViewing))
+                        index = i;
+                }
+                break;
+
+        }
+        return index;
+    }
+    @FXML
+    protected void onViewClient(ActionEvent event){
+        updateTable("Select * From Client", "Client");
+        parentBox = (HBox) ((Button)event.getSource()).getScene().getRoot();
+        Client curClient = (Client) clientSearchTable.getSelectionModel().selectedItemProperty().getValue();
+        try {
+            switchInner("Manager/ViewClient.fxml", "viewClientPn", event);
+        }
+        catch (Exception e) {
+            System.out.println("Couldn't open Window");
+            System.out.println(e.getMessage());
+        }
+        if(curClient!=null)
+        {
+            // Get the tings from the Pane
+            Pane curPane = (Pane) parentBox.getChildren().get(1);
+            viewClientName = (Label)curPane.lookup("#viewClientName");
+            viewClientSurname = (Label)curPane.lookup("#viewClientSurname");
+            viewClientEmail = (Label)curPane.lookup("#viewClientEmail");
+            viewClientPhone = (Label)curPane.lookup("#viewClientPhone");
+            viewClientAddress = (Label)curPane.lookup("#viewClientAddress");
+            clientPurchTable = (TableView)curPane.lookup("#clientPurchTable");
+            // Set the values of those tings
+            viewClientName.setText(curClient.getViewerFName());
+            viewClientSurname.setText(curClient.getViewerLName());
+            viewClientEmail.setText(curClient.getViewerEmail());
+            viewClientPhone.setText(curClient.getViewerPhone());
+            viewClientAddress.setText(curClient.getClientAddress());
+            TableColumn artName = new TableColumn<>("Art");
+            TableColumn purchaseDate = new TableColumn("Date Purchased");
+            TableColumn purchaseAmount = new TableColumn("Amount");
+
+        }
+
+
+    }
+    private int linkObjects(Object comparator, String compareOn, ObservableList objectList)
+    // Compares the object comparator to all objectList objects and returns index of object that matches on compareOn
+    {
+        int index = -1;
+        String objectType = (objectList.get(0)).getClass().getSimpleName();
+        Method[] allMethods ;
+        Method curMethod = null ;
+        switch(objectType){
+            case "Art":
+                updateTable("Select * From Art", "Art");
+                Art compArt = (Art) comparator;
+                Art curArt = artworks.get(0);
+                allMethods = curArt.getClass().getMethods();
+                for (Method method: allMethods){
+                    if(method.getName().contains(compareOn));
+                    {
+                        curMethod = method;
+                        break;
+                    }
+                }
+                for(int i = 0; i<artworks.size();i++){
+                    try {
+                        int curID = (Integer) curMethod.invoke(artworks.get(i));
+                        if (curID == (Integer)curMethod.invoke(compArt)) {
+                            index = i;
+                        }
+
+                    }
+                    catch (Exception e){
+                        System.out.println("Couldn't invoke the method");
+                        System.out.println(e.getMessage());
+                    }
+                }
+                break;
+            case "Artist":
+                updateTable("Select * From Artist", "Artist");
+                Artist compArtist = (Artist) comparator;
+                Artist curArtist = artists.get(0);
+                allMethods = curArtist.getClass().getMethods();
+                for (Method method: allMethods){
+                    if(method.getName().contains(compareOn));
+                    {
+                        curMethod = method;
+                        break;
+                    }
+                }
+                for(int i = 0; i<artists.size();i++){
+                    try {
+                        int curID = (Integer) curMethod.invoke(artists.get(i));
+                        if (curID == (Integer)curMethod.invoke(compArtist)) {
+                            index = i;
+                        }
+
+                    }
+                    catch (Exception e){
+                        System.out.println("Couldn't invoke the method");
+                        System.out.println(e.getMessage());
+                    }
+                }
+                break;
+            case "Client":
+                Client compClient = (Client) comparator;
+                Client curClient = null;
+                for(int i = 0; i<clients.size();i++){
+                    if(compClient.isEqual(curClient))
+                        index = i;
+                }
+                break;
+            case "Payment":
+                Payment compPayment = (Payment) comparator;
+                Payment curPayment = null;
+                for(int i = 0; i<payments.size();i++){
+                    if(curPayment.isEqual(compPayment))
+                        index = i;
+                }
+                break;
+            case "Purchase":
+                Purchase compPurchase = (Purchase) comparator;
+                Purchase curPurchase = null;
+                for(int i = 0; i<purchases.size();i++){
+                    if(compPurchase.isEqual(curPurchase))
+                        index = i;
+                }
+                break;
+            case "Request":
+                Request compRequest = (Request) comparator;
+                Request curRequest = null;
+                for(int i = 0; i<requests.size();i++){
+                    if(compRequest.isEqual(curRequest))
+                        index = i;
+                }
+                break;
+            case "Viewer":
+                Viewer compViewer = (Viewer) comparator;
+                Viewer curViewer = null;
+                for(int i = 0; i<viewers.size();i++){
+                    if(compViewer.isEqual(curViewer))
+                        index = i;
+                }
+                break;
+            case "Viewing":
+                Viewing compViewing = (Viewing) comparator;
+                Viewing curViewing = null;
+                for(int i = 0; i<viewings.size();i++){
+                    if(compViewing.isEqual(curViewing))
+                        index = i;
+                }
+                break;
+
+        }
+        return index;
     }
 }

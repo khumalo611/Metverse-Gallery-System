@@ -80,4 +80,10 @@ public class Request {
     public void setReqResponse(boolean reqResponse) {
         this.reqResponse.set(reqResponse);
     }
+
+    public boolean isEqual(Request compRequest){
+        if(compRequest.getRequestID() == this.getRequestID())
+            return true;
+        return false;
+    }
 }

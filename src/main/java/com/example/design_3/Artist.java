@@ -16,6 +16,9 @@ public class Artist {
     StringProperty artistPseudonym = new SimpleStringProperty();
     IntegerProperty artistDYear = new SimpleIntegerProperty();
 
+    public Artist(){
+
+    }
     public Artist(int artistID, String artistFName, String artistLName, String artistEmail, String artistCountry,
                   int artistBYear, String artistPassword, String artistPseudonym, int artistDYear) {
         this.artistID.setValue(artistID);
@@ -138,5 +141,10 @@ public class Artist {
                 artistID.getValue(),artistFName.getValue(),artistLName.getValue(),artistEmail.getValue(),artistCountry.getValue(),
                 artistBYear.getValue(),artistPassword.getValue(),artistPseudonym.getValue(),
                 artistDYear.getValue());
+    }
+    public boolean isEqual(Artist compArtist){
+        if(compArtist.getArtistID() == this.getArtistID())
+            return true;
+        return false;
     }
 }
