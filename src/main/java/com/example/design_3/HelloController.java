@@ -73,6 +73,7 @@ public class HelloController {
     public Button addArtDialogueBt;
     public Label addArtSelectedLb;
     public CheckBox addArtNewArtist;
+    public Label addArtErrorLb;
     // View client Use case
     public TableView clientSearchTable;
     public Button viewClientBt;
@@ -578,8 +579,10 @@ public class HelloController {
     //Caters for the addition of new artwork in the database when confirm button is clicked on the add Artwork page
     {
         try {
-            imageToBytes(curFile);
-            if (checkContentTf() && addArtDate.getValue() != null) {
+            if (checkContent(addArtTitleTf, addArtDate,addArtTypeTf,addArtStyleTf,addArtStatusCb,addArtSelectedLb)
+                    && addArtDate.getValue() != null) {
+                addArtErrorLb.setText("");
+                imageToBytes(curFile);
                 String title = addArtTitleTf.getText();
                 String date = (addArtDate.getValue()).toString();
                 String type = addArtTypeTf.getText();
@@ -627,7 +630,7 @@ public class HelloController {
                         Artist curArtist = (Artist) curArtists.getSelectionModel().selectedItemProperty().getValue();
                         if(curArtist !=null){
                             String artistID = "" + curArtist.getArtistID();
-                            String purchaseID = "0";
+                            String purchaseID = null;
                             String imagePath = curFile.getPath();
                             String sqlString = String.format("Insert Into [Art] (Art_Title, Art_Date, Art_type, Art_Style, Interpretation, Display_Status, Sale_Status, Price, Artist_ID, Purchase_ID, Image)\n" +
                                             "Values ('%s', #%s#, '%s', '%s', '%s', '%s', '%s', %s, %s, %s, '%s');", title, date, type, style, interpretation, displayStatus,
@@ -653,9 +656,9 @@ public class HelloController {
                         tablePop.hide();
                     });
                 }
-                //Need to add functionality to search for artist
-
-
+            }
+            else{
+                addArtErrorLb.setText("One or more required fields (*) are empty");
             }
         }
         catch (Exception e){
@@ -687,15 +690,35 @@ public class HelloController {
             }
         });
     }
-    private boolean checkContentTf(TextField... textFields){
-        boolean hasValue = true;
-        for(TextField curTf:textFields){
-            if(curTf.getText() == null || curTf.getText()==""){
-                hasValue = false;
-                break;
+    private boolean checkContent(Control... inputControls){
+        boolean hasContent = true;
+        for(Control curControl:inputControls){
+            String controlType = curControl.getTypeSelector();
+            switch(controlType){
+                case "TextField":
+                    if(((TextField)curControl).getText() == null)
+                        hasContent = false;
+                    break;
+                case "DatePicker":
+                    if (((DatePicker)curControl).getValue() == null)
+                        hasContent = false;
+                    break;
+                case "ChoiceBox":
+                    if (((ChoiceBox)curControl).getValue() == null)
+                        hasContent = false;
+                    break;
+                case "Label":
+                    if(((Label)curControl).getText().isEmpty())
+                    {
+                    System.out.println(((Label) curControl).getText());
+                    hasContent = false;
+                    }
+                    break;
             }
+            if(!hasContent)
+                break;
         }
-        return hasValue;
+        return hasContent;
     }
 
     @FXML
