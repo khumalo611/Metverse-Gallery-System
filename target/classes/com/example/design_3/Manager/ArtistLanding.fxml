@@ -28,7 +28,7 @@
             <HBox spacing="8.0">
                <children>
                   <TextField fx:id="artistSearchTf" prefHeight="25.0" prefWidth="280.0" />
-                  <Button fx:id="artistSearchBt" mnemonicParsing="false" prefHeight="25.0" prefWidth="103.0" style="-fx-background-color: #00968a; -fx-border-radius: 0;" text="Search" textFill="#fafafa" />
+                  <Button fx:id="artistSearchBt" mnemonicParsing="false" onAction="#onSearchArtist" prefHeight="25.0" prefWidth="103.0" style="-fx-background-color: #00968a; -fx-border-radius: 0;" text="Search" textFill="#fafafa" />
                </children>
             </HBox>
          </children>

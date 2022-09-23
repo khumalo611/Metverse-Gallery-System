@@ -112,6 +112,10 @@ public class HelloController {
     public TableColumn artNamesTb;
     private File curFile;
 
+    //Search Artist use-case fields
+    @FXML
+    private TextField artistSearchTf;
+
     //Tables to store data in
     ObservableList <Artist> artists = FXCollections.observableArrayList();
     ObservableList <Art> artworks = FXCollections.observableArrayList();
@@ -559,6 +563,7 @@ public class HelloController {
             addArt.close();
         }
     }
+
     @FXML
     protected void onSearchArt(Event event)
     // Handles the search for art use-case
@@ -587,7 +592,7 @@ public class HelloController {
     {
         if (clientSearchTf.getText() == "") {
             clientSearchTf.getStyleClass().add("searchBarError");
-            clientSearchTf.setPromptText("Please enter name of artwork");
+            clientSearchTf.setPromptText("Please enter name of client");
         } else {
             String searchItem = "'*" + clientSearchTf.getText() + "*'";
             String sqlString = "Select * From Viewer Where First_Name Like " + searchItem;
@@ -604,12 +609,32 @@ public class HelloController {
     }
 
     @FXML
+    protected void onSearchArtist(Event event)
+    // Handles the search for art use-case
+    {
+        if (artistSearchTf.getText() == "") {
+            artistSearchTf.getStyleClass().add("searchBarError");
+            artistSearchTf.setPromptText("Please enter name of artist");
+        } else {
+            String searchItem = "'*" + artistSearchTf.getText() + "*'";
+            String sqlString = "Select * From Artist Where First_Name Like " + searchItem;
+            updateTable(sqlString, "Artist");
+            artistSearchTable.setItems(artists);
+
+        }
+        artistSearchTf.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                artistSearchTf.getStyleClass().remove(artistSearchTf.getStyleClass().size() - 1);
+                artistSearchTf.setPromptText("Enter artwork name");
+            }
+        });
+    }
+
+    @FXML
     void onRemoveArtwork(ActionEvent event) {
         Art selectedItem = (Art) artSearchTable.getSelectionModel().getSelectedItem();
         artSearchTable.getItems().remove(selectedItem);
         artSearchTable.refresh();
-
-
     }
 
     private boolean checkContentTf(TextField... textFields){
