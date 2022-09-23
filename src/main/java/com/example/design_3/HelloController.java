@@ -36,6 +36,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.Base64;
+import java.util.function.UnaryOperator;
 
 public class HelloController {
 
@@ -573,6 +574,21 @@ public class HelloController {
             removeArtBt.disableProperty().bind(Bindings.isEmpty(artSearchTable.getSelectionModel().getSelectedItems()));
             updateArtBt.disableProperty().bind(Bindings.isEmpty(artSearchTable.getSelectionModel().getSelectedItems()));
         }
+        else if (addArtPriceTf != null){
+            /*
+                Code Source: https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
+                by Uwe
+                on StackOverflow
+             */
+            UnaryOperator<TextFormatter.Change> filter = change -> {
+            String text = change.getText();
+            if(text.matches("[0-9]*"))
+                return change;
+            return null;
+            };
+            TextFormatter numText = new TextFormatter(filter);
+            addArtPriceTf.setTextFormatter(numText);
+        }
     }
     @FXML
     protected void onAddArtConfirm(ActionEvent event) throws IOException, SQLException
@@ -772,6 +788,22 @@ public class HelloController {
             System.out.println(e.getMessage());
         }
     }
+    @FXML
+    protected void goArt(ActionEvent event) {
+        try {
+            switchInner("Manager/ArtworkLanding.fxml", "artworkLanding", event);
+            updateTable("Select * From Art", "Art");
+            curContent = (Pane) parentBox.getChildren().get(1);
+            artSearchTable = (TableView) curContent.lookup("#artSearchTable");
+            artNamesTb = new TableColumn<>("Name");
+            artNamesTb.setCellValueFactory(new PropertyValueFactory<Art,String>("artTitle"));
+            artSearchTable.getColumns().add(artNamesTb);
+            artSearchTable.setItems(artworks);
+        } catch (Exception e) {
+            System.out.printf("Error switching to art screen");
+            System.out.println(e.getMessage());
+        }
+    }
 
     private int compareItems(Object Comparator, ObservableList objectList ){
         String objectType = Comparator.getClass().getSimpleName();
@@ -846,27 +878,25 @@ public class HelloController {
         return index;
     }
     @FXML
-    protected void onViewClient(ActionEvent event){
+    protected void onViewClient(ActionEvent event) {
         updateTable("Select * From Client", "Client");
-        parentBox = (HBox) ((Button)event.getSource()).getScene().getRoot();
+        parentBox = (HBox) ((Button) event.getSource()).getScene().getRoot();
         Client curClient = (Client) clientSearchTable.getSelectionModel().selectedItemProperty().getValue();
         try {
             switchInner("Manager/ViewClient.fxml", "viewClientPn", event);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("Couldn't open Window");
             System.out.println(e.getMessage());
         }
-        if(curClient!=null)
-        {
+        if (curClient != null) {
             // Get the tings from the Pane
             Pane curPane = (Pane) parentBox.getChildren().get(1);
-            viewClientName = (Label)curPane.lookup("#viewClientName");
-            viewClientSurname = (Label)curPane.lookup("#viewClientSurname");
-            viewClientEmail = (Label)curPane.lookup("#viewClientEmail");
-            viewClientPhone = (Label)curPane.lookup("#viewClientPhone");
-            viewClientAddress = (Label)curPane.lookup("#viewClientAddress");
-            clientPurchTable = (TableView)curPane.lookup("#clientPurchTable");
+            viewClientName = (Label) curPane.lookup("#viewClientName");
+            viewClientSurname = (Label) curPane.lookup("#viewClientSurname");
+            viewClientEmail = (Label) curPane.lookup("#viewClientEmail");
+            viewClientPhone = (Label) curPane.lookup("#viewClientPhone");
+            viewClientAddress = (Label) curPane.lookup("#viewClientAddress");
+            clientPurchTable = (TableView) curPane.lookup("#clientPurchTable");
             // Set the values of those tings
             viewClientName.setText(curClient.getViewerFName());
             viewClientSurname.setText(curClient.getViewerLName());
@@ -878,9 +908,11 @@ public class HelloController {
             TableColumn purchaseAmount = new TableColumn("Amount");
 
         }
-
-
     }
+
+
+
+
     private int linkObjects(Object comparator, String compareOn, ObservableList objectList)
     // Compares the object comparator to all objectList objects and returns index of object that matches on compareOn
     {
