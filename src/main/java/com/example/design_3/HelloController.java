@@ -36,6 +36,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.Base64;
+import java.util.Formatter;
 import java.util.function.UnaryOperator;
 
 public class HelloController {
@@ -100,6 +101,19 @@ public class HelloController {
     public Pane notificationPage;
     //Confirmation page
     public Label confirmText;
+
+    //Add artist Use case elements
+
+    public TextField addArtistNameTf;
+    public TextField addArtistSNameTf;
+    public TextField addArtistEmailTf;
+    public TextField addArtistCountryTf;
+    public TextField addArtistBYearTf;
+    public TextField addArtistPseudonymTf;
+    public Pane addArtistPn;
+    public Label addArtistErrorLb;
+    public Label addArtistReqLb;
+    public TextField addArtistDYear;
 
 
     //
@@ -306,7 +320,7 @@ public class HelloController {
                     String artistCountry = allNodes.getString("Country");
                     int artistBYear = allNodes.getInt("Birth_Year");
                     String artistPassword = allNodes.getString("Password");
-                    String artistPseudonym = allNodes.getString("Psuedonym");
+                    String artistPseudonym = allNodes.getString("Pseudonym");
                     int artistDYear = allNodes.getInt("Death_Year");
                     Artist newArtist = new Artist(artistID,artistFName,artistLName,artistEmail,artistCountry,artistBYear,
                             artistPassword,artistPseudonym,artistDYear);
@@ -575,19 +589,21 @@ public class HelloController {
             updateArtBt.disableProperty().bind(Bindings.isEmpty(artSearchTable.getSelectionModel().getSelectedItems()));
         }
         else if (addArtPriceTf != null){
-            /*
-                Code Source: https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
-                by Uwe
-                on StackOverflow
-             */
-            UnaryOperator<TextFormatter.Change> filter = change -> {
-            String text = change.getText();
-            if(text.matches("[0-9]*"))
-                return change;
-            return null;
-            };
-            TextFormatter numText = new TextFormatter(filter);
-            addArtPriceTf.setTextFormatter(numText);
+            addArtPriceTf.setTextFormatter(setNumFormat());
+            addArtTitleTf.setTextFormatter(setTextFormat());
+            addArtTypeTf.setTextFormatter(setTextFormat());
+            addArtStyleTf.setTextFormatter(setTextFormat());
+            addArtInspirationTf.setTextFormatter(setTextFormat());
+        }
+        else if (addArtistBYearTf !=null){
+            addArtistBYearTf.setTextFormatter(setNumFormat());
+            addArtistDYear.setTextFormatter(setNumFormat());
+            addArtistNameTf.setTextFormatter(setTextFormat());
+            addArtistSNameTf.setTextFormatter(setTextFormat());
+            addArtistEmailTf.setTextFormatter(setTextFormat());
+            addArtistCountryTf.setTextFormatter(setTextFormat());
+            addArtistPseudonymTf.setTextFormatter(setTextFormat());
+            addArtistReqLb.setTooltip(new Tooltip("All fields marked (*) are required"));
         }
     }
     @FXML
@@ -595,8 +611,7 @@ public class HelloController {
     //Caters for the addition of new artwork in the database when confirm button is clicked on the add Artwork page
     {
         try {
-            if (checkContent(addArtTitleTf, addArtDate,addArtTypeTf,addArtStyleTf,addArtStatusCb,addArtSelectedLb)
-                    && addArtDate.getValue() != null) {
+            if (checkContent(addArtTitleTf, addArtDate,addArtTypeTf,addArtStyleTf,addArtStatusCb,addArtSelectedLb)) {
                 addArtErrorLb.setText("");
                 imageToBytes(curFile);
                 String title = addArtTitleTf.getText();
@@ -672,6 +687,9 @@ public class HelloController {
                         tablePop.hide();
                     });
                 }
+                else{
+
+                }
             }
             else{
                 addArtErrorLb.setText("One or more required fields (*) are empty");
@@ -706,13 +724,22 @@ public class HelloController {
             }
         });
     }
+    @FXML
+    public void onAddArtistClick(ActionEvent event){
+        try {
+            switchInner("Manager/AddArtist.fxml", "addArtistPn", event);
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
     private boolean checkContent(Control... inputControls){
         boolean hasContent = true;
         for(Control curControl:inputControls){
             String controlType = curControl.getTypeSelector();
             switch(controlType){
                 case "TextField":
-                    if(((TextField)curControl).getText() == null)
+                    if(((TextField)curControl).getText().isEmpty())
                         hasContent = false;
                     break;
                 case "DatePicker":
@@ -910,8 +937,68 @@ public class HelloController {
         }
     }
 
+    @FXML
+    protected void onAddArtistConfirm(ActionEvent event){
+        updateTable("Select * From Artist", "Artist");
+        int curTableSize = artists.size();
+        if(checkContent(addArtistNameTf, addArtistSNameTf, addArtistEmailTf,addArtistCountryTf,addArtistBYearTf)){
+            addArtistErrorLb.setText("");
+            String artistName = addArtistNameTf.getText();
+            String artistSName = addArtistSNameTf.getText();
+            String artistEmail = addArtistEmailTf.getText();
+            String artistCountry = addArtistCountryTf.getText();
+            String artistBYear = addArtistBYearTf.getText();
+            String artistDYear = addArtistDYear.getText();
+            String artistPseudonym = addArtistPseudonymTf.getText();
+            ConnectToDB newConnection = new ConnectToDB();
+            String sqlString = String.format("Insert Into [Artist] (First_Name, Last_Name, Email, Country, Birth_Year, Death_Year, Pseudonym)\n" +
+                            "Values ('%s', '%s', '%s', '%s', %s, %s, '%s');", artistName,artistSName,artistEmail,artistCountry,
+                                artistBYear,artistDYear,artistPseudonym);
+            newConnection.addToDB(sqlString);
+            updateTable("Select * From Artist", "Artist");
+            int newTableSize = artists.size();
+            if(curTableSize < newTableSize) {
+                try {
+                    switchInner("Notifications.fxml", "notificationPage", event);
+                }
+                catch(Exception e){
+                    System.out.println(e.getMessage());
+                }
+            }
+            else
+                System.out.println("An error occurred, artist not added");
+        }
+        else{
+            addArtistErrorLb.setText("One or more of the required fields (*) is empty");
+        }
 
+    }
+    private TextFormatter setNumFormat(){
+        /*
+                Code Source: https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
+                by Uwe
+                on StackOverflow
+             */
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String text = change.getText();
+            if(text.matches("[0-9]*"))
+                return change;
+            return null;
+        };
+        TextFormatter numText = new TextFormatter(filter);
+        return numText;
+    }
 
+    private TextFormatter setTextFormat(){
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String text = change.getText();
+            if(text.matches(".*'.*"))
+                return null;
+            return change;
+        };
+        TextFormatter stringFormat = new TextFormatter(filter);
+        return stringFormat;
+    }
 
     private int linkObjects(Object comparator, String compareOn, ObservableList objectList)
     // Compares the object comparator to all objectList objects and returns index of object that matches on compareOn
