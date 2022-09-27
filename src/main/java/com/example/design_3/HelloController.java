@@ -685,7 +685,7 @@ public class HelloController {
             updateArtistLName.setText(curArtist.getArtistLName().getValue());
             updateArtistPseudonym.setText(curArtist.getArtistPseudonym().getValue());
             updateArtistEmail.setText(curArtist.getArtistEmail().getValue());
-            updateArtistCountry.setText(curArtist.getArtistFName().getValue());
+            updateArtistCountry.setText(curArtist.getArtistCountry().getValue());
             updateArtistBYear.setText(String.valueOf(curArtist.getArtistBYear().getValue()));
             updateArtistDYear.setText(String.valueOf(curArtist.getArtistDYear().getValue()));
         }
@@ -702,10 +702,10 @@ public class HelloController {
                 Connection newConnection = DriverManager.getConnection(dataBaseURL);
                 System.out.println("Connected to MS Access database");
                 Statement sqlStatement = newConnection.createStatement();
-                String sql = "UPDATE Artist SET First_Name = '" + updateArtistFName.getText() + "', Last_Name = '" + updateArtistLName.getText() + "', Email = '" + updateArtistEmail.getText() + "', Country = '" + updateArtistCountry.getText() + "', Birth_Year = '" + updateArtistBYear.getText() + "', Death_Year = '" + updateArtistDYear.getText() + "', Pseudonym = '" + updateArtistPseudonym.getText() + "', WHERE ArtistID = " + artistIDVar + ";";
+                String sql = "UPDATE Artist SET First_Name = '" + updateArtistFName.getText() + "', Last_Name = '" + updateArtistLName.getText() + "', Email = '" + updateArtistEmail.getText() + "', Country = '" + updateArtistCountry.getText() + "', Birth_Year = '" + updateArtistBYear.getText() + "', Death_Year = '" + updateArtistDYear.getText() + "', Psuedonym = '" + updateArtistPseudonym.getText() + "' WHERE ArtistID = " + artistIDVar + ";";
                 sqlStatement.executeUpdate(sql);
 
-                txtArtistUpdAlert.setText("Account Successfully Registered!");
+                txtArtistUpdAlert.setText("Artist Details Updated Successfully!");
                 txtArtistUpdAlert.setTextFill(GREEN);
                 newConnection.close();
             }
