@@ -32,6 +32,9 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.Base64;
 
+import static javafx.scene.paint.Color.GREEN;
+import static javafx.scene.paint.Color.RED;
+
 public class HelloController {
 
     @FXML
@@ -115,6 +118,26 @@ public class HelloController {
     //Search Artist use-case fields
     @FXML
     private TextField artistSearchTf;
+
+    //Update Artist use-case fields
+    @FXML
+    private Pane updateArtistPn;
+    @FXML
+    private TextField updateArtistBYear;
+    @FXML
+    private TextField updateArtistCountry;
+    @FXML
+    private TextField updateArtistDYear;
+    @FXML
+    private TextField updateArtistEmail;
+    @FXML
+    private TextField updateArtistFName;
+    @FXML
+    private TextField updateArtistLName;
+    @FXML
+    private TextField updateArtistPseudonym;
+    @FXML
+    private Label txtArtistUpdAlert;
 
     //Tables to store data in
     ObservableList <Artist> artists = FXCollections.observableArrayList();
@@ -603,7 +626,7 @@ public class HelloController {
         clientSearchTf.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 clientSearchTf.getStyleClass().remove(clientSearchTf.getStyleClass().size() - 1);
-                clientSearchTf.setPromptText("Enter artwork name");
+                clientSearchTf.setPromptText("Enter client name");
             }
         });
     }
@@ -635,6 +658,62 @@ public class HelloController {
         Art selectedItem = (Art) artSearchTable.getSelectionModel().getSelectedItem();
         artSearchTable.getItems().remove(selectedItem);
         artSearchTable.refresh();
+    }
+
+    int artistIDVar;
+    @FXML
+    void onUpdateArtist(ActionEvent event) throws IOException {
+        parentBox = (HBox)((Button)event.getSource()).getScene().getRoot();
+        FXMLLoader artPage = new FXMLLoader(HelloApplication.class.getResource("Manager/UpdateArtist.fxml"));
+        Scene testScene = new Scene(artPage.load());
+        curContent = (Pane)testScene.lookup("#updateArtistPn");
+        parentBox.getChildren().remove(1);
+        parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
+        Artist curArtist = (Artist) artistSearchTable.getSelectionModel().selectedItemProperty().getValue();
+        if(curArtist!=null){
+            Pane updateArtist = (Pane)parentBox.getChildren().get(1);
+            updateArtistFName = (TextField) updateArtist.lookup("#updateArtistFName");
+            updateArtistLName = (TextField) updateArtist.lookup("#updateArtistLName");
+            updateArtistPseudonym = (TextField) updateArtist.lookup("#updateArtistPseudonym");
+            updateArtistEmail = (TextField) updateArtist.lookup("#updateArtistEmail");
+            updateArtistCountry = (TextField) updateArtist.lookup("#updateArtistCountry");
+            updateArtistBYear = (TextField) updateArtist.lookup("#updateArtistBYear");
+            updateArtistDYear = (TextField) updateArtist.lookup("#updateArtistDYear");
+
+            artistIDVar = curArtist.getArtistID();
+            updateArtistFName.setText(curArtist.getArtistFName().getValue());
+            updateArtistLName.setText(curArtist.getArtistLName().getValue());
+            updateArtistPseudonym.setText(curArtist.getArtistPseudonym().getValue());
+            updateArtistEmail.setText(curArtist.getArtistEmail().getValue());
+            updateArtistCountry.setText(curArtist.getArtistFName().getValue());
+            updateArtistBYear.setText(String.valueOf(curArtist.getArtistBYear().getValue()));
+            updateArtistDYear.setText(String.valueOf(curArtist.getArtistDYear().getValue()));
+        }
+    }
+
+    @FXML
+    void onConfirmUpdateArtist(ActionEvent event) {
+        if (updateArtistFName.getText().isBlank() && updateArtistLName.getText().isBlank() && updateArtistPseudonym.getText().isBlank() && updateArtistEmail.getText().isBlank() && updateArtistCountry.getText().isBlank() && updateArtistBYear.getText().isBlank() && updateArtistDYear.getText().isBlank()) {
+            txtArtistUpdAlert.setText("Update Failed! Please Check Your Entries And Try Again.");
+            txtArtistUpdAlert.setTextFill(RED);
+        } else {
+            String dataBaseURL = "jdbc:ucanaccess://MetVerse_Gallery11.accdb";
+            try {
+                Connection newConnection = DriverManager.getConnection(dataBaseURL);
+                System.out.println("Connected to MS Access database");
+                Statement sqlStatement = newConnection.createStatement();
+                String sql = "UPDATE Artist SET First_Name = '" + updateArtistFName.getText() + "', Last_Name = '" + updateArtistLName.getText() + "', Email = '" + updateArtistEmail.getText() + "', Country = '" + updateArtistCountry.getText() + "', Birth_Year = '" + updateArtistBYear.getText() + "', Death_Year = '" + updateArtistDYear.getText() + "', Pseudonym = '" + updateArtistPseudonym.getText() + "', WHERE ArtistID = " + artistIDVar + ";";
+                sqlStatement.executeUpdate(sql);
+
+                txtArtistUpdAlert.setText("Account Successfully Registered!");
+                txtArtistUpdAlert.setTextFill(GREEN);
+                newConnection.close();
+            }
+            catch(Exception e){
+                e.printStackTrace();
+                e.getCause();
+            }
+        }
     }
 
     private boolean checkContentTf(TextField... textFields){
