@@ -19,7 +19,7 @@
                   </Label>
                </children>
             </Pane>
-            <Button layoutX="281.0" layoutY="324.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="134.0" style="-fx-background-color: #00968a;" text="Request Meeting" textFill="#fafafa" />
+            <Button layoutX="281.0" layoutY="324.0" mnemonicParsing="false" onAction="#onRequestMeeting" prefHeight="46.0" prefWidth="134.0" style="-fx-background-color: #00968a;" text="Request Meeting" textFill="#fafafa" />
             <Button layoutX="281.0" layoutY="225.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="134.0" style="-fx-background-color: #00968a;" text="Request Status" textFill="#fafafa" />
          </children>
       </Pane>

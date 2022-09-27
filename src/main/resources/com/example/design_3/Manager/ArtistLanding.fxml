@@ -15,7 +15,7 @@
             <HBox layoutY="240.0" prefHeight="25.0" prefWidth="390.0" spacing="20.0">
                <children>
                   <Button fx:id="addArtistBt" mnemonicParsing="false" onAction="#onAddArtistClick" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Add" textFill="#fafafa" />
-                  <Button fx:id="removeArtistBt" disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Remove" textFill="#fafafa" />
+                  <Button fx:id="removeArtistBt" disable="true" mnemonicParsing="false" onAction="#onRemoveArtist" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Remove" textFill="#fafafa" />
                   <Button fx:id="updateArtistBt" disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Update" textFill="#fafafa" />
                   <Button fx:id="viewArtistBt" disable="true" mnemonicParsing="false" onAction="#onViewArtistClick" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="View" textFill="#fafafa" />
                </children>

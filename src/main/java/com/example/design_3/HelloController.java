@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -25,6 +26,7 @@ import javafx.stage.Stage;
 import javafx.util.FXPermission;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.image.BufferedImage;
@@ -114,6 +116,10 @@ public class HelloController {
     public Label addArtistErrorLb;
     public Label addArtistReqLb;
     public TextField addArtistDYear;
+    //Confirmation elements
+    public Pane confirmationPage;
+    public Button confirmationBackBt;
+    public Button confirmationConfirmBt;
 
 
     //
@@ -191,6 +197,7 @@ public class HelloController {
         artNamesTb.setCellValueFactory(new PropertyValueFactory<Art,String>("artTitle"));
         artSearchTable.getColumns().add(artNamesTb);
         artSearchTable.setItems(artworks);
+        System.out.println(artworks.size() + " Artworks in table");
     }
     @FXML
     protected void onArtistBtClick(ActionEvent event) throws IOException{
@@ -265,6 +272,18 @@ public class HelloController {
         FXMLLoader artPage = new FXMLLoader(HelloApplication.class.getResource(targetFxmlPath));
         Scene testScene = new Scene(artPage.load());
         curContent = (Pane)testScene.lookup("#" + targetContentID);
+        parentBox = (HBox)((Button)event.getSource()).getScene().getRoot();
+        parentBox.getChildren().remove(1);
+        parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
+    }
+    private void switchInnerConfirmation(ActionEvent event, String message) throws IOException{
+        // Handles the switching of content window caused outside of nave Pane, for notification window
+
+        FXMLLoader artPage = new FXMLLoader(HelloApplication.class.getResource("Confirmation.fxml"));
+        Scene testScene = new Scene(artPage.load());
+        curContent = (Pane)testScene.lookup("#confirmationPage");
+        confirmText = (Label) curContent.lookup("#confirmText");
+        confirmText.setText(message);
         parentBox = (HBox)((Button)event.getSource()).getScene().getRoot();
         parentBox.getChildren().remove(1);
         parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
@@ -971,7 +990,83 @@ public class HelloController {
         else{
             addArtistErrorLb.setText("One or more of the required fields (*) is empty");
         }
+    }
+    @FXML
+    protected void onRemoveArt(ActionEvent event){
+        String message = "Selected art will be removed.\nContinue?";
+        try{
+            //parentBox = (HBox)((Button)event.getSource()).getScene().getRoot();
+            switchInnerConfirmation(event,message);
+            System.out.println(parentBox.getChildren().size());
+            confirmationConfirmBt = (Button)(parentBox.getChildren().get(1)).lookup("#confirmationConfirmBt");
+            confirmationConfirmBt.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    Art curArt = (Art)artSearchTable.getSelectionModel().getSelectedItem();
+                    artSearchTable.getItems().remove(curArt);
+                    String artName = curArt.getArtTitle();
+                    ConnectToDB curConnect = new ConnectToDB();
+                    curConnect.removeDb(String.format("Delete From [Art] Where Art_Title = '%s'", artName));
+                    try {
+                        switchInner("Notifications.fxml", "notificationPage", event);
+                    }
+                    catch (Exception e){
+                        System.out.println("Can't switch to notification page");
+                        System.out.println(e.getMessage());
+                    }
+                }
+            });
+            confirmationBackBt = (Button)parentBox.getChildren().get(1).lookup("#confirmationBackBt");
+            confirmationBackBt.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    goArt(event);
+                }
+            });
+        }
+        catch (Exception e){
+            System.out.println("Can't switch to notification Page");
+            System.out.println(e.getMessage());
+        }
+    }
 
+    @FXML
+    protected void onRemoveArtist(ActionEvent event){
+        String message = "Selected artist will be removed.\nContinue?";
+        try{
+            //parentBox = (HBox)((Button)event.getSource()).getScene().getRoot();
+            switchInnerConfirmation(event,message);
+            System.out.println(parentBox.getChildren().size());
+            confirmationConfirmBt = (Button)(parentBox.getChildren().get(1)).lookup("#confirmationConfirmBt");
+            confirmationConfirmBt.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    Artist curArtist = (Artist)artistSearchTable.getSelectionModel().getSelectedItem();
+                    artistSearchTable.getItems().remove(curArtist);
+                    String artistName = curArtist.getArtistFName().get();
+                    ConnectToDB curConnect = new ConnectToDB();
+                    curConnect.removeDb(String.format("Delete From [Artist] Where First_Name = '%s'", artistName));
+                    try {
+                        switchInner("Notifications.fxml", "notificationPage", event);
+                    }
+                    catch (Exception e){
+                        System.out.println("Can't switch to notification page");
+                        System.out.println(e.getMessage());
+                    }
+                }
+            });
+            confirmationBackBt = (Button)parentBox.getChildren().get(1).lookup("#confirmationBackBt");
+            confirmationBackBt.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    goArtist(event);
+                }
+            });
+        }
+        catch (Exception e){
+            System.out.println("Can't switch to notification Page");
+            System.out.println(e.getMessage());
+        }
     }
     private TextFormatter setNumFormat(){
         /*
@@ -988,6 +1083,7 @@ public class HelloController {
         TextFormatter numText = new TextFormatter(filter);
         return numText;
     }
+
 
     private TextFormatter setTextFormat(){
         UnaryOperator<TextFormatter.Change> filter = change -> {

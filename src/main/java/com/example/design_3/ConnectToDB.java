@@ -29,6 +29,16 @@ public class ConnectToDB {
             System.out.println(e.getMessage());
         }
     }
+    public void removeDb(String sqlString){
+        try {
+            sqlStatement.executeUpdate(sqlString);
+            this.close();
+        }
+        catch (Exception e){
+            System.out.println("Record not removed successfully");
+            e.getMessage();
+        }
+    }
     public void close() throws SQLException {
         newConnection.close();
     }
