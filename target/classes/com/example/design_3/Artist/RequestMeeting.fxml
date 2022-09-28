@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="requestMeetingPn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="542.0" prefWidth="696.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.design_3.HelloController">
+<Pane fx:id="requestMeetingPn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="542.0" prefWidth="696.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.design_3.ArtistController">
     <children>
         <Pane prefHeight="80.0" prefWidth="696.0" style="-fx-background-color: #00968a;">
             <children>
@@ -22,25 +24,47 @@
         <HBox alignment="CENTER" layoutX="248.0" layoutY="469.0" prefHeight="25.0" prefWidth="200.0" spacing="10.0">
             <children>
                 <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Cancel" textFill="#fafafa" />
-                <Button mnemonicParsing="false" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Confirm" textFill="#fafafa" />
+                <Button fx:id="requestMConfirm" mnemonicParsing="false" onAction="#onRequestMeetingConfirm" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Confirm" textFill="#fafafa" />
             </children>
         </HBox>
-      <TextField alignment="TOP_LEFT" layoutX="165.0" layoutY="158.0" prefHeight="168.0" prefWidth="430.0" promptText="Enter message here." />
-      <Label layoutX="86.0" layoutY="158.0" text="Message:">
+      <TextField fx:id="requestMessageTf" alignment="TOP_LEFT" layoutX="92.0" layoutY="158.0" prefHeight="168.0" prefWidth="260.0" promptText="Enter message here." />
+      <Label layoutX="21.0" layoutY="158.0" text="Message:">
          <font>
             <Font name="MS Reference Sans Serif" size="12.0" />
          </font>
       </Label>
-      <Label layoutX="86.0" layoutY="364.0" text="Date:">
+      <Label layoutX="21.0" layoutY="364.0" text="Date:">
          <font>
             <Font name="MS Reference Sans Serif" size="12.0" />
          </font>
       </Label>
-      <DatePicker layoutX="273.0" layoutY="359.0" promptText="Choose a meeting date" />
-      <Label fx:id="requestMErrorLb" layoutX="316.0" layoutY="417.0" prefHeight="15.0" prefWidth="65.0" textFill="RED">
+      <DatePicker fx:id="requestDateDp" layoutX="134.0" layoutY="359.0" promptText="Choose a meeting date" />
+      <Label fx:id="requestMErrorLb" alignment="CENTER" layoutX="198.0" layoutY="420.0" prefHeight="15.0" prefWidth="300.0" textFill="RED">
          <font>
             <Font name="MS Reference Sans Serif" size="12.0" />
          </font>
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
+      </Label>
+      <TableView fx:id="requestMeetingTb" layoutX="482.0" layoutY="155.0" prefHeight="175.0" prefWidth="200.0" />
+      <Label layoutX="364.0" layoutY="158.0" text="Select a Manager:">
+         <font>
+            <Font name="MS Reference Sans Serif" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="362.0" layoutY="365.0" text="Selected Manager:">
+         <font>
+            <Font name="MS Reference Sans Serif" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="selectedManagerLb" layoutX="507.0" layoutY="364.0" prefHeight="15.0" prefWidth="150.0" textFill="#aeaeae">
+         <font>
+            <Font name="MS Reference Sans Serif" size="12.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
       </Label>
     </children>
 </Pane>

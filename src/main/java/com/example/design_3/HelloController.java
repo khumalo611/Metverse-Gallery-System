@@ -380,7 +380,7 @@ public class HelloController {
                     String managerLName = allNodes.getString("Last_Name");
                     String managerEmail = allNodes.getString("Email");
                     String managerPassword = allNodes.getString("Password");
-                    String managerOfficeNum = allNodes.getString("Office_Number");
+                    String managerOfficeNum = allNodes.getString("Office_Phone");
                     Manager newManager = new Manager(managerID, managerFName, managerLName,
                             managerEmail, managerPassword, managerOfficeNum);
                     managers.add(newManager);
@@ -717,7 +717,6 @@ public class HelloController {
         catch (Exception e){
             System.out.println(e.getMessage());
         }
-
     }
     private void uploadFile(File curFile){
         //File newFile = curFile.copyFile()
