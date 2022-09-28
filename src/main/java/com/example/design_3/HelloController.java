@@ -80,8 +80,6 @@ public class HelloController {
     public Button addArtistBt;
     public TextField clientSearchTf;
     public Button btnSearchClient;
-
-
     //
     private Pane curContent;
     // Search artwork use case elements
@@ -138,6 +136,26 @@ public class HelloController {
     private TextField updateArtistPseudonym;
     @FXML
     private Label txtArtistUpdAlert;
+
+    //View Artist use-case fields
+    @FXML
+    private Label lblArtDate;
+    @FXML
+    private Label lblArtStyle;
+    @FXML
+    private Label lblArtTitle;
+    @FXML
+    private Label lblArtType;
+    @FXML
+    private Label lblArtistName;
+    @FXML
+    private Label lblInterpretation;
+    @FXML
+    private Label lblPrice;
+    @FXML
+    private Label lblSaleStatus;
+    @FXML
+    private Pane viewArtworkPn;
 
     //Tables to store data in
     ObservableList <Artist> artists = FXCollections.observableArrayList();
@@ -713,6 +731,33 @@ public class HelloController {
                 e.printStackTrace();
                 e.getCause();
             }
+        }
+    }
+
+    @FXML
+    protected void onViewArtwork(ActionEvent event) throws IOException {
+        parentBox = (HBox)((Button)event.getSource()).getScene().getRoot();
+        switchInner("Manager/ViewArtwork.fxml", "viewArtworkPn", event);
+        Art artObj = (Art) artSearchTable.getSelectionModel().selectedItemProperty().getValue();
+        if(artObj != null){
+            Pane viewArtwork = (Pane)parentBox.getChildren().get(1);
+            lblArtDate = (Label) viewArtwork.lookup("#lblArtDate");
+            lblArtStyle = (Label) viewArtwork.lookup("#lblArtStyle");
+            lblArtTitle = (Label) viewArtwork.lookup("#lblArtTitle");
+            lblArtType = (Label) viewArtwork.lookup("#lblArtType");
+            lblArtistName = (Label) viewArtwork.lookup("#lblArtistName");
+            lblInterpretation = (Label) viewArtwork.lookup("#lblInterpretation");
+            lblPrice = (Label) viewArtwork.lookup("#lblPrice");
+            lblSaleStatus = (Label) viewArtwork.lookup("#lblSaleStatus");
+
+            lblArtDate.setText(String.valueOf(artObj.getArtDate()));
+            lblArtStyle.setText(artObj.getArtStyle());
+            lblArtTitle.setText(artObj.getArtTitle());
+            lblArtType.setText(artObj.getArtType());
+            lblArtistName.setText(String.valueOf(artObj.getArtistID()));
+            lblInterpretation.setText(artObj.getArtInterpretation());
+            lblPrice.setText(String.valueOf(artObj.getArtPrice()));
+            lblSaleStatus.setText(String.valueOf(artObj.getArtSaleStatus()));
         }
     }
 
