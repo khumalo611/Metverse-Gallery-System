@@ -806,9 +806,14 @@ public class HelloController {
         curContent = (Pane)testScene.lookup("#viewRequestPn");
         parentBox.getChildren().remove(1);
         parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
-        Art artObj = (Art) artSearchTable.getSelectionModel().selectedItemProperty().getValue();
-        if(artObj != null){
+        Request reqObj = (Request) requestSearchTable.getSelectionModel().selectedItemProperty().getValue();
+        if(reqObj != null){
             Pane viewRequest = (Pane)parentBox.getChildren().get(1);
+            txtreqMessage = (TextArea) viewRequest.lookup("#txtreqMessage");
+            lblreqDate = (Label) viewRequest.lookup("#lblreqDate");
+
+            txtreqMessage.setText(reqObj.getReqMessage());
+            lblreqDate.setText(reqObj.getReqDate());
         }
     }
 
