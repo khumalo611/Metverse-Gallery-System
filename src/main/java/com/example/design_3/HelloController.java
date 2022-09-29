@@ -808,7 +808,7 @@ public class HelloController {
         parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
         Art artObj = (Art) artSearchTable.getSelectionModel().selectedItemProperty().getValue();
         if(artObj != null){
-            Pane viewArtwork = (Pane)parentBox.getChildren().get(1);
+            Pane viewRequest = (Pane)parentBox.getChildren().get(1);
         }
     }
 
