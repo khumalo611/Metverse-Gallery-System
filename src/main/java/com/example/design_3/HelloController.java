@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
@@ -29,6 +30,7 @@ import java.util.Base64;
 
 import static javafx.scene.paint.Color.GREEN;
 import static javafx.scene.paint.Color.RED;
+import static javafx.scene.paint.Color.BLACK;
 
 public class HelloController {
 
@@ -77,6 +79,7 @@ public class HelloController {
     public Button btnSearchClient;
     //
     private Pane curContent;
+    private AnchorPane curContentB;
     // Search artwork use case elements
     @FXML
     private TextField artSearchTf;
@@ -157,6 +160,14 @@ public class HelloController {
     private TableView requestSearchTable;
     public TableColumn artistIDCol;
     public TableColumn dateCol;
+    @FXML
+    private Label lblreqDate;
+    @FXML
+    private TextArea txtreqMessage;
+    @FXML
+    private Pane viewRequestPn;
+    @FXML
+    private Button btnViewRequest;
 
     //Tables to store data in
     ObservableList <Artist> artists = FXCollections.observableArrayList();
@@ -522,7 +533,7 @@ public class HelloController {
             viewArtistLName.setText(curArtist.getArtistLName().getValue());
             viewArtistPseudonym.setText(curArtist.getArtistPseudonym().getValue());
             viewArtistEmail.setText(curArtist.getArtistEmail().getValue());
-            viewArtistCountry.setText(curArtist.artistCountry.getValue());
+            viewArtistCountry.setText(curArtist.getArtistCountry().getValue());
             viewArtistBYear.setText(String.valueOf(curArtist.getArtistBYear().getValue()));
             viewArtistDYear.setText(String.valueOf(curArtist.getArtistDYear().getValue()));
         }
@@ -590,6 +601,9 @@ public class HelloController {
             removeArtBt.disableProperty().bind(Bindings.isEmpty(artSearchTable.getSelectionModel().getSelectedItems()));
             updateArtBt.disableProperty().bind(Bindings.isEmpty(artSearchTable.getSelectionModel().getSelectedItems()));
         }
+        else if(requestSearchTable != null){
+            btnViewRequest.disableProperty().bind(Bindings.isEmpty(requestSearchTable.getSelectionModel().getSelectedItems()));
+        }
     }
     @FXML
     protected void onAddArtConfirm(ActionEvent event) throws IOException, SQLException
@@ -598,7 +612,7 @@ public class HelloController {
         if(checkContentTf() && addArtDate.getValue() != null){
             String title = addArtTitleTf.getText();
             String date = (addArtDate.getValue()).toString();
-            String type = addArtTypeTf.getText() ;
+            String type = addArtTypeTf.getText();
             String style = addArtStyleTf.getText();
             String interpretation = addArtInspirationTf.getText();
             Double price = Double.parseDouble(addArtPriceTf.getText());
@@ -750,10 +764,14 @@ public class HelloController {
     @FXML
     protected void onViewArtwork(ActionEvent event) throws IOException {
         parentBox = (HBox)((Button)event.getSource()).getScene().getRoot();
-        switchInner("Manager/ViewArtwork.fxml", "viewArtworkPn", event);
+        FXMLLoader artPage = new FXMLLoader(HelloApplication.class.getResource("Manager/ViewArtwork.fxml"));
+        Scene testScene = new Scene(artPage.load());
+        curContentB = (AnchorPane)testScene.lookup("#viewArtworkPn");
+        parentBox.getChildren().remove(1);
+        parentBox.getChildren().add(parentBox.getChildren().size(),curContentB);
         Art artObj = (Art) artSearchTable.getSelectionModel().selectedItemProperty().getValue();
         if(artObj != null){
-            Pane viewArtwork = (Pane)parentBox.getChildren().get(1);
+            AnchorPane viewArtwork = (AnchorPane)parentBox.getChildren().get(1);
             lblArtDate = (Label) viewArtwork.lookup("#lblArtDate");
             lblArtStyle = (Label) viewArtwork.lookup("#lblArtStyle");
             lblArtTitle = (Label) viewArtwork.lookup("#lblArtTitle");
@@ -763,14 +781,34 @@ public class HelloController {
             lblPrice = (Label) viewArtwork.lookup("#lblPrice");
             lblSaleStatus = (Label) viewArtwork.lookup("#lblSaleStatus");
 
-            lblArtDate.setText(String.valueOf(artObj.getArtDate()));
-            lblArtStyle.setText(artObj.getArtStyle());
+            lblArtDate.setText("Made in " + String.valueOf(artObj.getArtDate()));
+            lblArtStyle.setText("Exhibits " + artObj.getArtStyle());
             lblArtTitle.setText(artObj.getArtTitle());
             lblArtType.setText(artObj.getArtType());
-            lblArtistName.setText(String.valueOf(artObj.getArtistID()));
+            lblArtistName.setText("By Artist ID " + String.valueOf(artObj.getArtistID()));
             lblInterpretation.setText(artObj.getArtInterpretation());
-            lblPrice.setText(String.valueOf(artObj.getArtPrice()));
-            lblSaleStatus.setText(String.valueOf(artObj.getArtSaleStatus()));
+            if (artObj.getArtPrice() != 0) {
+                lblPrice.setTextFill(BLACK);
+                lblPrice.setText(String.valueOf(artObj.getArtPrice()));
+            }
+            if (artObj.getArtSaleStatus() != null) {
+                lblSaleStatus.setTextFill(BLACK);
+                lblSaleStatus.setText("On Sale \tPurchase ID " + artObj.getPurchaseID());
+            }
+        }
+    }
+
+    @FXML
+    protected void onViewRequest(ActionEvent event) throws IOException {
+        parentBox = (HBox)((Button)event.getSource()).getScene().getRoot();
+        FXMLLoader requestPage = new FXMLLoader(HelloApplication.class.getResource("Manager/ViewRequest.fxml"));
+        Scene testScene = new Scene(requestPage.load());
+        curContent = (Pane)testScene.lookup("#viewRequestPn");
+        parentBox.getChildren().remove(1);
+        parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
+        Art artObj = (Art) artSearchTable.getSelectionModel().selectedItemProperty().getValue();
+        if(artObj != null){
+            Pane viewArtwork = (Pane)parentBox.getChildren().get(1);
         }
     }
 

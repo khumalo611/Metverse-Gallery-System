@@ -22,10 +22,10 @@
          <children>
             <HBox alignment="CENTER" layoutY="239.0" prefHeight="25.0" prefWidth="390.0" spacing="20.0">
                <children>
-                  <Button disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="View" textFill="#fafafa" />
+                  <Button fx:id="btnViewRequest" disable="true" mnemonicParsing="false" onAction="#onViewRequest" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="View" textFill="#fafafa" />
                </children>
             </HBox>
-            <TableView fx:id="requestSearchTable" layoutY="35.0" prefHeight="141.0" prefWidth="390.0">
+            <TableView fx:id="requestSearchTable" layoutY="35.0" onMouseClicked="#enableButtons" prefHeight="141.0" prefWidth="390.0">
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
