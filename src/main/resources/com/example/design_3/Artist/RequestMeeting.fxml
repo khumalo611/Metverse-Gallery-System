@@ -5,7 +5,7 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
@@ -23,11 +23,10 @@
         </Pane>
         <HBox alignment="CENTER" layoutX="248.0" layoutY="469.0" prefHeight="25.0" prefWidth="200.0" spacing="10.0">
             <children>
-                <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Cancel" textFill="#fafafa" />
+                <Button mnemonicParsing="false" onAction="#goRequests" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Cancel" textFill="#fafafa" />
                 <Button fx:id="requestMConfirm" mnemonicParsing="false" onAction="#onRequestMeetingConfirm" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Confirm" textFill="#fafafa" />
             </children>
         </HBox>
-      <TextField fx:id="requestMessageTf" alignment="TOP_LEFT" layoutX="92.0" layoutY="158.0" prefHeight="168.0" prefWidth="260.0" promptText="Enter message here." />
       <Label layoutX="21.0" layoutY="158.0" text="Message:">
          <font>
             <Font name="MS Reference Sans Serif" size="12.0" />
@@ -66,5 +65,6 @@
             <Cursor fx:constant="TEXT" />
          </cursor>
       </Label>
+      <TextArea fx:id="requestMessageTf" layoutX="92.0" layoutY="158.0" prefHeight="168.0" prefWidth="260.0" wrapText="true" />
     </children>
 </Pane>

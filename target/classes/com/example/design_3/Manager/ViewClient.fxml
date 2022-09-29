@@ -47,7 +47,6 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
                 <Label text="Name:">
@@ -90,17 +89,17 @@
                   <Font name="Microsoft Sans Serif" size="12.0" />
                </font>
             </Label>
-                <Label text="Address: " GridPane.rowIndex="4">
-                    <font>
-                        <Font name="MS Reference Sans Serif" size="12.0" />
-                    </font>
-                </Label>
-            <Label fx:id="viewClientAddress" style="-fx-font-weight: bold;" text="'Client Address'" GridPane.columnIndex="1" GridPane.rowIndex="4">
-               <font>
-                  <Font name="Microsoft Sans Serif" size="12.0" />
-               </font>
-            </Label>
          </children>
       </GridPane>
+      <Label fx:id="viewClientAddress" layoutX="155.0" layoutY="341.0" prefHeight="97.0" prefWidth="200.0" style="-fx-font-weight: bold;" text="'Client Address'" wrapText="true">
+         <font>
+            <Font name="Microsoft Sans Serif" size="12.0" />
+         </font>
+      </Label>
+          <Label layoutX="55.0" layoutY="344.0" text="Address: ">
+              <font>
+                  <Font name="MS Reference Sans Serif" size="12.0" />
+              </font>
+          </Label>
     </children>
 </Pane>

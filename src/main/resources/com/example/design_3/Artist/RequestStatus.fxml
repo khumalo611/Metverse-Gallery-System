@@ -1,44 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.Cursor?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="542.0" prefWidth="894.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.design_3.HelloController">
+<Pane fx:id="requestStatusPn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="542.0" prefWidth="696.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.design_3.ArtistController">
     <children>
-        <VBox layoutY="79.0" prefHeight="463.0" prefWidth="200.0" style="-fx-background-color: #33334c;">
-            <children>
-                <Button defaultButton="true" mnemonicParsing="false" onAction="#onCurButtonClick" prefHeight="46.0" prefWidth="206.0" style="-fx-background-color: #33334c;" text="Home" textFill="#fafafa">
-                    <font>
-                        <Font name="Microsoft Sans Serif" size="12.0" />
-                    </font>
-                    <cursor>
-                        <Cursor fx:constant="DEFAULT" />
-                    </cursor>
-                </Button>
-                <Button fx:id="myButton" mnemonicParsing="false" onAction="#onCurButtonClick" prefHeight="46.0" prefWidth="206.0" style="-fx-background-color: #33334c;" text="Artwork" textFill="#fafafa">
-                    <font>
-                        <Font name="Microsoft Sans Serif" size="12.0" />
-                    </font>
-                </Button>
-                <Button mnemonicParsing="false" prefHeight="46.0" prefWidth="206.0" style="-fx-background-color: #33334c;" text="Artist" textFill="#fafafa">
-                    <font>
-                        <Font name="Microsoft Sans Serif" size="12.0" />
-                    </font>
-                </Button>
-                <Button mnemonicParsing="false" prefHeight="46.0" prefWidth="206.0" style="-fx-background-color: #33334c;" text="Client" textFill="#fafafa">
-                    <font>
-                        <Font name="Microsoft Sans Serif" size="12.0" />
-                    </font>
-                </Button>
-            </children>
-        </VBox>
-        <Pane layoutX="199.0" prefHeight="80.0" prefWidth="696.0" style="-fx-background-color: #00968a;">
+        <Pane prefHeight="80.0" prefWidth="696.0" style="-fx-background-color: #00968a;">
             <children>
                 <Label layoutX="299.0" layoutY="30.0" text="Request Status" textFill="#fafafa">
                     <font>
@@ -47,45 +18,40 @@
                 </Label>
             </children>
         </Pane>
-        <Pane prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #27273a;">
+        <HBox alignment="CENTER" layoutX="248.0" layoutY="477.0" prefHeight="25.0" prefWidth="200.0" spacing="10.0">
             <children>
-                <Label layoutX="49.0" layoutY="31.0" text="The MetVerse" textFill="#fafafa">
-                    <font>
-                        <Font name="MS Reference Sans Serif" size="15.0" />
-                    </font>
-                </Label>
-            </children>
-        </Pane>
-        <HBox alignment="CENTER_RIGHT" layoutX="641.0" layoutY="477.0" prefHeight="25.0" prefWidth="200.0" spacing="10.0">
-            <children>
-                <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Cancel" textFill="#fafafa" />
+                <Button mnemonicParsing="false" onAction="#goRequests" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Cancel" textFill="#fafafa" />
             </children>
         </HBox>
-        <TextField layoutX="441.0" layoutY="178.0" prefHeight="168.0" prefWidth="390.0" style="-fx-border-color: #545454; -fx-border-radius: 12; -fx-background-color: transparent;" />
-        <Label layoutX="362.0" layoutY="178.0" text="Message:">
+        <Label layoutX="113.0" layoutY="140.0" text="Message:">
             <font>
                 <Font name="MS Reference Sans Serif" size="12.0" />
             </font>
         </Label>
-        <Label layoutX="362.0" layoutY="384.0" text="Date:">
+        <Label layoutX="113.0" layoutY="346.0" text="Date:">
             <font>
                 <Font name="MS Reference Sans Serif" size="12.0" />
             </font>
         </Label>
-      <Label layoutX="441.0" layoutY="384.0" text="20/05/2022">
+      <Label fx:id="checkRequestDateLb" layoutX="192.0" layoutY="346.0" prefHeight="15.0" prefWidth="85.0" textOverrun="CLIP">
          <font>
             <Font name="MS Reference Sans Serif" size="12.0" />
          </font>
       </Label>
-      <Label layoutX="362.0" layoutY="424.0" text="Status:">
+      <Label layoutX="113.0" layoutY="386.0" text="Status:">
          <font>
             <Font name="MS Reference Sans Serif" size="12.0" />
          </font>
       </Label>
-      <Label layoutX="441.0" layoutY="424.0" text="Approved" textFill="#00968a">
+      <Label fx:id="checkRequestStatusLb" layoutX="192.0" layoutY="386.0" text="Approved" textFill="#00968a">
          <font>
             <Font name="MS Reference Sans Serif" size="12.0" />
          </font>
+      </Label>
+      <Label fx:id="checkRequestMessageLb" alignment="TOP_LEFT" layoutX="192.0" layoutY="140.0" prefHeight="168.0" prefWidth="390.0" style="-fx-border-color: black; -fx-border-radius: 12; -fx-background-color: rgba(0,0,0,0.05); -fx-background-radius: 12;" textFill="#676767" wrapText="true">
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
       </Label>
     </children>
 </Pane>

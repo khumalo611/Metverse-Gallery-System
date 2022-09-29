@@ -10,12 +10,14 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import org.w3c.dom.Text;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
+import java.util.function.UnaryOperator;
 
 public class ArtistController {
 
@@ -40,9 +42,13 @@ public class ArtistController {
     public Pane requestMeetingPn;
     public Label requestMErrorLb;
     public DatePicker requestDateDp;
-    public TextField requestMessageTf;
+    public TextArea requestMessageTf;
     public TableView requestMeetingTb;
     public Label selectedManagerLb;
+    //Check status Use case elements
+    public Label checkRequestDateLb;
+    public Label checkRequestStatusLb;
+    public Label checkRequestMessageLb;
 
     //Tables to store data in
     ObservableList <Artist> artists = FXCollections.observableArrayList();
@@ -56,7 +62,7 @@ public class ArtistController {
     ObservableList <Viewing> viewings = FXCollections.observableArrayList();
 
     Artist curArtist = new Artist(6,"Lwando","Macakati","LwandosFakemail@gmail.com","South Africa",
-            1990, "Passy","fakePseudo", 2085);
+            1990, "Passwy","fakePseudo", 2085);
     private Pane curContent;
 
     @FXML
@@ -89,7 +95,8 @@ public class ArtistController {
                 selectedManagerLb = (Label) parentBox.getChildren().get(1).lookup("#selectedManagerLb");
                 selectedManagerLb.setText(curManager.getManagerFName() + " " + curManager.getManagerLName());
             } ));
-
+            requestMessageTf = (TextArea) parentBox.getChildren().get(1).lookup("#requestMessageTf");
+            requestMessageTf.setTextFormatter(setTextFormat());
         }
         catch(Exception e){
             System.out.println("Couldn't switch to request meeting");
@@ -121,6 +128,41 @@ public class ArtistController {
             requestMErrorLb.setText("All fields are required.");
         }
     }
+    @FXML
+    protected void onRequestStatus(ActionEvent event){
+        try {
+            switchInner("Artist/RequestStatus.fxml", "requestStatusPn", event);
+        }
+        catch(Exception e){
+            System.out.println("couldn't switch to request Status page");
+            System.out.println(e.getMessage());
+        }
+        checkRequestMessageLb = (Label)parentBox.getChildren().get(1).lookup("#checkRequestMessageLb");
+        checkRequestDateLb = (Label)parentBox.getChildren().get(1).lookup("#checkRequestDateLb");
+        checkRequestStatusLb = (Label)parentBox.getChildren().get(1).lookup("#checkRequestStatusLb");
+        String artistID = curArtist.getArtistID() + "";
+        updateTable(String.format("Select * From Request Where Artist_ID = %s",artistID), "Request");
+        System.out.println(requests.size());
+        Request curRequest = requests.get(0);
+        checkRequestMessageLb.setText(curRequest.getReqMessage());
+        checkRequestDateLb.setText(curRequest.getReqDate());
+        if(curRequest.reqResponse.get() == false){
+            checkRequestStatusLb.setStyle("-fx-text-fill: red;");
+            checkRequestStatusLb.setText("Declined");
+        }
+    }
+    @FXML
+    protected void goRequests(ActionEvent event){
+        try{
+            switchInner("Artist/RequestLanding.fxml", "requestLanding", event);
+        }
+        catch (Exception e){
+            System.out.println("Couldn't go back to Requests");
+            System.out.println(e.getMessage());
+        }
+    }
+
+    //Helper Methods
     private void updateTable(String sqlString, String tableName)
     // Method to update the table based on sql query
     {
@@ -352,6 +394,16 @@ public class ArtistController {
                 break;
         }
         return hasContent;
+    }
+    private TextFormatter setTextFormat(){
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String text = change.getText();
+            if(text.matches(".*'.*"))
+                return null;
+            return change;
+        };
+        TextFormatter stringFormat = new TextFormatter(filter);
+        return stringFormat;
     }
 }
 

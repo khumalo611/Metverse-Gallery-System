@@ -122,6 +122,7 @@ public class HelloController {
     public Button confirmationConfirmBt;
 
 
+
     //
     private Pane curContent;
     // Search artwork use case elements
