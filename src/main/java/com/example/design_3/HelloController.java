@@ -10,26 +10,21 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.FXPermission;
 
 import javax.imageio.ImageIO;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.Base64;
 
 import static javafx.scene.paint.Color.GREEN;
@@ -157,6 +152,12 @@ public class HelloController {
     @FXML
     private Pane viewArtworkPn;
 
+    //View Request use-case fields
+    @FXML
+    private TableView requestSearchTable;
+    public TableColumn artistIDCol;
+    public TableColumn dateCol;
+
     //Tables to store data in
     ObservableList <Artist> artists = FXCollections.observableArrayList();
     ObservableList <Art> artworks = FXCollections.observableArrayList();
@@ -244,6 +245,16 @@ public class HelloController {
     {
         //This line will replace the commented out paragraph, both do the same thing, but this is obviously cleaner.
         switchContent("Manager/RequestLanding.fxml", "requestLanding");
+
+        updateTable("Select * From Request", "Request");
+        requestSearchTable = (TableView) curContent.lookup("#requestSearchTable");
+        artistIDCol = new TableColumn<>("Artist Name");
+        dateCol = new TableColumn<>("Date");
+        artistIDCol.setCellValueFactory(new PropertyValueFactory<Request,String>("artistID"));
+        dateCol.setCellValueFactory(new PropertyValueFactory<Request,String>("reqDate"));
+        requestSearchTable.getColumns().add(artistIDCol);
+        requestSearchTable.getColumns().add(dateCol);
+        requestSearchTable.setItems(requests);
     }
 
     @FXML
@@ -720,7 +731,8 @@ public class HelloController {
                 Connection newConnection = DriverManager.getConnection(dataBaseURL);
                 System.out.println("Connected to MS Access database");
                 Statement sqlStatement = newConnection.createStatement();
-                String sql = "UPDATE Artist SET First_Name = '" + updateArtistFName.getText() + "', Last_Name = '" + updateArtistLName.getText() + "', Email = '" + updateArtistEmail.getText() + "', Country = '" + updateArtistCountry.getText() + "', Birth_Year = '" + updateArtistBYear.getText() + "', Death_Year = '" + updateArtistDYear.getText() + "', Psuedonym = '" + updateArtistPseudonym.getText() + "' WHERE ArtistID = " + artistIDVar + ";";
+                String sql = String.format("UPDATE Artist SET First_Name = '%s', Last_Name = '%s', Email = '%s', Country = '%s', Birth_Year = %s, " +
+                        "Death_Year = %s, Psuedonym = '%s' WHERE ArtistID = %d;", updateArtistFName.getText(), updateArtistLName.getText(), updateArtistEmail.getText(), updateArtistCountry.getText(), updateArtistBYear.getText(), updateArtistDYear.getText(), updateArtistPseudonym.getText(), artistIDVar);
                 sqlStatement.executeUpdate(sql);
 
                 txtArtistUpdAlert.setText("Artist Details Updated Successfully!");
@@ -730,6 +742,7 @@ public class HelloController {
             catch(Exception e){
                 e.printStackTrace();
                 e.getCause();
+                System.out.println(e.getMessage());
             }
         }
     }
