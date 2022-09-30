@@ -28,7 +28,7 @@
          </toggleGroup></RadioButton>
       <RadioButton fx:id="rbtnDeclineReq" layoutX="370.0" layoutY="386.0" mnemonicParsing="false" text="Decline" toggleGroup="$request" />
       <Button layoutX="494.0" layoutY="459.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #00968a;" text="Cancel" textFill="#fafafa" />
-      <Button fx:id="onRequestResponse" layoutX="370.0" layoutY="459.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #00968a;" text="Respond" textFill="#fafafa" />
+      <Button layoutX="370.0" layoutY="459.0" mnemonicParsing="false" onAction="#onRequestResponse" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #00968a;" text="Respond" textFill="#fafafa" />
       <Label fx:id="lblRequestAlert" layoutX="102.0" layoutY="424.0" prefHeight="17.0" prefWidth="492.0" />
    </children>
 </Pane>

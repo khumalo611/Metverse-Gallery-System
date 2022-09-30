@@ -78,6 +78,7 @@ public class HelloController {
     public Button addArtistBt;
     public TextField clientSearchTf;
     public Button btnSearchClient;
+
     //
     private Pane curContent;
     private AnchorPane curContentB;
@@ -921,7 +922,7 @@ public class HelloController {
     }
 
     @FXML
-    protected void onRequestResponse(ActionEvent event) throws IOException {
+    protected void onRequestResponse (ActionEvent event) throws IOException {
         String reqChoice;
         if (rbtnAcceptReq.isSelected()) {
             reqChoice = "Yes";
@@ -933,8 +934,10 @@ public class HelloController {
             Connection newConnection = DriverManager.getConnection(dataBaseURL);
             System.out.println("Connected to MS Access database");
             Statement sqlStatement = newConnection.createStatement();
-            String sql = String.format("UPDATE Request SET Response = %s WHERE Request_ID = %d;", reqChoice, artIDVar);
+            String sql = String.format("UPDATE Request SET Response = %s WHERE Request_ID = %d;", reqChoice, reqIDVar);
             sqlStatement.executeUpdate(sql);
+            System.out.println(reqChoice);
+            System.out.println(reqIDVar);
 
             lblRequestAlert.setText("Response Sent To Server!");
             lblRequestAlert.setTextFill(GREEN);
