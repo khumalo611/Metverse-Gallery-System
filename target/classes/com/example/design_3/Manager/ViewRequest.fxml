@@ -4,11 +4,11 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-
-<Pane fx:id="viewRequestPn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="542.0" prefWidth="696.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="viewRequestPn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="542.0" prefWidth="696.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.design_3.HelloController">
    <children>
       <Pane prefHeight="80.0" prefWidth="696.0" style="-fx-background-color: #00968a;">
          <children>
@@ -22,10 +22,13 @@
       <TextArea fx:id="txtreqMessage" editable="false" layoutX="102.0" layoutY="145.0" prefHeight="146.0" prefWidth="492.0" text="[Request Message]" wrapText="true" />
       <Label layoutX="102.0" layoutY="336.0" text="Date:" />
       <Label fx:id="lblreqDate" layoutX="239.0" layoutY="336.0" text="[Request Date]" />
-      <RadioButton layoutX="239.0" layoutY="386.0" mnemonicParsing="false" text="Accept" />
-      <RadioButton layoutX="370.0" layoutY="386.0" mnemonicParsing="false" text="Decline" />
+      <RadioButton fx:id="rbtnAcceptReq" layoutX="239.0" layoutY="386.0" mnemonicParsing="false" text="Accept">
+         <toggleGroup>
+            <ToggleGroup fx:id="request" />
+         </toggleGroup></RadioButton>
+      <RadioButton fx:id="rbtnDeclineReq" layoutX="370.0" layoutY="386.0" mnemonicParsing="false" text="Decline" toggleGroup="$request" />
       <Button layoutX="494.0" layoutY="459.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #00968a;" text="Cancel" textFill="#fafafa" />
-      <Button layoutX="370.0" layoutY="459.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #00968a;" text="Respond" textFill="#fafafa" />
-      <Label layoutX="102.0" layoutY="424.0" text="[Request Alert]" />
+      <Button fx:id="onRequestResponse" layoutX="370.0" layoutY="459.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #00968a;" text="Respond" textFill="#fafafa" />
+      <Label fx:id="lblRequestAlert" layoutX="102.0" layoutY="424.0" prefHeight="17.0" prefWidth="492.0" />
    </children>
 </Pane>

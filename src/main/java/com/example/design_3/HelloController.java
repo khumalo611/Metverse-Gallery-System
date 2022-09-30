@@ -135,7 +135,7 @@ public class HelloController {
     private TextField updateArtistPseudonym;
     @FXML
     private Label txtArtistUpdAlert;
-    static int artistIDVar, artIDVar;
+    static int artistIDVar, artIDVar, reqIDVar;
 
     //View Artist use-case fields
     @FXML
@@ -200,6 +200,10 @@ public class HelloController {
     //Update Request Status use-case fields
     @FXML
     private Label lblRequestAlert;
+    @FXML
+    private RadioButton rbtnAcceptReq;
+    @FXML
+    private RadioButton rbtnDeclineReq;
 
 
     //Tables to store data in
@@ -909,9 +913,36 @@ public class HelloController {
             Pane viewRequest = (Pane)parentBox.getChildren().get(1);
             txtreqMessage = (TextArea) viewRequest.lookup("#txtreqMessage");
             lblreqDate = (Label) viewRequest.lookup("#lblreqDate");
+            reqIDVar = reqObj.getRequestID();
 
             txtreqMessage.setText(reqObj.getReqMessage());
             lblreqDate.setText(reqObj.getReqDate());
+        }
+    }
+
+    @FXML
+    protected void onRequestResponse(ActionEvent event) throws IOException {
+        String reqChoice;
+        if (rbtnAcceptReq.isSelected()) {
+            reqChoice = "Yes";
+        } else {
+            reqChoice = "No";
+        }
+        String dataBaseURL = "jdbc:ucanaccess://MetVerse_Gallery11.accdb";
+        try {
+            Connection newConnection = DriverManager.getConnection(dataBaseURL);
+            System.out.println("Connected to MS Access database");
+            Statement sqlStatement = newConnection.createStatement();
+            String sql = String.format("UPDATE Request SET Response = %s WHERE Request_ID = %d;", reqChoice, artIDVar);
+            sqlStatement.executeUpdate(sql);
+
+            lblRequestAlert.setText("Response Sent To Server!");
+            lblRequestAlert.setTextFill(GREEN);
+            newConnection.close();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            e.getCause();
         }
     }
 
