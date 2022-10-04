@@ -207,6 +207,18 @@ public class HelloController {
     @FXML
     private RadioButton rbtnDeclineReq;
 
+    //Login fields
+    @FXML
+    private Button btnLogin;
+    @FXML
+    private Button btnRegister;
+    @FXML
+    private TextField txtEmail;
+    @FXML
+    private Label txtLoginAlert;
+    @FXML
+    private TextField txtPassword;
+
 
     //Tables to store data in
     ObservableList <Artist> artists = FXCollections.observableArrayList();
@@ -1051,5 +1063,9 @@ public class HelloController {
         artNamesTb.setCellValueFactory(new PropertyValueFactory<Artist,String>(attributeName));
         artistSearchTable.getColumns().add(artNamesTb);
         artistSearchTable.setItems(artists);
+    }
+
+    @FXML
+    public void RegisterButtonClick(ActionEvent event) {
     }
 }
