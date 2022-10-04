@@ -32,6 +32,7 @@ import java.util.Base64;
 import static javafx.scene.paint.Color.GREEN;
 import static javafx.scene.paint.Color.RED;
 import static javafx.scene.paint.Color.BLACK;
+import static javafx.scene.text.TextAlignment.CENTER;
 
 public class HelloController {
 
@@ -946,6 +947,87 @@ public class HelloController {
         catch(Exception e){
             e.printStackTrace();
             e.getCause();
+        }
+    }
+
+    @FXML
+    void LoginButtonClick(ActionEvent event) {
+        if (txtEmail.getText().isBlank() && txtPassword.getText().isBlank()) {
+            txtLoginAlert.setText("Invalid Login! Try Again.");
+            txtLoginAlert.setTextAlignment(CENTER);
+        } else {
+            String dataBaseURL = "jdbc:ucanaccess://MetVerse_Gallery11.accdb";
+            try {
+                Connection newConnection = DriverManager.getConnection(dataBaseURL);
+                System.out.println("Connected to MS Access database");
+                Statement sqlStatement = newConnection.createStatement();
+                String sql = "SELECT COUNT(1) FROM Manager WHERE Email = '" + txtEmail.getText() + "' AND Password = '" + txtPassword.getText() + "'";
+                ResultSet queryResult = sqlStatement.executeQuery(sql);
+
+                while(queryResult.next()) {
+                    if (queryResult.getInt(1) == 1) {
+                        txtLoginAlert.setText("Logging in...");
+                        txtLoginAlert.setTextAlignment(CENTER);
+                        txtLoginAlert.setTextFill(GREEN);
+
+                        Stage primaryStage = (Stage) btnLogin.getScene().getWindow();
+                        primaryStage.close();
+                        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Manager/ManagerLanding.fxml"));
+                        Scene scene = new Scene(fxmlLoader.load());
+                        Stage stage = new Stage();
+                        stage.setScene(scene);
+                        stage.show();
+                    }
+                }
+
+                sqlStatement = newConnection.createStatement();
+                sql = "SELECT COUNT(1) FROM Artist WHERE Email = '" + txtEmail.getText() + "' AND Password = '" + txtPassword.getText() + "'";
+                queryResult = sqlStatement.executeQuery(sql);
+
+                while(queryResult.next()) {
+                    if (queryResult.getInt(1) == 1) {
+                        txtLoginAlert.setText("Logging in...");
+                        txtLoginAlert.setTextAlignment(CENTER);
+                        txtLoginAlert.setTextFill(GREEN);
+
+                        Stage primaryStage = (Stage) btnLogin.getScene().getWindow();
+                        primaryStage.close();
+                        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Artist/ArtistLanding.fxml"));
+                        Scene scene = new Scene(fxmlLoader.load());
+                        Stage stage = new Stage();
+                        stage.setScene(scene);
+                        stage.show();
+                    }
+                }
+
+                sqlStatement = newConnection.createStatement();
+                sql = "SELECT COUNT(1) FROM Viewer WHERE Email = '" + txtEmail.getText() + "' AND Password = '" + txtPassword.getText() + "'";
+                queryResult = sqlStatement.executeQuery(sql);
+
+                while(queryResult.next()) {
+                    if (queryResult.getInt(1) == 1) {
+                        txtLoginAlert.setText("Logging in...");
+                        txtLoginAlert.setTextAlignment(CENTER);
+                        txtLoginAlert.setTextFill(GREEN);
+
+                        Stage primaryStage = (Stage) btnLogin.getScene().getWindow();
+                        primaryStage.close();
+                        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Viewer/ViewerLanding.fxml"));
+                        Scene scene = new Scene(fxmlLoader.load());
+                        Stage stage = new Stage();
+                        stage.setScene(scene);
+                        stage.show();
+                    } else {
+                        txtLoginAlert.setText("Invalid Login! Try Again.");
+                        txtLoginAlert.setTextAlignment(CENTER);
+                    }
+                }
+                newConnection.close();
+            }
+            catch(Exception e){
+                e.printStackTrace();
+                e.getCause();
+            }
         }
     }
 
