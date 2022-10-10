@@ -219,6 +219,10 @@ public class HelloController {
     @FXML
     private TextField txtPassword;
 
+    //Buy Art use-case fields
+    @FXML
+    private TableView artBuyTable;
+    public TableColumn artTitleCol;
 
     //Tables to store data in
     ObservableList <Artist> artists = FXCollections.observableArrayList();
@@ -310,7 +314,7 @@ public class HelloController {
 
         updateTable("Select * From Request", "Request");
         requestSearchTable = (TableView) curContent.lookup("#requestSearchTable");
-        artistIDCol = new TableColumn<>("Artist Name");
+        artistIDCol = new TableColumn<>("Artist ID");
         dateCol = new TableColumn<>("Date");
         artistIDCol.setCellValueFactory(new PropertyValueFactory<Request,String>("artistID"));
         dateCol.setCellValueFactory(new PropertyValueFactory<Request,String>("reqDate"));
@@ -1056,6 +1060,35 @@ public class HelloController {
         }
     }
 
+    @FXML
+    void onBuyBtClick(ActionEvent event) throws IOException {
+        switchContent("Manager/BuyLanding.fxml", "buyContent");
+
+        updateTable("Select * From Art WHERE Display_Status = Yes;", "Art");
+        artBuyTable = (TableView) curContent.lookup("#artBuyTable");
+        artistIDCol = new TableColumn<>("Artist ID");
+        artTitleCol = new TableColumn<>("Art Title");
+        artistIDCol.setCellValueFactory(new PropertyValueFactory<Art,String>("artistID"));
+        artTitleCol.setCellValueFactory(new PropertyValueFactory<Art,String>("artTitle"));
+        requestSearchTable.getColumns().add(artistIDCol);
+        requestSearchTable.getColumns().add(artTitleCol);
+        requestSearchTable.setItems(artworks);
+    }
+
+    @FXML
+    void onConfirmBuyArt(ActionEvent event) throws IOException {
+        parentBox = (HBox)((Button)event.getSource()).getScene().getRoot();
+        FXMLLoader paymentPage = new FXMLLoader(HelloApplication.class.getResource("Viewer/MakePayment.fxml"));
+        Scene testScene = new Scene(paymentPage.load());
+        curContent = (Pane)testScene.lookup("#makePaymentPn");
+        parentBox.getChildren().remove(1);
+        parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
+        Request currentArt = (Request) artBuyTable.getSelectionModel().selectedItemProperty().getValue();
+        if(currentArt != null){
+
+        }
+    }
+
     private boolean checkContentTf(TextField... textFields){
         boolean hasValue = true;
         for(TextField curTf:textFields){
@@ -1079,6 +1112,7 @@ public class HelloController {
     }
 
     @FXML
-    public void RegisterButtonClick(ActionEvent event) {
+    public void RegisterButtonClick(ActionEvent event) throws IOException {
+
     }
 }
