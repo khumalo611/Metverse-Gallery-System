@@ -1019,9 +1019,21 @@ public class HelloController {
                 sqlStatement = newConnection.createStatement();
                 sql = "SELECT COUNT(1) FROM Viewer WHERE Email = '" + txtEmail.getText() + "' AND Password = '" + txtPassword.getText() + "'";
                 queryResult = sqlStatement.executeQuery(sql);
-                sql = "SELECT * FROM Viewer WHERE Email = '" + txtEmail.getText() + "'";
+                sql = "SELECT * FROM Viewer WHERE Email = '" + txtEmail.getText() + "';";
                 ResultSet result = sqlStatement.executeQuery(sql);
                 Viewer currentViewer;
+
+                if (result.next()){
+                    int viewerID = result.getInt("Viewer_ID");
+                    String viewerType = result.getString("Type_Of_Viewer");
+                    String viewerPassword = result.getString("Password");
+                    String viewerFName = result.getString("First_Name");
+                    String viewerLName = result.getString("Last_Name");
+                    String viewerEmail = result.getString("Email");
+                    String viewerPhone = result.getString("Phone");
+
+                    currentViewer = new Viewer(viewerID, viewerType, viewerPassword, viewerFName, viewerLName, viewerEmail, viewerPhone);
+                }
 
                 while(queryResult.next()) {
                     if (queryResult.getInt(1) == 1) {
@@ -1029,15 +1041,7 @@ public class HelloController {
                         txtLoginAlert.setTextAlignment(CENTER);
                         txtLoginAlert.setTextFill(GREEN);
 
-                        int viewerID = result.getInt("Viewer_ID");
-                        String viewerType = result.getString("Type_Of_Viewer");
-                        String viewerPassword = result.getString("Password");
-                        String viewerFName = result.getString("First_Name");
-                        String viewerLName = result.getString("Last_Name");
-                        String viewerEmail = result.getString("Email");
-                        String viewerPhone = result.getString("Phone");
 
-                        currentViewer = new Viewer(viewerID, viewerType, viewerPassword, viewerFName, viewerLName, viewerEmail, viewerPhone);
 
                         Stage primaryStage = (Stage) btnLogin.getScene().getWindow();
                         primaryStage.close();
@@ -1062,7 +1066,7 @@ public class HelloController {
 
     @FXML
     void onBuyBtClick(ActionEvent event) throws IOException {
-        switchContent("Manager/BuyLanding.fxml", "buyContent");
+        switchContent("Viewer/BuyLanding.fxml", "buyContent");
 
         updateTable("Select * From Art WHERE Display_Status = Yes;", "Art");
         artBuyTable = (TableView) curContent.lookup("#artBuyTable");
@@ -1087,6 +1091,11 @@ public class HelloController {
         if(currentArt != null){
 
         }
+    }
+
+    @FXML
+    public void onBookingBtClick(ActionEvent event) {
+
     }
 
     private boolean checkContentTf(TextField... textFields){

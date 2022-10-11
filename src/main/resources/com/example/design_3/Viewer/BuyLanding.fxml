@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="buyContent" prefHeight="542.0" prefWidth="696.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.design_3.ViewerController">
+<Pane fx:id="buyContent" prefHeight="542.0" prefWidth="696.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.design_3.HelloController">
    <children>
       <Pane prefHeight="80.0" prefWidth="696.0" style="-fx-background-color: #00968a;">
          <children>
