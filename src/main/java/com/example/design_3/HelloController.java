@@ -1094,8 +1094,8 @@ public class HelloController {
     }
 
     @FXML
-    public void onBookingBtClick(ActionEvent event) {
-
+    public void onBookingBtClick(ActionEvent event) throws IOException {
+        switchContent("Viewer/BookingLanding.fxml", "bookingContent");
     }
 
     private boolean checkContentTf(TextField... textFields){
@@ -1122,6 +1122,11 @@ public class HelloController {
 
     @FXML
     public void RegisterButtonClick(ActionEvent event) throws IOException {
+
+    }
+
+    @FXML
+    void onConfirmBooking(ActionEvent event) {
 
     }
 }
