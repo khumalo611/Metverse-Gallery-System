@@ -38,11 +38,7 @@
             <RadioButton fx:id="rbtDateD" mnemonicParsing="false" text="04 August 2022" toggleGroup="$TimeSlots" />
             <RadioButton fx:id="rbtDateE" mnemonicParsing="false" text="05 August 2022" toggleGroup="$TimeSlots" />
             <RadioButton fx:id="rbtDateF" mnemonicParsing="false" text="06 August 2022" toggleGroup="$TimeSlots" />
-            <RadioButton fx:id="rbtDateG" mnemonicParsing="false" text="07 August 2022">
-               <toggleGroup>
-                  <ToggleGroup fx:id="TimeSlots1" />
-               </toggleGroup>
-            </RadioButton>
+            <RadioButton fx:id="rbtDateG" mnemonicParsing="false" text="07 August 2022" toggleGroup="$TimeSlots" />
          </children>
       </VBox>
    </children>

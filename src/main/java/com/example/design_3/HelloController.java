@@ -223,6 +223,7 @@ public class HelloController {
     @FXML
     private TableView artBuyTable;
     public TableColumn artTitleCol;
+    public TableColumn artistIDColB;
 
     //Tables to store data in
     ObservableList <Artist> artists = FXCollections.observableArrayList();
@@ -913,7 +914,12 @@ public class HelloController {
             }
             if (artObj.getArtSaleStatus() != null) {
                 lblSaleStatus.setTextFill(BLACK);
-                lblSaleStatus.setText("On Sale \tPurchase ID " + artObj.getPurchaseID());
+                if (artObj.getArtSaleStatus() == "FALSE") {
+                    lblSaleStatus.setText("Not Sold \tPurchase ID: NULL");
+                } else {
+                    lblSaleStatus.setText("Sold \tPurchase ID " + artObj.getPurchaseID());
+                }
+                System.out.println(artObj.getArtSaleStatus());
             }
         }
     }
@@ -1070,13 +1076,13 @@ public class HelloController {
 
         updateTable("Select * From Art WHERE Display_Status = Yes;", "Art");
         artBuyTable = (TableView) curContent.lookup("#artBuyTable");
-        artistIDCol = new TableColumn<>("Artist ID");
+        artistIDColB = new TableColumn<>("Artist ID");
         artTitleCol = new TableColumn<>("Art Title");
-        artistIDCol.setCellValueFactory(new PropertyValueFactory<Art,String>("artistID"));
+        artistIDColB.setCellValueFactory(new PropertyValueFactory<Art,String>("artistID"));
         artTitleCol.setCellValueFactory(new PropertyValueFactory<Art,String>("artTitle"));
-        requestSearchTable.getColumns().add(artistIDCol);
-        requestSearchTable.getColumns().add(artTitleCol);
-        requestSearchTable.setItems(artworks);
+        artBuyTable.getColumns().add(artistIDColB);
+        artBuyTable.getColumns().add(artTitleCol);
+        artBuyTable.setItems(artworks);
     }
 
     @FXML
