@@ -313,7 +313,7 @@ public class HelloController {
         //This line will replace the commented out paragraph, both do the same thing, but this is obviously cleaner.
         switchContent("Manager/RequestLanding.fxml", "requestLanding");
 
-        updateTable("Select * From Request", "Request");
+        updateTable("Select * From Request WHERE Response = 'Pending'", "Request");
         requestSearchTable = (TableView) curContent.lookup("#requestSearchTable");
         artistIDCol = new TableColumn<>("Artist ID");
         dateCol = new TableColumn<>("Date");
@@ -497,7 +497,7 @@ public class HelloController {
                     int requestID = allNodes.getInt("Request_ID");
                     String requestDate = allNodes.getString("Date");
                     String requestMessage = allNodes.getString("Message");
-                    Boolean requestResponse = allNodes.getBoolean("Response");
+                    String requestResponse = allNodes.getString("Response");
                     int managerID = allNodes.getInt("Manager_ID");
                     int artistID = allNodes.getInt("Artist_ID");
                     Request newRequest = new Request(requestID,requestDate,requestMessage,
@@ -948,19 +948,17 @@ public class HelloController {
     protected void onRequestResponse (ActionEvent event) throws IOException {
         String reqChoice;
         if (rbtnAcceptReq.isSelected()) {
-            reqChoice = "Yes";
+            reqChoice = "Accepted";
         } else {
-            reqChoice = "No";
+            reqChoice = "Decline";
         }
         String dataBaseURL = "jdbc:ucanaccess://MetVerse_Gallery11.accdb";
         try {
             Connection newConnection = DriverManager.getConnection(dataBaseURL);
             System.out.println("Connected to MS Access database");
             Statement sqlStatement = newConnection.createStatement();
-            String sql = String.format("UPDATE Request SET Response = %s WHERE Request_ID = %d;", reqChoice, reqIDVar);
+            String sql = String.format("UPDATE Request SET Response = '%s' WHERE Request_ID = %d;", reqChoice, reqIDVar);
             sqlStatement.executeUpdate(sql);
-            System.out.println(reqChoice);
-            System.out.println(reqIDVar);
 
             lblRequestAlert.setText("Response Sent To Server!");
             lblRequestAlert.setTextFill(GREEN);
