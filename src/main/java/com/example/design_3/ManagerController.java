@@ -242,12 +242,8 @@ public class ManagerController {
         FXMLLoader homePage = new FXMLLoader(HelloApplication.class.getResource("Manager/HomePage.fxml"));
         Scene testScene = new Scene(homePage.load());
         curContent = (Pane)testScene.lookup("#homeContent");
-//        parentBox = (HBox) testScene.lookup("#parentBox");
         parentBox.getChildren().remove(1);
         parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
-
-//        contentPn.getChildren().clear();
-//        contentPn.getChildren().setAll(curContent);
     }
     @FXML
     protected void onArtBtClick(ActionEvent event) throws IOException{
@@ -559,9 +555,6 @@ public class ManagerController {
         }
     }
 
-
-    // Artist Page Methods
-
     @FXML
     protected void onViewArtistClick(ActionEvent event) throws IOException {
         //Will still enter the code to connect table selection to selected/ curArtist below
@@ -624,14 +617,6 @@ public class ManagerController {
         if(addArtStatusCb.getItems().size() == 0 ) {
             addArtStatusCb.getItems().add("Sold");
             addArtStatusCb.getItems().add("Test");
-        }
-
-    }
-    @FXML
-    protected void onViewClient(ActionEvent event){
-        Client curClient = (Client) clientSearchTable.getSelectionModel().selectedItemProperty().getValue();
-        if(curClient!=null){
-            //TBC
         }
     }
 
@@ -963,103 +948,6 @@ public class ManagerController {
         }
     }
 
-    @FXML
-    void LoginButtonClick(ActionEvent event) {
-        if (txtEmail.getText().isBlank() && txtPassword.getText().isBlank()) {
-            txtLoginAlert.setText("Invalid Login! Try Again.");
-            txtLoginAlert.setTextAlignment(CENTER);
-        } else {
-            String dataBaseURL = "jdbc:ucanaccess://MetVerse_Gallery11.accdb";
-            try {
-                Connection newConnection = DriverManager.getConnection(dataBaseURL);
-                System.out.println("Connected to MS Access database");
-                Statement sqlStatement = newConnection.createStatement();
-                String sql = "SELECT COUNT(1) FROM Manager WHERE Email = '" + txtEmail.getText() + "' AND Password = '" + txtPassword.getText() + "'";
-                ResultSet queryResult = sqlStatement.executeQuery(sql);
-
-                while(queryResult.next()) {
-                    if (queryResult.getInt(1) == 1) {
-                        txtLoginAlert.setText("Logging in...");
-                        txtLoginAlert.setTextAlignment(CENTER);
-                        txtLoginAlert.setTextFill(GREEN);
-
-                        Stage primaryStage = (Stage) btnLogin.getScene().getWindow();
-                        primaryStage.close();
-                        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Manager/ManagerLanding.fxml"));
-                        Scene scene = new Scene(fxmlLoader.load());
-                        Stage stage = new Stage();
-                        stage.setScene(scene);
-                        stage.show();
-                    }
-                }
-
-                sqlStatement = newConnection.createStatement();
-                sql = "SELECT COUNT(1) FROM Artist WHERE Email = '" + txtEmail.getText() + "' AND Password = '" + txtPassword.getText() + "'";
-                queryResult = sqlStatement.executeQuery(sql);
-
-                while(queryResult.next()) {
-                    if (queryResult.getInt(1) == 1) {
-                        txtLoginAlert.setText("Logging in...");
-                        txtLoginAlert.setTextAlignment(CENTER);
-                        txtLoginAlert.setTextFill(GREEN);
-
-                        Stage primaryStage = (Stage) btnLogin.getScene().getWindow();
-                        primaryStage.close();
-                        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Artist/ArtistLanding.fxml"));
-                        Scene scene = new Scene(fxmlLoader.load());
-                        Stage stage = new Stage();
-                        stage.setScene(scene);
-                        stage.show();
-                    }
-                }
-
-                sqlStatement = newConnection.createStatement();
-                sql = "SELECT COUNT(1) FROM Viewer WHERE Email = '" + txtEmail.getText() + "' AND Password = '" + txtPassword.getText() + "'";
-                queryResult = sqlStatement.executeQuery(sql);
-                sql = "SELECT * FROM Viewer WHERE Email = '" + txtEmail.getText() + "';";
-                ResultSet result = sqlStatement.executeQuery(sql);
-                Viewer currentViewer;
-
-                if (result.next()){
-                    int viewerID = result.getInt("Viewer_ID");
-                    String viewerType = result.getString("Type_Of_Viewer");
-                    String viewerPassword = result.getString("Password");
-                    String viewerFName = result.getString("First_Name");
-                    String viewerLName = result.getString("Last_Name");
-                    String viewerEmail = result.getString("Email");
-                    String viewerPhone = result.getString("Phone");
-
-                    currentViewer = new Viewer(viewerID, viewerType, viewerPassword, viewerFName, viewerLName, viewerEmail, viewerPhone);
-                }
-
-                while(queryResult.next()) {
-                    if (queryResult.getInt(1) == 1) {
-                        txtLoginAlert.setText("Logging in...");
-                        txtLoginAlert.setTextAlignment(CENTER);
-                        txtLoginAlert.setTextFill(GREEN);
-
-
-
-                        Stage primaryStage = (Stage) btnLogin.getScene().getWindow();
-                        primaryStage.close();
-                        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Viewer/ViewerLanding.fxml"));
-                        Scene scene = new Scene(fxmlLoader.load());
-                        Stage stage = new Stage();
-                        stage.setScene(scene);
-                        stage.show();
-                    } else {
-                        txtLoginAlert.setText("Invalid Login! Try Again.");
-                        txtLoginAlert.setTextAlignment(CENTER);
-                    }
-                }
-                newConnection.close();
-            }
-            catch(Exception e){
-                e.printStackTrace();
-                e.getCause();
-            }
-        }
-    }
 
     private boolean checkContentTf(TextField... textFields){
         boolean hasValue = true;
@@ -1081,10 +969,5 @@ public class ManagerController {
         artNamesTb.setCellValueFactory(new PropertyValueFactory<Artist,String>(attributeName));
         artistSearchTable.getColumns().add(artNamesTb);
         artistSearchTable.setItems(artists);
-    }
-
-    @FXML
-    public void RegisterButtonClick(ActionEvent event) throws IOException {
-
     }
 }

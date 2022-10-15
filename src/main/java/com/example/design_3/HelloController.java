@@ -3,94 +3,297 @@ package com.example.design_3;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import static javafx.scene.paint.Color.*;
+import static javafx.scene.text.TextAlignment.*;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
 public class HelloController {
-    // This is the controller for the Manager's page. This controls all events that take place for the Manager
 
     @FXML
-    public Pane artworkLanding;
+    private Button btnLogin, btnRegister;
+
     @FXML
-    public Button homeBt;
+    private TextField txtEmail, txtPassword;
+
     @FXML
-    public Button artworkBt;
+    private Label txtLoginAlert, txtMRegAlert, txtARegAlert, txtVRegAlert;
+
     @FXML
-    public Button artistBt;
+    private ToggleButton btnArtistReg, btnManagerReg, btnViewerReg;
+
     @FXML
-    public Button clientBt;
+    private ToggleGroup panelButtons;
+
     @FXML
-    public Button requestBt;
+    private Button btnMCancel, btnMRegister;
+
+    @FXML
+    private TextField txtMCPassword, txtMEmail, txtMFName, txtMLName, txtMNumber, txtMPassword;
+
+    @FXML
+    private Pane panelManagerReg;
+
+    @FXML
+    private Button btnACancel, btnARegister;
+
+    @FXML
+    private TextField txtABirthYear, txtACPassword, txtACountry, txtAEmail, txtAFName, txtALName, txtANumber, txtAPassword;
+
+    @FXML
+    private Pane panelArtistReg;
+
+    @FXML
+    private Button btnVCancel, btnVRegister;
+
+    @FXML
+    private TextField txtCPassword, txtVEmail, txtVFName, txtVLName, txtVNumber, txtVPassword;
+
+    @FXML
+    private Pane panelViewerReg, curContent;
     @FXML
     public Pane contentPn;
     @FXML
-    public Pane homeContent;
-    @FXML
-    public HBox parentPane;
-    @FXML
     public HBox parentBox;
-    private TextField artSearchTf;
-    private Pane curContent;
 
-    @FXML
-    protected void onHomeBtClick(ActionEvent event) throws IOException
-    // Event handler for when home button is clicked
-    {
-        //creates an fxmlloader instance using the fxml file from the manager folder in resources
-        FXMLLoader homePage = new FXMLLoader(HelloApplication.class.getResource("Manager/HomePage.fxml"));
-        // Loads the file and creates an instance of a scene from that fxml
-        Scene testScene = new Scene(homePage.load());
-        // curContent are the names of all the content panes that we will be switching to. This uses a cached reference
-        // to get the new content window we want displayed and saves it in curContent.
-        curContent = (Pane)testScene.lookup("#homeContent");
-        //ParentPane is the root of the main window which is the landing page, so this takes the second child of that pane
-        // (which in this case is our display empty content window) and removes it.
-        parentPane.getChildren().remove(contentPn);
-        // This replaces the removed content window with the new content window we saved as curContent
-        parentPane.getChildren().add(parentPane.getChildren().size(),curContent);
-
-        // The others use the same code just copied and pasted across, I might create a method to clean this up so that
-        // you just enter the destination fxml path and fx id of the element we want displayed then, boom.
+    public HelloController(){
+        //connectToDB();
     }
 
     @FXML
-    protected void onArtBtClick(ActionEvent event) throws IOException{
-        switchContent("Manager/ArtworkLanding.fxml", "artworkLanding");
+    void LoginButtonClick(ActionEvent event) {
+        if (txtEmail.getText().isBlank() && txtPassword.getText().isBlank()) {
+            txtLoginAlert.setText("Invalid Login! Try Again.");
+            txtLoginAlert.setTextAlignment(CENTER);
+        } else {
+            String dataBaseURL = "jdbc:ucanaccess://MetVerse_Gallery11.accdb";
+            try {
+                Connection newConnection = DriverManager.getConnection(dataBaseURL);
+                System.out.println("Connected to MS Access database");
+                Statement sqlStatement = newConnection.createStatement();
+                String sql = "SELECT COUNT(1) FROM Manager WHERE Email = '" + txtEmail.getText() + "' AND Password = '" + txtPassword.getText() + "'";
+                ResultSet queryResult = sqlStatement.executeQuery(sql);
+
+                while(queryResult.next()) {
+                    if (queryResult.getInt(1) == 1) {
+                        txtLoginAlert.setText("Logging in...");
+                        txtLoginAlert.setTextAlignment(CENTER);
+                        txtLoginAlert.setTextFill(GREEN);
+
+                        Stage primaryStage = (Stage) btnLogin.getScene().getWindow();
+                        primaryStage.close();
+                        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Manager/ManagerLanding.fxml"));
+                        Scene scene = new Scene(fxmlLoader.load());
+                        Stage stage = new Stage();
+                        stage.setScene(scene);
+                        stage.show();
+                    }
+                }
+
+                sqlStatement = newConnection.createStatement();
+                sql = "SELECT COUNT(1) FROM Artist WHERE Email = '" + txtEmail.getText() + "' AND Password = '" + txtPassword.getText() + "'";
+                queryResult = sqlStatement.executeQuery(sql);
+
+                while(queryResult.next()) {
+                    if (queryResult.getInt(1) == 1) {
+                        txtLoginAlert.setText("Logging in...");
+                        txtLoginAlert.setTextAlignment(CENTER);
+                        txtLoginAlert.setTextFill(GREEN);
+
+                        Stage primaryStage = (Stage) btnLogin.getScene().getWindow();
+                        primaryStage.close();
+                        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Artist/ArtistLanding.fxml"));
+                        Scene scene = new Scene(fxmlLoader.load());
+                        Stage stage = new Stage();
+                        stage.setScene(scene);
+                        stage.show();
+                    }
+                }
+
+                sqlStatement = newConnection.createStatement();
+                sql = "SELECT COUNT(1) FROM Viewer WHERE Email = '" + txtEmail.getText() + "' AND Password = '" + txtPassword.getText() + "'";
+                queryResult = sqlStatement.executeQuery(sql);
+
+                while(queryResult.next()) {
+                    if (queryResult.getInt(1) == 1) {
+                        txtLoginAlert.setText("Logging in...");
+                        txtLoginAlert.setTextAlignment(CENTER);
+                        txtLoginAlert.setTextFill(GREEN);
+
+                        Stage primaryStage = (Stage) btnLogin.getScene().getWindow();
+                        primaryStage.close();
+                        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Viewer/ViewerLanding.fxml"));
+                        Scene scene = new Scene(fxmlLoader.load());
+                        Stage stage = new Stage();
+                        stage.setScene(scene);
+                        stage.show();
+                    } else {
+                        txtLoginAlert.setText("Invalid Login! Try Again.");
+                        txtLoginAlert.setTextAlignment(CENTER);
+                    }
+                }
+                newConnection.close();
+            }
+            catch(Exception e){
+                e.printStackTrace();
+                e.getCause();
+            }
+        }
     }
     @FXML
-    protected void onArtistBtClick(ActionEvent event) throws IOException{
-        switchContent("Manager/ArtistLanding.fxml", "artistLanding");
+    void RegisterButtonClick(ActionEvent event) throws IOException {
+        Stage primaryStage = (Stage) btnRegister.getScene().getWindow();
+        primaryStage.close();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Registration/RegistrationParent.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.show();
     }
     @FXML
-    protected void onClientBtCLick(ActionEvent event) throws IOException{
-        switchContent("Manager/ClientLanding.fxml", "clientLanding");
-    }
-    @FXML
-    protected void onRequestsBtClick(ActionEvent event) throws IOException
-    {
-        switchContent("Manager/RequestLanding.fxml", "requestLanding");
-    }
-    protected void connectToUI (Pane nextPane){
-        // Was just using this to test something, will become the method to connect to all buttons and stuff we need.
-        artSearchTf = (TextField) parentBox.lookup("#artSearchTf");
-        artSearchTf.setText("Yasho!");
-    }
-    @FXML
-    //Still working on this one
-    protected void onAddArtClickBt(ActionEvent event) throws IOException{
-        switchContent("Manager/AddArtwork.fxml", "addArtContent");
-    }
-    // Will replace the whole paragraph that switches content with the one line you see in the
-    // onRequestBtClick method
-    private void switchContent(String targetFxmlPath, String targetContentID) throws IOException{
-        FXMLLoader artPage = new FXMLLoader(HelloApplication.class.getResource(targetFxmlPath));
+    void ArtistRegBtClick(ActionEvent event) throws IOException {
+        FXMLLoader artPage = new FXMLLoader(HelloApplication.class.getResource("Registration/ArtistRegistration.fxml"));
         Scene testScene = new Scene(artPage.load());
-        curContent = (Pane)testScene.lookup("#" + targetContentID);
+        curContent = (Pane)testScene.lookup("#panelArtistReg");
         parentBox.getChildren().remove(1);
         parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
+    }
+    @FXML
+    void ManagerRegBtClick(ActionEvent event) throws IOException {
+        FXMLLoader artPage = new FXMLLoader(HelloApplication.class.getResource("Registration/ManagerRegistration.fxml"));
+        Scene testScene = new Scene(artPage.load());
+        curContent = (Pane)testScene.lookup("#panelManagerReg");
+        parentBox.getChildren().remove(1);
+        parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
+    }
+    @FXML
+    void ViewerRegBtClick(ActionEvent event) throws IOException {
+        FXMLLoader artPage = new FXMLLoader(HelloApplication.class.getResource("Registration/ViewerRegistration.fxml"));
+        Scene testScene = new Scene(artPage.load());
+        curContent = (Pane)testScene.lookup("#panelViewerReg");
+        parentBox.getChildren().remove(1);
+        parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
+    }
+    @FXML
+    void MCancelRegBtClick(ActionEvent event) throws IOException {
+        Stage primaryStage = (Stage) btnMCancel.getScene().getWindow();
+        primaryStage.close();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Login.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setTitle("Hello!");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    void MConfirmRegBtClick(ActionEvent event) {
+        if (txtMEmail.getText().isBlank() || txtMPassword.getText().isBlank() || txtMFName.getText().isBlank() || txtMLName.getText().isBlank() || txtMNumber.getText().isBlank()) {
+            txtMRegAlert.setText("Registration Failed! Try Again.");
+            txtMRegAlert.setTextFill(RED);
+        } else {
+            String dataBaseURL = "jdbc:ucanaccess://MetVerse_Gallery11.accdb";
+            try {
+                Connection newConnection = DriverManager.getConnection(dataBaseURL);
+                System.out.println("Connected to MS Access database");
+                Statement sqlStatement = newConnection.createStatement();
+                String sql = "INSERT INTO Manager (First_Name, Last_Name, Email, Password, Office_Phone) VALUES ('" + txtMFName.getText() + "','" + txtMLName.getText() + "','" + txtMEmail.getText() + "','" + txtMPassword.getText() + "','" + txtMNumber.getText() + "');";
+                sqlStatement.executeUpdate(sql);
+
+                txtMRegAlert.setText("Account Successfully Registered!");
+                txtMRegAlert.setTextFill(GREEN);
+                newConnection.close();
+            }
+            catch(Exception e){
+                e.printStackTrace();
+                e.getCause();
+            }
+        }
+    }
+
+    @FXML
+    void ACancelRegBtClick(ActionEvent event) throws IOException {
+        Stage primaryStage = (Stage) btnACancel.getScene().getWindow();
+        primaryStage.close();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Login.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setTitle("Hello!");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    void AConfirmRegBtClick(ActionEvent event) {
+        if (txtAEmail.getText().isBlank() || txtAPassword.getText().isBlank() || txtAFName.getText().isBlank() || txtALName.getText().isBlank() || txtABirthYear.getText().isBlank() || txtACountry.getText().isBlank()) {
+            txtARegAlert.setText("Registration Failed! Try Again.");
+            txtARegAlert.setTextFill(RED);
+        } else {
+            String dataBaseURL = "jdbc:ucanaccess://MetVerse_Gallery11.accdb";
+            try {
+                Connection newConnection = DriverManager.getConnection(dataBaseURL);
+                System.out.println("Connected to MS Access database");
+                Statement sqlStatement = newConnection.createStatement();
+                String sql = "INSERT INTO Artist (First_Name, Last_Name, Email, Password, Country, Birth_Year) VALUES ('" + txtAFName.getText() + "','" + txtALName.getText() + "','" + txtAEmail.getText() + "','" + txtAPassword.getText() + "','" + txtACountry.getText() + "','" + txtABirthYear.getText() + "');";
+                sqlStatement.executeUpdate(sql);
+
+                txtARegAlert.setText("Account Successfully Registered!");
+                txtARegAlert.setTextFill(GREEN);
+                newConnection.close();
+            }
+            catch(Exception e){
+                e.printStackTrace();
+                e.getCause();
+            }
+        }
+    }
+
+    @FXML
+    void VCancelRegBtClick(ActionEvent event) throws IOException {
+        Stage primaryStage = (Stage) btnVCancel.getScene().getWindow();
+        primaryStage.close();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Login.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setTitle("Hello!");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    void VConfirmRegBtClick(ActionEvent event) {
+        if (txtVEmail.getText().isBlank() || txtVPassword.getText().isBlank() || txtVFName.getText().isBlank() || txtVLName.getText().isBlank() || txtVNumber.getText().isBlank()) {
+            txtVRegAlert.setText("Registration Failed! Try Again.");
+            txtVRegAlert.setTextFill(RED);
+        } else {
+            String dataBaseURL = "jdbc:ucanaccess://MetVerse_Gallery11.accdb";
+            try {
+                Connection newConnection = DriverManager.getConnection(dataBaseURL);
+                System.out.println("Connected to MS Access database");
+                Statement sqlStatement = newConnection.createStatement();
+                String sql = "INSERT INTO Viewer (First_Name, Last_Name, Email, Password, Phone) VALUES ('" + txtVFName.getText() + "','" + txtVLName.getText() + "','" + txtVEmail.getText() + "','" + txtVPassword.getText() + "','" + txtVNumber.getText() + "');";
+                sqlStatement.executeUpdate(sql);
+
+                txtVRegAlert.setText("Account Successfully Registered!");
+                txtVRegAlert.setTextFill(GREEN);
+                newConnection.close();
+            }
+            catch(Exception e){
+                e.printStackTrace();
+                e.getCause();
+            }
+        }
     }
 }
