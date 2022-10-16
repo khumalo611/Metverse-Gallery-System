@@ -116,7 +116,6 @@ public class HelloController {
 
 
 
-    //
     private Pane curContent;
     // Search artwork use case elements
     @FXML
@@ -145,7 +144,6 @@ public class HelloController {
     @FXML
     public Label viewArtistDYear;
 
-    public TableColumn artistNames;
     public TableColumn artNamesTb;
     private File curFile;
 
@@ -159,26 +157,13 @@ public class HelloController {
     ObservableList <Purchase> purchases = FXCollections.observableArrayList();
     ObservableList <Request> requests = FXCollections.observableArrayList();
     ObservableList <Viewing> viewings = FXCollections.observableArrayList();
-    //private Artist curArtist;
 
-    public HelloController(){
-        //connectToDB();
-        //updateTable("Select * From Artist;", "Artist");
-    }
 
     // Manager Page Methods
 
     @FXML
     protected void onHomeBtClick(ActionEvent event) throws IOException {
-        FXMLLoader homePage = new FXMLLoader(HelloApplication.class.getResource("Manager/HomePage.fxml"));
-        Scene testScene = new Scene(homePage.load());
-        curContent = (Pane)testScene.lookup("#homeContent");
-//        parentBox = (HBox) testScene.lookup("#parentBox");
-        parentBox.getChildren().remove(1);
-        parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
-
-//        contentPn.getChildren().clear();
-//        contentPn.getChildren().setAll(curContent);
+        switchContent("Manager/HomePage.fxml","homeContent");
     }
     @FXML
     protected void onArtBtClick(ActionEvent event) throws IOException{
@@ -564,14 +549,6 @@ public class HelloController {
         addArtSelectedLb.setText(curFile.getName());
 //        imageToBytes();
     }
-//    @FXML
-//    protected void changeFocus(KeyEvent event){
-//        if(event.getCode() == KeyCode.TAB && ((TextField)event.getSource()).getId() == "addArtPriceTf" ){
-//        }
-//        else if(event.getCode() == KeyCode.TAB && ((TextField)event.getSource()).getId() == "addArtTitleTf" ){
-//
-//        }
-//    }
 
     @FXML
     protected void enableButtons(Event event){
@@ -776,9 +753,7 @@ public class HelloController {
             System.out.println(e.getMessage());
         }
     }
-    private void uploadFile(File curFile){
-        //File newFile = curFile.copyFile()
-    }
+
     @FXML
     protected void onSearchArt(Event event)
     // Handles the search for art use-case
@@ -869,18 +844,8 @@ public class HelloController {
         }
         artScroll.setContent(artHolderHb);
     }
-    private void updateTableView(String sqlString, String tableName, String tableFxId, String tableColumnName, String attributeName){
-        updateTable(sqlString, tableName);
-        curContent = (Pane)parentBox.getChildren().get(1);
-        artistSearchTable = (TableView) curContent.lookup("#" + tableFxId);
-        artNamesTb = new TableColumn<>(tableColumnName);
-        artNamesTb.setCellValueFactory(new PropertyValueFactory<Artist,String>(attributeName));
-        artistSearchTable.getColumns().add(artNamesTb);
-        artistSearchTable.setItems(artists);
-    }
 
-    // Methods for retuning back to relavant landing page
-
+    //region Methods for retuning back to relevant landing page
     @FXML
     protected void goHome(ActionEvent event){
         try {
@@ -926,78 +891,6 @@ public class HelloController {
         }
     }
 
-    private int compareItems(Object Comparator, ObservableList objectList ){
-        String objectType = Comparator.getClass().getSimpleName();
-        int index = -1;
-        switch(objectType){
-            case "Art":
-                Art compArt = (Art) Comparator;
-                Art curArt = null;
-                for(int i = 0; i<artworks.size();i++){
-                    if(compArt.isEqual(curArt))
-                        index = i;
-                }
-                break;
-            case "Artist":
-                Artist compArtist = (Artist) Comparator;
-                Artist curArtist = null;
-                for(int i = 0; i<artists.size();i++){
-                    if(compArtist.isEqual(curArtist))
-                        index = i;
-                }
-                break;
-            case "Client":
-                Client compClient = (Client) Comparator;
-                Client curClient = null;
-                for(int i = 0; i<clients.size();i++){
-                    if(compClient.isEqual(curClient))
-                        index = i;
-                }
-                break;
-            case "Payment":
-                Payment compPayment = (Payment) Comparator;
-                Payment curPayment = null;
-                for(int i = 0; i<payments.size();i++){
-                    if(curPayment.isEqual(compPayment))
-                        index = i;
-                }
-                break;
-            case "Purchase":
-                Purchase compPurchase = (Purchase) Comparator;
-                Purchase curPurchase = null;
-                for(int i = 0; i<purchases.size();i++){
-                    if(compPurchase.isEqual(curPurchase))
-                        index = i;
-                }
-                break;
-            case "Request":
-                Request compRequest = (Request) Comparator;
-                Request curRequest = null;
-                for(int i = 0; i<requests.size();i++){
-                    if(compRequest.isEqual(curRequest))
-                        index = i;
-                }
-                break;
-            case "Viewer":
-                Viewer compViewer = (Viewer) Comparator;
-                Viewer curViewer = null;
-                for(int i = 0; i<viewers.size();i++){
-                    if(compViewer.isEqual(curViewer))
-                        index = i;
-                }
-                break;
-            case "Viewing":
-                Viewing compViewing = (Viewing) Comparator;
-                Viewing curViewing = null;
-                for(int i = 0; i<viewings.size();i++){
-                    if(compViewing.isEqual(curViewing))
-                        index = i;
-                }
-                break;
-
-        }
-        return index;
-    }
     @FXML
     protected void onViewClient(ActionEvent event) {
         updateTable("Select * From Client", "Client");
