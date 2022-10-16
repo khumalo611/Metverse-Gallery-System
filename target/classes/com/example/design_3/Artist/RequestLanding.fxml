@@ -21,6 +21,7 @@
             </Pane>
             <Button layoutX="281.0" layoutY="324.0" mnemonicParsing="false" onAction="#onRequestMeeting" prefHeight="46.0" prefWidth="134.0" style="-fx-background-color: #00968a;" text="Request Meeting" textFill="#fafafa" />
             <Button layoutX="281.0" layoutY="225.0" mnemonicParsing="false" onAction="#onRequestStatus" prefHeight="46.0" prefWidth="134.0" style="-fx-background-color: #00968a;" text="Request Status" textFill="#fafafa" />
+            <Label fx:id="requestLandingError" alignment="CENTER" contentDisplay="CENTER" layoutX="135.0" layoutY="426.0" prefHeight="17.0" prefWidth="426.0" textAlignment="CENTER" textFill="RED" />
          </children>
       </Pane>
    </children>

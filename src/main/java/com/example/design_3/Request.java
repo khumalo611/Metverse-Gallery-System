@@ -7,12 +7,12 @@ public class Request {
     IntegerProperty requestID = new SimpleIntegerProperty();
     StringProperty reqDate = new SimpleStringProperty();
     StringProperty reqMessage = new SimpleStringProperty();
-    BooleanProperty reqResponse = new SimpleBooleanProperty();
+    StringProperty reqResponse = new SimpleStringProperty();
     IntegerProperty managerID = new SimpleIntegerProperty();
     IntegerProperty artistID = new SimpleIntegerProperty();
 
     public Request(int requestID, String reqDate, String reqMessage,
-                   boolean reqResponse, int managerID, int artistID) {
+                   String reqResponse, int managerID, int artistID) {
         this.requestID.setValue(requestID);
         this.reqDate.setValue(reqDate);
         this.reqMessage.setValue(reqMessage);
@@ -69,15 +69,19 @@ public class Request {
         this.reqMessage.set(reqMessage);
     }
 
-    public boolean isReqResponse() {
+    public String isReqResponse() {
         return reqResponse.get();
     }
 
-    public BooleanProperty reqResponseProperty() {
+    public StringProperty reqResponseProperty() {
         return reqResponse;
     }
 
-    public void setReqResponse(boolean reqResponse) {
+    public String getReqResponse() {
+        return reqResponse.get();
+    }
+
+    public void setReqResponse(String reqResponse) {
         this.reqResponse.set(reqResponse);
     }
 

@@ -14,8 +14,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -23,22 +24,13 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
-import javafx.util.FXPermission;
-
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
 import java.io.*;
 import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
 import java.sql.*;
-import java.time.LocalDate;
-import java.util.Base64;
-import java.util.Formatter;
 import java.util.function.UnaryOperator;
 
 public class HelloController {
@@ -69,7 +61,7 @@ public class HelloController {
     public CheckBox addArtOnDisplayCb;
     public Button addArtCancelBt;
     public Button addArtConfirmBt;
-    public ChoiceBox addArtStatusCb;
+    public CheckBox addArtStatusCb;
     public DatePicker addArtDate;
     public TextField addArtTitleTf;
 
@@ -120,6 +112,7 @@ public class HelloController {
     public Pane confirmationPage;
     public Button confirmationBackBt;
     public Button confirmationConfirmBt;
+    public ScrollPane artScroll;
 
 
 
@@ -431,7 +424,7 @@ public class HelloController {
                     int requestID = allNodes.getInt("Request_ID");
                     String requestDate = allNodes.getString("Date");
                     String requestMessage = allNodes.getString("Message");
-                    Boolean requestResponse = allNodes.getBoolean("Response");
+                    String requestResponse = allNodes.getString("Response");
                     int managerID = allNodes.getInt("Manager_ID");
                     int artistID = allNodes.getInt("Artist_ID");
                     Request newRequest = new Request(requestID,requestDate,requestMessage,
@@ -445,10 +438,7 @@ public class HelloController {
                     int viewingID = allNodes.getInt("Viewing_ID");
                     String viewingTimeslot = allNodes.getString("Timeslot");
                     int viewingCapacity = allNodes.getInt("Gallery_Capacity");
-                    int viewerID = allNodes.getInt("Viewer_ID");
-                    int artID = allNodes.getInt("Art_ID");
-                    Viewing newViewing = new Viewing(viewingID,viewingTimeslot,viewingCapacity,
-                            viewerID,artID);
+                    Viewing newViewing = new Viewing(viewingID,viewingTimeslot,viewingCapacity);
                     viewings.add(newViewing);
                     System.out.println(newViewing);
                 }
@@ -538,7 +528,7 @@ public class HelloController {
             DataBufferByte imageBuffByte = (DataBufferByte) imageRaster.getDataBuffer();
             byte[] imageData = imageBuffByte.getData();
 
-            System.out.println(Base64.getEncoder().encodeToString(imageData));
+            //System.out.println(Base64.getEncoder().encodeToString(imageData));
 
             InputStream curStream = new BufferedInputStream(new FileInputStream(curFile));
             File newCopy = new File("src/main/resources/com/example/design_3/Images/" + curFile.getName());
@@ -582,16 +572,6 @@ public class HelloController {
 //
 //        }
 //    }
-    @FXML
-    protected void fillElements(Event event){
-        if(addArtStatusCb.getItems().size() == 0)
-        {
-            addArtStatusCb.getItems().removeAll();
-            addArtStatusCb.getItems().add("Sold");
-            addArtStatusCb.getItems().add("In-Stock");
-            reqLabel.setTooltip(new Tooltip("All fields marked (*) are required"));
-        }
-    }
 
     @FXML
     protected void enableButtons(Event event){
@@ -641,21 +621,17 @@ public class HelloController {
                 String interpretation = addArtInspirationTf.getText();
                 Double price = Double.parseDouble(addArtPriceTf.getText());
                 Boolean displayStatus = addArtOnDisplayCb.isSelected();
-                String artStatus = addArtOnDisplayCb.getText();
+                Boolean artStatus = addArtStatusCb.isSelected();
                 Boolean newArtist = addArtNewArtist.isSelected();
                 if (!newArtist) {
                     updateTable("Select * From Artist", "Artist");
-                    Popup tablePop = new Popup();
+                    Stage tablePop = new Stage();
                     VBox popupRoot = new VBox();
                     popupRoot.setPadding(new Insets(5));
                     popupRoot.setSpacing(5);
                     popupRoot.setStyle("-fx-background-color: #fafafa;" +
                             "-fx-border-radius: 30px");
                     popupRoot.setAlignment(Pos.CENTER);
-                    Label windowName = new Label("Who does this art belong to ?");
-                    windowName.setStyle("-fx-background-color: #00968a;" +
-                            "-fx-text-fill: #fafafa;" +
-                            "-fx-border-width: 80px;");
                     TableView curArtists = new TableView();
                     curArtists.setPrefHeight(200);
                     curArtists.setMinWidth(80);
@@ -666,7 +642,13 @@ public class HelloController {
                     curArtists.getColumns().add(artNamesTb);
                     curArtists.setItems(artists);
                     Button cancelBt = new Button("Cancel");
+                    cancelBt.setStyle("-fx-background-color: #00968a;" +
+                            "-fx-text-fill: #fafafa;");
+                    cancelBt.prefWidth(80);
                     Button continueBt = new Button("Continue");
+                    continueBt.setStyle("-fx-background-color:  #00968a;" +
+                            "-fx-text-fill: #fafafa;");
+                    continueBt.setPrefWidth(80);
                     HBox buttonsHb = new HBox();
                     buttonsHb.setSpacing(10);
                     buttonsHb.setAlignment(Pos.CENTER);
@@ -674,9 +656,13 @@ public class HelloController {
                     continueBt.getStyleClass().add("generalButtons");
                     Label errorMessage = new Label("");
                     errorMessage.setStyle("-fx-text-fill: red;");
-                    popupRoot.getChildren().addAll(windowName, curArtists,errorMessage, buttonsHb);
-                    tablePop.getContent().add(popupRoot);
-                    tablePop.show(((Button)event.getSource()).getScene().getWindow(),250,200);
+                    popupRoot.getChildren().addAll(curArtists,errorMessage, buttonsHb);
+                    tablePop.setScene(new Scene(popupRoot));
+                    tablePop.initOwner(((Button)event.getSource()).getScene().getWindow());
+                    tablePop.initModality(Modality.WINDOW_MODAL);
+                    tablePop.setTitle("Select artist:");
+                    tablePop.setWidth(300);
+                    tablePop.show();
                     continueBt.setOnAction(event1 -> {
                         Artist curArtist = (Artist) curArtists.getSelectionModel().selectedItemProperty().getValue();
                         if(curArtist !=null){
@@ -708,7 +694,78 @@ public class HelloController {
                     });
                 }
                 else{
+                    Stage artistPop = new Stage();
+                    artistPop.initOwner(((Button)event.getSource()).getScene().getWindow());
+                    artistPop.initModality(Modality.WINDOW_MODAL);
+                    artistPop.setTitle("Who does this artwork belong to?");
+                    FXMLLoader curLoader = new FXMLLoader(HelloController.class.getResource("Manager/AddArtist.fxml"));
+                    Scene artistScene = new Scene(curLoader.load());
+                    artistPop.setScene(artistScene);
+                    artistPop.show();
+                    Button confirmBt = (Button)artistScene.lookup("#addArtistConfirmBt");
+                    confirmBt.setOnAction(event1 -> {
+                        updateTable("Select * From Artist", "Artist");
+                        int curTableSize = artists.size();
+                        addArtistNameTf = (TextField) artistScene.lookup("#addArtistNameTf");
+                        addArtistSNameTf = (TextField) artistScene.lookup("#addArtistSNameTf");
+                        addArtistEmailTf = (TextField) artistScene.lookup("#addArtistEmailTf");
+                        addArtistCountryTf = (TextField) artistScene.lookup("#addArtistCountryTf");
+                        addArtistBYearTf = (TextField) artistScene.lookup("#addArtistBYearTf");
+                        addArtistDYear = (TextField) artistScene.lookup("#addArtistDYear");
+                        addArtistPseudonymTf = (TextField) artistScene.lookup("#addArtistPseudonymTf");
+                        addArtistErrorLb = (Label) artistScene.lookup("#addArtistErrorLb");
 
+                        if(checkContent(addArtistNameTf, addArtistSNameTf, addArtistEmailTf,addArtistCountryTf,addArtistBYearTf)){
+                            addArtistErrorLb.setText("");
+                            String artistName = addArtistNameTf.getText();
+                            String artistSName = addArtistSNameTf.getText();
+                            String artistEmail = addArtistEmailTf.getText();
+                            String artistCountry = addArtistCountryTf.getText();
+                            String artistBYear = addArtistBYearTf.getText();
+                            String artistDYear = addArtistDYear.getText();
+                            String artistPseudonym = addArtistPseudonymTf.getText();
+                            ConnectToDB newConnection = new ConnectToDB();
+                            String sqlString = String.format("Insert Into [Artist] (First_Name, Last_Name, Email, Country, Birth_Year, Death_Year, Pseudonym)\n" +
+                                            "Values ('%s', '%s', '%s', '%s', %s, %s, '%s');", artistName,artistSName,artistEmail,artistCountry,
+                                    artistBYear,artistDYear,artistPseudonym);
+                            newConnection.addToDB(sqlString);
+
+                            updateTable("Select * From Artist", "Artist");
+                            Artist curArtist = artists.get(artists.size()-1);
+                            int newTableSize = artists.size();
+                            if(curTableSize < newTableSize) {
+                                try {
+                                    if(curArtist !=null){
+                                        String artistID = "" + curArtist.getArtistID();
+                                        String purchaseID = null;
+                                        String imagePath = curFile.getPath();
+                                        String sqString = String.format("Insert Into [Art] (Art_Title, Art_Date, Art_type, Art_Style, Interpretation, Display_Status, Sale_Status, Price, Artist_ID, Purchase_ID, Image)\n" +
+                                                        "Values ('%s', #%s#, '%s', '%s', '%s', '%s', '%s', %s, %s, %s, '%s');", title, date, type, style, interpretation, displayStatus,
+                                                artStatus, price, artistID, purchaseID, imagePath);
+                                        ConnectToDB addArt = new ConnectToDB();
+                                        addArt.addToDB(sqString);
+                                        try {
+                                            switchInner("Notifications.fxml","notificationPage", event);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    else{
+                                        addArtistErrorLb.setText("Please select an artist before continuing.");
+                                    }
+                                    artistPop.hide();
+                                }
+                                catch(Exception e){
+                                    System.out.println(e.getMessage());
+                                }
+                            }
+                            else
+                                System.out.println("An error occurred, artist not added");
+                        }
+                        else{
+                            addArtistErrorLb.setText("One or more of the required fields (*) is empty");
+                        }
+                    });
                 }
             }
             else{
@@ -747,6 +804,7 @@ public class HelloController {
     public void onAddArtistClick(ActionEvent event){
         try {
             switchInner("Manager/AddArtist.fxml", "addArtistPn", event);
+
         }
         catch(Exception e){
             System.out.println(e.getMessage());
@@ -788,11 +846,28 @@ public class HelloController {
         switchInner("OnDisplay.fxml", "onDisplayContent",event);
         updateTable("Select * From Art Where Display_Status = true", "Art");
         curContent = (Pane) parentBox.getChildren().get(1);
-        onDisplayTable = (TableView) curContent.lookup("#onDisplayTable");
-        artNamesTb = new TableColumn<>("Name");
-        artNamesTb.setCellValueFactory(new PropertyValueFactory<Art,String>("artTitle"));
-        onDisplayTable.getColumns().add(artNamesTb);
-        onDisplayTable.setItems(artworks);
+        artScroll = (ScrollPane) curContent.lookup("#artScroll");
+        HBox artHolderHb = new HBox();
+        artHolderHb.setPrefSize(696,300);
+        artHolderHb.setSpacing(30);
+        for(Art curArt:artworks){
+            updateTable(String.format("Select * from Artist where ArtistID = %d",curArt.getArtistID()),"Artist");
+            Artist curArtist = artists.get(0);
+            VBox curArtHoldVb = new VBox();
+            curArtHoldVb.setPadding(new Insets(10,10,10,10));
+            curArtHoldVb.setPrefSize(240,300);
+            curArtHoldVb.setSpacing(20);
+            curArtHoldVb.setAlignment(Pos.TOP_CENTER);
+            Label artName = new Label(curArt.getArtTitle());
+            Label artArtist = new Label(String.format("%s %s", curArtist.getArtistFName().get(),curArtist.getArtistLName().get()));
+            ImageView artImage = new ImageView();
+            artImage.setImage(convertToFxImage(curArt.getArtImage()));
+            artImage.setFitHeight(150);
+            artImage.setFitWidth(150);
+            curArtHoldVb.getChildren().addAll(artImage, artName, artArtist);
+            artHolderHb.getChildren().add(curArtHoldVb);
+        }
+        artScroll.setContent(artHolderHb);
     }
     private void updateTableView(String sqlString, String tableName, String tableFxId, String tableColumnName, String attributeName){
         updateTable(sqlString, tableName);
@@ -949,13 +1024,26 @@ public class HelloController {
             viewClientEmail.setText(curClient.getViewerEmail());
             viewClientPhone.setText(curClient.getViewerPhone());
             viewClientAddress.setText(curClient.getClientAddress());
-            TableColumn artName = new TableColumn<>("Art");
-            TableColumn purchaseDate = new TableColumn("Date Purchased");
+            artworks = getArtSold(curClient);
+            TableColumn artName = new TableColumn<>("Art Name");
             TableColumn purchaseAmount = new TableColumn("Amount");
-
+            artName.setCellValueFactory(new PropertyValueFactory<Art,String>("artTitle"));
+            purchaseAmount.setCellValueFactory(new PropertyValueFactory<Art,Double>("artPrice"));
+            clientPurchTable.getColumns().addAll(artName,purchaseAmount);
+            clientPurchTable.setItems(artworks);
         }
     }
-
+    private ObservableList getArtSold(Client curClient){
+        ObservableList<Art> curArtworks = FXCollections.observableArrayList();
+        updateTable(String.format("Select * from Purchase Where Viewer_ID = %d",curClient.getViewerID()),"Purchase");
+        for(Purchase curPurchase: purchases){
+           updateTable(String.format("Select * from Art where Purchase_ID = %d",curPurchase.getPurchaseID()), "Art");
+           for(Art thisArt:artworks){
+               curArtworks.add(thisArt);
+           }
+        }
+        return curArtworks;
+    }
     @FXML
     protected void onAddArtistConfirm(ActionEvent event){
         updateTable("Select * From Artist", "Artist");
@@ -1030,6 +1118,24 @@ public class HelloController {
         }
     }
 
+    private static Image convertToFxImage(BufferedImage image)
+
+        //Source Dan on: https://stackoverflow.com/questions/30970005/bufferedimage-to-javafx-image
+    {
+        WritableImage wr = null;
+        if (image != null) {
+            wr = new WritableImage(image.getWidth(), image.getHeight());
+            PixelWriter pw = wr.getPixelWriter();
+            for (int x = 0; x < image.getWidth(); x++) {
+                for (int y = 0; y < image.getHeight(); y++) {
+                    pw.setArgb(x, y, image.getRGB(x, y));
+                }
+            }
+        }
+
+        return new ImageView(wr).getImage();
+    }
+
     @FXML
     protected void onRemoveArtist(ActionEvent event){
         String message = "Selected artist will be removed.\nContinue?";
@@ -1095,6 +1201,8 @@ public class HelloController {
         TextFormatter stringFormat = new TextFormatter(filter);
         return stringFormat;
     }
+
+
 
     private int linkObjects(Object comparator, String compareOn, ObservableList objectList)
     // Compares the object comparator to all objectList objects and returns index of object that matches on compareOn

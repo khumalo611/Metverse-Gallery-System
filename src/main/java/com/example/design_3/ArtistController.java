@@ -49,6 +49,7 @@ public class ArtistController {
     public Label checkRequestDateLb;
     public Label checkRequestStatusLb;
     public Label checkRequestMessageLb;
+    public Label requestLandingError;
 
     //Tables to store data in
     ObservableList <Artist> artists = FXCollections.observableArrayList();
@@ -61,7 +62,7 @@ public class ArtistController {
     ObservableList <Request> requests = FXCollections.observableArrayList();
     ObservableList <Viewing> viewings = FXCollections.observableArrayList();
 
-    Artist curArtist = new Artist(6,"Lwando","Macakati","LwandosFakemail@gmail.com","South Africa",
+    Artist curArtist = new Artist(9,"Lwando","Macakati","LwandosFakemail@gmail.com","South Africa",
             1990, "Passwy","fakePseudo", 2085);
     private Pane curContent;
 
@@ -76,31 +77,43 @@ public class ArtistController {
     @FXML
     protected void onRequestsBtClick(ActionEvent event) throws IOException {
         switchContent("Artist/RequestLanding.fxml","requestLanding");
-
     }
     @FXML
     protected void onRequestMeeting(ActionEvent event){
-        try {
-            switchInner("Artist/RequestMeeting.fxml", "requestMeetingPn", event);
-            updateTable("Select * From Manager","Manager");
-            TableColumn managerName = new TableColumn<>("Name");
-            TableColumn managerSName = new TableColumn("Surname");
-            managerName.setCellValueFactory(new PropertyValueFactory<Manager,String>("managerFName"));
-            managerSName.setCellValueFactory(new PropertyValueFactory<Manager, String>("managerLName"));
-            requestMeetingTb = (TableView) parentBox.getChildren().get(1).lookup("#requestMeetingTb");
-            requestMeetingTb.getColumns().addAll(managerName,managerSName);
-            requestMeetingTb.setItems(managers);
-            requestMeetingTb.getSelectionModel().selectedItemProperty().addListener(((observableValue, oldValue, newValue) ->{
-                Manager curManager = (Manager)requestMeetingTb.getSelectionModel().getSelectedItem();
-                selectedManagerLb = (Label) parentBox.getChildren().get(1).lookup("#selectedManagerLb");
-                selectedManagerLb.setText(curManager.getManagerFName() + " " + curManager.getManagerLName());
-            } ));
-            requestMessageTf = (TextArea) parentBox.getChildren().get(1).lookup("#requestMessageTf");
-            requestMessageTf.setTextFormatter(setTextFormat());
-        }
-        catch(Exception e){
-            System.out.println("Couldn't switch to request meeting");
-            System.out.println(e.getMessage());
+        updateTable(String.format("Select * From Request Where Artist_ID = %d", curArtist.getArtistID()),"Request" );
+        if(requests.size() > 0){
+            try {
+                Request curRequest = requests.get(0);
+                if (curRequest.getReqResponse() == "Approved" || curRequest.getReqResponse() == "Declined") {
+                    return;
+                }
+                requestLandingError.setText("Can't have more than one active requests, try again later.");
+            }catch (Exception e)
+            {
+                System.out.println(e.getMessage());
+            }
+        }else {
+            try {
+                switchInner("Artist/RequestMeeting.fxml", "requestMeetingPn", event);
+                updateTable("Select * From Manager", "Manager");
+                TableColumn managerName = new TableColumn<>("Name");
+                TableColumn managerSName = new TableColumn("Surname");
+                managerName.setCellValueFactory(new PropertyValueFactory<Manager, String>("managerFName"));
+                managerSName.setCellValueFactory(new PropertyValueFactory<Manager, String>("managerLName"));
+                requestMeetingTb = (TableView) parentBox.getChildren().get(1).lookup("#requestMeetingTb");
+                requestMeetingTb.getColumns().addAll(managerName, managerSName);
+                requestMeetingTb.setItems(managers);
+                requestMeetingTb.getSelectionModel().selectedItemProperty().addListener(((observableValue, oldValue, newValue) -> {
+                    Manager curManager = (Manager) requestMeetingTb.getSelectionModel().getSelectedItem();
+                    selectedManagerLb = (Label) parentBox.getChildren().get(1).lookup("#selectedManagerLb");
+                    selectedManagerLb.setText(curManager.getManagerFName() + " " + curManager.getManagerLName());
+                }));
+                requestMessageTf = (TextArea) parentBox.getChildren().get(1).lookup("#requestMessageTf");
+                requestMessageTf.setTextFormatter(setTextFormat());
+            } catch (Exception e) {
+                System.out.println("Couldn't switch to request meeting");
+                System.out.println(e.getMessage());
+            }
         }
     }
     @FXML
@@ -113,7 +126,7 @@ public class ArtistController {
             String managerID = curManager.getManagerID() + "";
             String artistID = curArtist.getArtistID()+ "";
             ConnectToDB curConnection = new ConnectToDB();
-            String sqlString = String.format("Insert Into Request ([Date], Message, Manager_ID, Artist_ID) Values (#%s#,'%s',%s,%s);",
+            String sqlString = String.format("Insert Into Request ([Date], Message, Manager_ID, Artist_ID, Response) Values (#%s#,'%s',%s,%s,'Pending');",
                     date,message,managerID, artistID);
             curConnection.addToDB(sqlString);
             try {
@@ -146,9 +159,13 @@ public class ArtistController {
         Request curRequest = requests.get(0);
         checkRequestMessageLb.setText(curRequest.getReqMessage());
         checkRequestDateLb.setText(curRequest.getReqDate());
-        if(curRequest.reqResponse.get() == false){
+        if(curRequest.reqResponse.get() == "Declined"){
             checkRequestStatusLb.setStyle("-fx-text-fill: red;");
             checkRequestStatusLb.setText("Declined");
+        }
+        else if (curRequest.reqResponse.get() != "Approved"){
+            checkRequestStatusLb.setStyle("-fx-text-fill: #838383;");
+            checkRequestStatusLb.setText("Pending");
         }
     }
     @FXML
@@ -304,7 +321,7 @@ public class ArtistController {
                         int requestID = allNodes.getInt("Request_ID");
                         String requestDate = allNodes.getString("Date");
                         String requestMessage = allNodes.getString("Message");
-                        Boolean requestResponse = allNodes.getBoolean("Response");
+                        String requestResponse = allNodes.getString("Response");
                         int managerID = allNodes.getInt("Manager_ID");
                         int artistID = allNodes.getInt("Artist_ID");
                         Request newRequest = new Request(requestID,requestDate,requestMessage,
@@ -318,10 +335,7 @@ public class ArtistController {
                         int viewingID = allNodes.getInt("Viewing_ID");
                         String viewingTimeslot = allNodes.getString("Timeslot");
                         int viewingCapacity = allNodes.getInt("Gallery_Capacity");
-                        int viewerID = allNodes.getInt("Viewer_ID");
-                        int artID = allNodes.getInt("Art_ID");
-                        Viewing newViewing = new Viewing(viewingID,viewingTimeslot,viewingCapacity,
-                                viewerID,artID);
+                        Viewing newViewing = new Viewing(viewingID,viewingTimeslot,viewingCapacity);
                         viewings.add(newViewing);
                         System.out.println(newViewing);
                     }
