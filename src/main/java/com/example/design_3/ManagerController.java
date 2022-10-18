@@ -17,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -32,6 +33,9 @@ import java.io.*;
 import java.lang.reflect.Method;
 import java.sql.*;
 import java.util.function.UnaryOperator;
+
+import static javafx.scene.paint.Color.*;
+import static javafx.scene.paint.Color.BLACK;
 
 public class ManagerController {
     // This is the controller for the Manager's page. This controls all events that take place for the Manager
@@ -115,8 +119,6 @@ public class ManagerController {
     public Button confirmationConfirmBt;
     public ScrollPane artScroll;
 
-
-
     private Pane curContent;
     // Search artwork use case elements
     @FXML
@@ -158,6 +160,83 @@ public class ManagerController {
     ObservableList <Purchase> purchases = FXCollections.observableArrayList();
     ObservableList <Request> requests = FXCollections.observableArrayList();
     ObservableList <Viewing> viewings = FXCollections.observableArrayList();
+
+
+    //Integration variables
+
+    //Search Artist use-case fields
+    @FXML
+    private TextField artistSearchTf;
+    public TextField clientSearchTf;
+    //Update Artist use-case fields
+    @FXML
+    private Pane updateArtistPn;
+    @FXML
+    private TextField updateArtistBYear;
+    @FXML
+    private TextField updateArtistCountry;
+    @FXML
+    private TextField updateArtistDYear;
+    @FXML
+    private TextField updateArtistEmail;
+    @FXML
+    private TextField updateArtistFName;
+    @FXML
+    private TextField updateArtistLName;
+    @FXML
+    private TextField updateArtistPseudonym;
+    @FXML
+    private Label txtArtistUpdAlert;
+    static int artistIDVar, artIDVar, reqIDVar;
+    //Update Art use-case fields
+    @FXML
+    private Label txtArtUpdAlert;
+    @FXML
+    private TextField updateArtDate;
+    @FXML
+    private TextField updateArtInterpretation;
+    @FXML
+    private Pane updateArtPn;
+    @FXML
+    private TextField updateArtPrice;
+    @FXML
+    private TextField updateArtStyle;
+    @FXML
+    private TextField updateArtTitle;
+    @FXML
+    private TextField updateArtType;
+    @FXML
+    private RadioButton rbtnNoDisplay;
+    @FXML
+    private RadioButton rbtnNotSoldSale;
+    @FXML
+    private RadioButton rbtnSoldSale;
+    @FXML
+    private RadioButton rbtnYesDisplay;
+
+    //View Artist use-case fields
+    @FXML
+    private Label lblArtDate;
+    @FXML
+    private Label lblArtStyle;
+    @FXML
+    private Label lblArtTitle;
+    @FXML
+    private Label lblArtType;
+    @FXML
+    private Label lblArtistName;
+    @FXML
+    private Label lblInterpretation;
+    @FXML
+    private Label lblPrice;
+    @FXML
+    private Label lblSaleStatus;
+    @FXML
+    private Pane viewArtworkPn;
+    private AnchorPane curContentB;
+
+
+    //=====
 
     @FXML
     protected void onHomeBtClick(ActionEvent event) throws IOException
@@ -1160,4 +1239,215 @@ public class ManagerController {
 //        }
 //        return index;
 //    }
+
+    //Integration Use Case
+
+    @FXML
+    protected void onSearchArtist(Event event)
+    // Handles the search for art use-case
+    {
+        if (artistSearchTf.getText() == "") {
+            artistSearchTf.getStyleClass().add("searchBarError");
+            artistSearchTf.setPromptText("Please enter name of artist");
+        } else {
+            String searchItem = "'*" + artistSearchTf.getText() + "*'";
+            String sqlString = "Select * From Artist Where First_Name Like " + searchItem;
+            updateTable(sqlString, "Artist");
+            artistSearchTable.setItems(artists);
+
+        }
+        artistSearchTf.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                artistSearchTf.getStyleClass().remove(artistSearchTf.getStyleClass().size() - 1);
+                artistSearchTf.setPromptText("Enter artwork name");
+            }
+        });
+    }
+
+    @FXML
+    protected void onSearchClient(Event event)
+    // Handles the search for art use-case
+    {
+        if (clientSearchTf.getText() == "") {
+            clientSearchTf.getStyleClass().add("searchBarError");
+            clientSearchTf.setPromptText("Please enter name of client");
+        } else {
+            String searchItem = "'*" + clientSearchTf.getText() + "*'";
+            String sqlString = "Select * From Viewer Where First_Name Like " + searchItem;
+            updateTable(sqlString, "Viewer");
+            clientSearchTable.setItems(viewers);
+
+        }
+        clientSearchTf.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                clientSearchTf.getStyleClass().remove(clientSearchTf.getStyleClass().size() - 1);
+                clientSearchTf.setPromptText("Enter client name");
+            }
+        });
+    }
+
+    @FXML
+    void onUpdateArtist(ActionEvent event) throws IOException {
+        parentBox = (HBox)((Button)event.getSource()).getScene().getRoot();
+        FXMLLoader artPage = new FXMLLoader(HelloApplication.class.getResource("Manager/UpdateArtist.fxml"));
+        Scene testScene = new Scene(artPage.load());
+        curContent = (Pane)testScene.lookup("#updateArtistPn");
+        parentBox.getChildren().remove(1);
+        parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
+        Artist curArtist = (Artist) artistSearchTable.getSelectionModel().selectedItemProperty().getValue();
+        if(curArtist!=null){
+            Pane updateArtist = (Pane)parentBox.getChildren().get(1);
+            updateArtistFName = (TextField) updateArtist.lookup("#updateArtistFName");
+            updateArtistLName = (TextField) updateArtist.lookup("#updateArtistLName");
+            updateArtistPseudonym = (TextField) updateArtist.lookup("#updateArtistPseudonym");
+            updateArtistEmail = (TextField) updateArtist.lookup("#updateArtistEmail");
+            updateArtistCountry = (TextField) updateArtist.lookup("#updateArtistCountry");
+            updateArtistBYear = (TextField) updateArtist.lookup("#updateArtistBYear");
+            updateArtistDYear = (TextField) updateArtist.lookup("#updateArtistDYear");
+
+            artistIDVar = curArtist.getArtistID();
+            updateArtistFName.setText(curArtist.getArtistFName().getValue());
+            updateArtistLName.setText(curArtist.getArtistLName().getValue());
+            updateArtistPseudonym.setText(curArtist.getArtistPseudonym().getValue());
+            updateArtistEmail.setText(curArtist.getArtistEmail().getValue());
+            updateArtistCountry.setText(curArtist.getArtistCountry().getValue());
+            updateArtistBYear.setText(String.valueOf(curArtist.getArtistBYear().getValue()));
+            updateArtistDYear.setText(String.valueOf(curArtist.getArtistDYear().getValue()));
+        }
+    }
+
+    @FXML
+    void onConfirmUpdateArtist(ActionEvent event) {
+        if (updateArtistFName.getText().isBlank() && updateArtistLName.getText().isBlank() && updateArtistPseudonym.getText().isBlank() && updateArtistEmail.getText().isBlank() && updateArtistCountry.getText().isBlank() && updateArtistBYear.getText().isBlank() && updateArtistDYear.getText().isBlank()) {
+            txtArtistUpdAlert.setText("Update Failed! Please Check Your Entries And Try Again.");
+            txtArtistUpdAlert.setTextFill(RED);
+        } else {
+            String dataBaseURL = "jdbc:ucanaccess://MetVerse_Gallery11.accdb";
+            try {
+                Connection newConnection = DriverManager.getConnection(dataBaseURL);
+                System.out.println("Connected to MS Access database");
+                Statement sqlStatement = newConnection.createStatement();
+                String sql = String.format("UPDATE Artist SET First_Name = '%s', Last_Name = '%s', Email = '%s', Country = '%s', Birth_Year = %s, " +
+                        "Death_Year = %s, Psuedonym = '%s' WHERE ArtistID = %d;", updateArtistFName.getText(), updateArtistLName.getText(), updateArtistEmail.getText(), updateArtistCountry.getText(), updateArtistBYear.getText(), updateArtistDYear.getText(), updateArtistPseudonym.getText(), artistIDVar);
+                sqlStatement.executeUpdate(sql);
+
+                txtArtistUpdAlert.setText("Artist Details Updated Successfully!");
+                txtArtistUpdAlert.setTextFill(GREEN);
+                newConnection.close();
+            }
+            catch(Exception e){
+                e.printStackTrace();
+                e.getCause();
+            }
+        }
+    }
+
+    @FXML
+    void onUpdateArt(ActionEvent event) throws IOException {
+        parentBox = (HBox)((Button)event.getSource()).getScene().getRoot();
+        FXMLLoader artPage = new FXMLLoader(HelloApplication.class.getResource("Manager/UpdateArt.fxml"));
+        Scene testScene = new Scene(artPage.load());
+        curContent = (Pane)testScene.lookup("#updateArtPn");
+        parentBox.getChildren().remove(1);
+        parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
+        Art artObj = (Art) artSearchTable.getSelectionModel().selectedItemProperty().getValue();
+        if(artObj!=null){
+            Pane updateArt = (Pane)parentBox.getChildren().get(1);
+            updateArtTitle = (TextField) updateArt.lookup("#updateArtTitle");
+            updateArtDate = (TextField) updateArt.lookup("#updateArtDate");
+            updateArtType = (TextField) updateArt.lookup("#updateArtType");
+            updateArtStyle = (TextField) updateArt.lookup("#updateArtStyle");
+            updateArtInterpretation = (TextField) updateArt.lookup("#updateArtInterpretation");
+            updateArtPrice = (TextField) updateArt.lookup("#updateArtPrice");
+
+            artIDVar = artObj.getArtID();
+            updateArtTitle.setText(artObj.getArtTitle());
+            updateArtDate.setText(artObj.getArtDate());
+            updateArtType.setText(artObj.getArtType());
+            updateArtStyle.setText(artObj.getArtStyle());
+            updateArtInterpretation.setText(artObj.getArtInterpretation());
+            updateArtPrice.setText(String.valueOf(artObj.getArtPrice()));
+        }
+    }
+
+    @FXML
+    void onConfirmUpdateArt(ActionEvent event) {
+        if (updateArtTitle.getText().isBlank() && updateArtDate.getText().isBlank() && updateArtType.getText().isBlank() && updateArtStyle.getText().isBlank() && updateArtInterpretation.getText().isBlank() && updateArtPrice.getText().isBlank()) {
+            txtArtUpdAlert.setText("Update Failed! Please Check Your Entries And Try Again.");
+            txtArtUpdAlert.setTextFill(RED);
+        } else {
+            String dataBaseURL = "jdbc:ucanaccess://MetVerse_Gallery11.accdb";
+            try {
+                Connection newConnection = DriverManager.getConnection(dataBaseURL);
+                System.out.println("Connected to MS Access database");
+                Statement sqlStatement = newConnection.createStatement();
+                String sql = String.format("UPDATE Art SET Art_Title = '%s', Art_Type = '%s', Art_Style = '%s', Interpretation = '%s', " +
+                        "Price = '%s' WHERE Art_ID = %d;", updateArtTitle.getText(), updateArtType.getText(), updateArtStyle.getText(), updateArtInterpretation.getText(), updateArtPrice.getText(), artIDVar);
+                sqlStatement.executeUpdate(sql);
+                if (rbtnYesDisplay.isSelected()) {
+                    sql = String.format("UPDATE Art SET Display_Status = Yes WHERE Art_ID = %d;", artIDVar);
+                    sqlStatement.executeUpdate(sql);
+                } else {
+                    sql = String.format("UPDATE Art SET Display_Status = No WHERE Art_ID = %d;", artIDVar);
+                    sqlStatement.executeUpdate(sql);
+                }
+                if (rbtnSoldSale.isSelected()) {
+                    sql = String.format("UPDATE Art SET Sale_Status = Yes WHERE Art_ID = %d;", artIDVar);
+                    sqlStatement.executeUpdate(sql);
+                } else {
+                    sql = String.format("UPDATE Art SET Sale_Status = No WHERE Art_ID = %d;", artIDVar);
+                    sqlStatement.executeUpdate(sql);
+                }
+                txtArtUpdAlert.setText("Artist Details Updated Successfully!");
+                txtArtUpdAlert.setTextFill(GREEN);
+                newConnection.close();
+            }
+            catch(Exception e){
+                e.printStackTrace();
+                e.getCause();
+            }
+        }
+    }
+
+    @FXML
+    protected void onViewArtwork(ActionEvent event) throws IOException {
+        parentBox = (HBox)((Button)event.getSource()).getScene().getRoot();
+        FXMLLoader artPage = new FXMLLoader(HelloApplication.class.getResource("Manager/ViewArtwork.fxml"));
+        Scene testScene = new Scene(artPage.load());
+        curContentB = (AnchorPane)testScene.lookup("#viewArtworkPn");
+        parentBox.getChildren().remove(1);
+        parentBox.getChildren().add(parentBox.getChildren().size(),curContentB);
+        Art artObj = (Art) artSearchTable.getSelectionModel().selectedItemProperty().getValue();
+        if(artObj != null){
+            AnchorPane viewArtwork = (AnchorPane)parentBox.getChildren().get(1);
+            lblArtDate = (Label) viewArtwork.lookup("#lblArtDate");
+            lblArtStyle = (Label) viewArtwork.lookup("#lblArtStyle");
+            lblArtTitle = (Label) viewArtwork.lookup("#lblArtTitle");
+            lblArtType = (Label) viewArtwork.lookup("#lblArtType");
+            lblArtistName = (Label) viewArtwork.lookup("#lblArtistName");
+            lblInterpretation = (Label) viewArtwork.lookup("#lblInterpretation");
+            lblPrice = (Label) viewArtwork.lookup("#lblPrice");
+            lblSaleStatus = (Label) viewArtwork.lookup("#lblSaleStatus");
+
+            lblArtDate.setText("Made in " + String.valueOf(artObj.getArtDate()));
+            lblArtStyle.setText("Exhibits " + artObj.getArtStyle());
+            lblArtTitle.setText(artObj.getArtTitle());
+            lblArtType.setText(artObj.getArtType());
+            lblArtistName.setText("By Artist ID " + String.valueOf(artObj.getArtistID()));
+            lblInterpretation.setText(artObj.getArtInterpretation());
+            if (artObj.getArtPrice() != 0) {
+                lblPrice.setTextFill(BLACK);
+                lblPrice.setText(String.valueOf(artObj.getArtPrice()));
+            }
+            if (artObj.getArtSaleStatus() != null) {
+                lblSaleStatus.setTextFill(BLACK);
+                if (artObj.getArtSaleStatus() == "FALSE") {
+                    lblSaleStatus.setText("Not Sold \tPurchase ID: NULL");
+                } else {
+                    lblSaleStatus.setText("Sold \tPurchase ID " + artObj.getPurchaseID());
+                }
+                System.out.println(artObj.getArtSaleStatus());
+            }
+        }
+    }
 }

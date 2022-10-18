@@ -33,8 +33,8 @@
               </TableView>
             <HBox spacing="8.0">
                <children>
-                    <TextField prefHeight="25.0" prefWidth="280.0" />
-                    <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="103.0" style="-fx-background-color: #00968a; -fx-border-radius: 0;" text="Search" textFill="#fafafa" />
+                    <TextField onAction="#onSearchClient" prefHeight="25.0" prefWidth="280.0" />
+                    <Button mnemonicParsing="false" onAction="#onSearchClient" prefHeight="25.0" prefWidth="103.0" style="-fx-background-color: #00968a; -fx-border-radius: 0;" text="Search" textFill="#fafafa" />
                </children>
             </HBox>
          </children>
