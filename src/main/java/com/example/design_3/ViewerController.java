@@ -59,6 +59,10 @@ public class ViewerController {
         switchContent("Viewer/BookingLanding.fxml","bookingContent");
     }
 
+    @FXML
+    void onConfirmBooking(ActionEvent event) {
+    }
+
     //Switches the content on the display section of the window
     private void switchContent(String targetFxmlPath, String targetContentID) throws IOException {
         FXMLLoader artPage = new FXMLLoader(HelloApplication.class.getResource(targetFxmlPath));

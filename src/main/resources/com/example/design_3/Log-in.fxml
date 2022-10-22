@@ -56,5 +56,10 @@
             </Button>
          </children>
       </VBox>
+      <Button fx:id="btnRegister" layoutX="507.0" layoutY="382.0" mnemonicParsing="false" onAction="#RegisterButtonClick" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Register" textFill="#fafafa">
+         <font>
+            <Font name="MS Reference Sans Serif" size="12.0" />
+         </font>
+      </Button>
     </children>
 </Pane>

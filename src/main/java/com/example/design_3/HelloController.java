@@ -1367,7 +1367,7 @@ public class HelloController {
     void MCancelRegBtClick(ActionEvent event) throws IOException {
         Stage primaryStage = (Stage) btnMCancel.getScene().getWindow();
         primaryStage.close();
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Login.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Log-in.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
         stage.setTitle("Hello!");
@@ -1404,7 +1404,7 @@ public class HelloController {
     void ACancelRegBtClick(ActionEvent event) throws IOException {
         Stage primaryStage = (Stage) btnACancel.getScene().getWindow();
         primaryStage.close();
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Login.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Log-in.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
         stage.setTitle("Hello!");
@@ -1441,7 +1441,7 @@ public class HelloController {
     void VCancelRegBtClick(ActionEvent event) throws IOException {
         Stage primaryStage = (Stage) btnVCancel.getScene().getWindow();
         primaryStage.close();
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Login.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Log-in.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
         stage.setTitle("Hello!");

@@ -235,6 +235,27 @@ public class ManagerController {
     private Pane viewArtworkPn;
     private AnchorPane curContentB;
 
+    //View Request use-case fields
+    @FXML
+    private TableView requestSearchTable;
+    public TableColumn artistIDCol;
+    public TableColumn dateCol;
+    @FXML
+    private Label lblreqDate;
+    @FXML
+    private TextArea txtreqMessage;
+    @FXML
+    private Pane viewRequestPn;
+    @FXML
+    private Button btnViewRequest;
+
+    //Update Request Status use-case fields
+    @FXML
+    private Label lblRequestAlert;
+    @FXML
+    private RadioButton rbtnAcceptReq;
+    @FXML
+    private RadioButton rbtnDeclineReq;
 
     //=====
 
@@ -297,7 +318,18 @@ public class ManagerController {
     @FXML
     protected void onRequestsBtClick(ActionEvent event) throws IOException
     {
+        //This line will replace the commented out paragraph, both do the same thing, but this is obviously cleaner.
         switchContent("Manager/RequestLanding.fxml", "requestLanding");
+
+        updateTable("Select * From Request WHERE Response = 'Pending'", "Request");
+        requestSearchTable = (TableView) curContent.lookup("#requestSearchTable");
+        artistIDCol = new TableColumn<>("Artist ID");
+        dateCol = new TableColumn<>("Date");
+        artistIDCol.setCellValueFactory(new PropertyValueFactory<Request,String>("artistID"));
+        dateCol.setCellValueFactory(new PropertyValueFactory<Request,String>("reqDate"));
+        requestSearchTable.getColumns().add(artistIDCol);
+        requestSearchTable.getColumns().add(dateCol);
+        requestSearchTable.setItems(requests);
     }
 
     @FXML
@@ -611,6 +643,9 @@ public class ManagerController {
             addArtistCountryTf.setTextFormatter(setTextFormat());
             addArtistPseudonymTf.setTextFormatter(setTextFormat());
             addArtistReqLb.setTooltip(new Tooltip("All fields marked (*) are required"));
+        }
+        else if(requestSearchTable != null){
+            btnViewRequest.disableProperty().bind(Bindings.isEmpty(requestSearchTable.getSelectionModel().getSelectedItems()));
         }
     }
     @FXML
@@ -1448,6 +1483,52 @@ public class ManagerController {
                 }
                 System.out.println(artObj.getArtSaleStatus());
             }
+        }
+    }
+
+    @FXML
+    protected void onViewRequest(ActionEvent event) throws IOException {
+        parentBox = (HBox)((Button)event.getSource()).getScene().getRoot();
+        FXMLLoader requestPage = new FXMLLoader(HelloApplication.class.getResource("Manager/ViewRequest.fxml"));
+        Scene testScene = new Scene(requestPage.load());
+        curContent = (Pane)testScene.lookup("#viewRequestPn");
+        parentBox.getChildren().remove(1);
+        parentBox.getChildren().add(parentBox.getChildren().size(),curContent);
+        Request reqObj = (Request) requestSearchTable.getSelectionModel().selectedItemProperty().getValue();
+        if(reqObj != null){
+            Pane viewRequest = (Pane)parentBox.getChildren().get(1);
+            txtreqMessage = (TextArea) viewRequest.lookup("#txtreqMessage");
+            lblreqDate = (Label) viewRequest.lookup("#lblreqDate");
+            reqIDVar = reqObj.getRequestID();
+
+            txtreqMessage.setText(reqObj.getReqMessage());
+            lblreqDate.setText(reqObj.getReqDate());
+        }
+    }
+
+    @FXML
+    protected void onRequestResponse (ActionEvent event) throws IOException {
+        String reqChoice;
+        if (rbtnAcceptReq.isSelected()) {
+            reqChoice = "Accepted";
+        } else {
+            reqChoice = "Decline";
+        }
+        String dataBaseURL = "jdbc:ucanaccess://MetVerse_Gallery11.accdb";
+        try {
+            Connection newConnection = DriverManager.getConnection(dataBaseURL);
+            System.out.println("Connected to MS Access database");
+            Statement sqlStatement = newConnection.createStatement();
+            String sql = String.format("UPDATE Request SET Response = '%s' WHERE Request_ID = %d;", reqChoice, reqIDVar);
+            sqlStatement.executeUpdate(sql);
+
+            lblRequestAlert.setText("Response Sent To Server!");
+            lblRequestAlert.setTextFill(GREEN);
+            newConnection.close();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            e.getCause();
         }
     }
 }
