@@ -16,7 +16,7 @@
                <children>
                   <Button fx:id="addArtistBt" mnemonicParsing="false" onAction="#onAddArtistClick" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Add" textFill="#fafafa" />
                   <Button fx:id="removeArtistBt" disable="true" mnemonicParsing="false" onAction="#onRemoveArtist" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Remove" textFill="#fafafa" />
-                  <Button fx:id="updateArtistBt" disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Update" textFill="#fafafa" />
+                  <Button fx:id="updateArtistBt" disable="true" mnemonicParsing="false" onAction="#onUpdateArtist" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Update" textFill="#fafafa" />
                   <Button fx:id="viewArtistBt" disable="true" mnemonicParsing="false" onAction="#onViewArtistClick" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="View" textFill="#fafafa" />
                </children>
             </HBox>
@@ -27,8 +27,8 @@
             </TableView>
             <HBox spacing="8.0">
                <children>
-                  <TextField fx:id="artistSearchTf" prefHeight="25.0" prefWidth="280.0" />
-                  <Button fx:id="artistSearchBt" mnemonicParsing="false" prefHeight="25.0" prefWidth="103.0" style="-fx-background-color: #00968a; -fx-border-radius: 0;" text="Search" textFill="#fafafa" />
+                  <TextField fx:id="artistSearchTf" onAction="#onSearchArtist" prefHeight="25.0" prefWidth="280.0" promptText="Enter artist name" />
+                  <Button fx:id="artistSearchBt" mnemonicParsing="false" onAction="#onSearchArtist" prefHeight="25.0" prefWidth="103.0" style="-fx-background-color: #00968a; -fx-border-radius: 0;" text="Search" textFill="#fafafa" />
                </children>
             </HBox>
          </children>

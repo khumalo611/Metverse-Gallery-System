@@ -23,21 +23,22 @@
       <HBox alignment="CENTER" layoutX="153.0" layoutY="422.0" prefHeight="25.0" prefWidth="390.0" spacing="20.0">
          <children>
             <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Cancel" textFill="#fafafa" />
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Confirm" textFill="#fafafa" />
+            <Button mnemonicParsing="false" onAction="#onConfirmBooking" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Confirm" textFill="#fafafa" />
          </children>
       </HBox>
       <VBox layoutX="298.0" layoutY="163.0" prefHeight="200.0" prefWidth="150.0" spacing="10.0">
          <children>
-            <RadioButton mnemonicParsing="false" text="01 August 2022">
+            <RadioButton fx:id="rbtDateA" mnemonicParsing="false" text="01 August 2022">
                <toggleGroup>
                   <ToggleGroup fx:id="TimeSlots" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton mnemonicParsing="false" text="02 August 2022" toggleGroup="$TimeSlots" />
-            <RadioButton mnemonicParsing="false" text="03 August 2022" toggleGroup="$TimeSlots" />
-            <RadioButton mnemonicParsing="false" text="04 August 2022" toggleGroup="$TimeSlots" />
-            <RadioButton mnemonicParsing="false" text="05 August 2022" toggleGroup="$TimeSlots" />
-            <RadioButton mnemonicParsing="false" text="06 August 2022" toggleGroup="$TimeSlots" />
+            <RadioButton fx:id="rbtDateB" mnemonicParsing="false" text="02 August 2022" toggleGroup="$TimeSlots" />
+            <RadioButton fx:id="rbtDateC" mnemonicParsing="false" text="03 August 2022" toggleGroup="$TimeSlots" />
+            <RadioButton fx:id="rbtDateD" mnemonicParsing="false" text="04 August 2022" toggleGroup="$TimeSlots" />
+            <RadioButton fx:id="rbtDateE" mnemonicParsing="false" text="05 August 2022" toggleGroup="$TimeSlots" />
+            <RadioButton fx:id="rbtDateF" mnemonicParsing="false" text="06 August 2022" toggleGroup="$TimeSlots" />
+            <RadioButton fx:id="rbtDateG" mnemonicParsing="false" text="07 August 2022" toggleGroup="$TimeSlots" />
          </children>
       </VBox>
    </children>

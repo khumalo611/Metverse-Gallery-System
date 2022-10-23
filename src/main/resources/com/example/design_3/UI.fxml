@@ -36,7 +36,7 @@
                 </Label>
             </children>
         </Pane>
-        <HBox alignment="CENTER" layoutX="577.0" layoutY="475.0" prefHeight="25.0" prefWidth="390.0" spacing="20.0" style="-fx-background-color: #00968;">
+        <HBox alignment="CENTER" layoutX="363.0" layoutY="475.0" prefHeight="25.0" prefWidth="390.0" spacing="20.0" style="-fx-background-color: #00968;">
             <children>
                 <Button mnemonicParsing="false" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Button 2" textFill="#fafafa">
                     <font>
