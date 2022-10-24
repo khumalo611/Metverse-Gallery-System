@@ -68,7 +68,7 @@ public class ArtistController {
 
     @FXML
     protected void onHomeBtClick(ActionEvent event) throws IOException {
-        switchContent("Artist/HomePage.fxml","homeContent");
+        switchContent("Manager/HomePage.fxml","homeContent");
     }
     @FXML
     protected void onArtStatusBtClick(ActionEvent event) throws IOException {
