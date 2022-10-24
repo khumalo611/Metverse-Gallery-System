@@ -16,8 +16,8 @@
                <children>
                   <Button fx:id="addArtBt" mnemonicParsing="false" onAction="#onAddArtClickBt" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Add" textFill="#fafafa" />
                   <Button fx:id="removeArtBt" disable="true" mnemonicParsing="false" onAction="#onRemoveArt" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Remove" textFill="#fafafa" />
-                  <Button fx:id="updateArtBt" disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Update" textFill="#fafafa" />
-                  <Button fx:id="viewArtBt" disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="View" textFill="#fafafa" />
+                  <Button fx:id="updateArtBt" disable="true" mnemonicParsing="false" onAction="#onUpdateArt" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Update" textFill="#fafafa" />
+                  <Button fx:id="viewArtBt" disable="true" mnemonicParsing="false" onAction="#onViewArtwork" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00968a;" text="View" textFill="#fafafa" />
                </children>
             </HBox>
             <TableView fx:id="artSearchTable" layoutY="35.0" onMouseClicked="#enableButtons" prefHeight="141.0" prefWidth="390.0">

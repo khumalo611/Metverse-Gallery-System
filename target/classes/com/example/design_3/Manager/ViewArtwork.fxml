@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane fx:id="viewArtworkPn" prefHeight="542.0" prefWidth="696.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.design_3.ManagerController">
+   <children>
+      <Pane prefHeight="80.0" prefWidth="696.0" style="-fx-background-color: #00968a;">
+         <children>
+            <Label layoutX="304.0" layoutY="30.0" text="View Artwork" textFill="#fafafa">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Label fx:id="lblArtTitle" layoutX="75.0" layoutY="126.0" text="[Art Title]" />
+      <Label fx:id="lblArtistName" layoutX="75.0" layoutY="152.0" text="By [Artist Name]" />
+      <Label fx:id="lblArtDate" layoutX="75.0" layoutY="241.0" text="Made in [Art Date]" />
+      <Label fx:id="lblArtType" layoutX="75.0" layoutY="211.0" text="[Art Type]" />
+      <Label fx:id="lblArtStyle" layoutX="76.0" layoutY="271.0" text="Exhibits [Art Style]" />
+      <Label fx:id="lblSaleStatus" layoutX="75.0" layoutY="309.0" text="[Sale Status]       Purchase ID [Purchase ID]" textFill="TRANSPARENT" />
+      <Label fx:id="lblPrice" layoutX="75.0" layoutY="339.0" text="Price    R[Price]" textFill="TRANSPARENT" />
+      <Label layoutX="75.0" layoutY="369.0" text="Interpretation:" />
+      <Label fx:id="lblInterpretation" layoutX="75.0" layoutY="400.0" prefHeight="17.0" prefWidth="547.0" text="Label" textFill="TRANSPARENT" wrapText="true" />
+   </children>
+</AnchorPane>

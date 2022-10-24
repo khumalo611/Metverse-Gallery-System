@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="panelManagerReg" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="542.0" prefWidth="696.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.design_3.HelloController">
+   <children>
+      <Pane prefHeight="80.0" prefWidth="696.0" style="-fx-background-color: #00968a;">
+         <children>
+            <Label layoutX="206.0" layoutY="21.0" text="Register As Manager" textFill="#fafafa">
+               <font>
+                  <Font name="Maiandra GD" size="32.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <TextField fx:id="txtMFName" layoutX="280.0" layoutY="149.0" prefHeight="25.0" prefWidth="196.0" />
+      <TextField fx:id="txtMLName" layoutX="280.0" layoutY="199.0" prefHeight="25.0" prefWidth="196.0" />
+      <TextField fx:id="txtMNumber" layoutX="280.0" layoutY="249.0" prefHeight="25.0" prefWidth="196.0" />
+      <TextField fx:id="txtMEmail" layoutX="280.0" layoutY="299.0" prefHeight="25.0" prefWidth="196.0" />
+      <TextField fx:id="txtMPassword" layoutX="280.0" layoutY="349.0" prefHeight="25.0" prefWidth="196.0" />
+      <TextField fx:id="txtMCPassword" layoutX="280.0" layoutY="399.0" prefHeight="25.0" prefWidth="196.0" />
+      <Button fx:id="btnMRegister" layoutX="460.0" layoutY="472.0" mnemonicParsing="false" onAction="#MConfirmRegBtClick" prefHeight="32.0" prefWidth="91.0" style="-fx-background-color: #00968a;" text="Register" textFill="#fafafa" />
+      <Button fx:id="btnMCancel" layoutX="571.0" layoutY="472.0" mnemonicParsing="false" onAction="#MCancelRegBtClick" prefHeight="32.0" prefWidth="91.0" style="-fx-background-color: #00968a;" text="Cancel" textFill="#fafafa" />
+      <Label layoutX="76.0" layoutY="153.0" text="First Name :" />
+      <Label layoutX="76.0" layoutY="203.0" text="Last Name :" />
+      <Label layoutX="76.0" layoutY="253.0" text="Contact Number :" />
+      <Label layoutX="76.0" layoutY="303.0" text="Email :" />
+      <Label layoutX="76.0" layoutY="353.0" text="Password :" />
+      <Label layoutX="76.0" layoutY="403.0" text="Confirm Password :" />
+      <Label fx:id="txtMRegAlert" layoutX="76.0" layoutY="442.0" prefHeight="17.0" prefWidth="270.0" text="Label" textFill="TRANSPARENT" />
+   </children>
+</Pane>

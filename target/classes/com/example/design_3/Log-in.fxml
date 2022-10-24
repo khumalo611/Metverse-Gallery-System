@@ -47,14 +47,19 @@
         </Pane>
       <VBox alignment="CENTER" layoutX="422.0" layoutY="254.0" prefHeight="80.0" prefWidth="250.0" spacing="20.0">
          <children>
-            <TextField promptText="Email" />
-            <TextField promptText="Password" />
-            <Button mnemonicParsing="false" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Sign-In" textFill="#fafafa">
+            <TextField fx:id="txtEmail" promptText="Email" />
+            <TextField fx:id="txtPassword" promptText="Password" />
+            <Button fx:id="btnLogin" mnemonicParsing="false" onAction="#LoginButtonClick" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Sign-In" textFill="#fafafa">
                <font>
                   <Font name="MS Reference Sans Serif" size="12.0" />
                </font>
             </Button>
          </children>
       </VBox>
+      <Button fx:id="btnRegister" layoutX="507.0" layoutY="382.0" mnemonicParsing="false" onAction="#RegisterButtonClick" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Register" textFill="#fafafa">
+         <font>
+            <Font name="MS Reference Sans Serif" size="12.0" />
+         </font>
+      </Button>
     </children>
 </Pane>
