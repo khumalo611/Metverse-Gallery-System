@@ -873,7 +873,9 @@ public class HelloController {
             curArtHoldVb.setSpacing(20);
             curArtHoldVb.setAlignment(Pos.TOP_CENTER);
             Label artName = new Label(curArt.getArtTitle());
+            artName.wrapTextProperty().setValue(true);
             Label artArtist = new Label(String.format("%s %s", curArtist.getArtistFName().get(),curArtist.getArtistLName().get()));
+            artArtist.wrapTextProperty().setValue(true);
             ImageView artImage = new ImageView();
             artImage.setImage(convertToFxImage(curArt.getArtImage()));
             artImage.setFitHeight(150);
