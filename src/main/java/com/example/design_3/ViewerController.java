@@ -20,6 +20,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import static javafx.scene.paint.Color.GREEN;
+
 public class ViewerController {
 
     @FXML
@@ -31,6 +33,8 @@ public class ViewerController {
     @FXML
     public HBox parentBox;
     private Pane curContent;
+    @FXML
+    private Label lblBookAlert;
 
     // Integration UseCases
     @FXML
@@ -61,6 +65,7 @@ public class ViewerController {
 
     @FXML
     void onConfirmBooking(ActionEvent event) {
+        lblBookAlert.setTextFill(GREEN);
     }
 
     //Switches the content on the display section of the window
