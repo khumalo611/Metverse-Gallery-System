@@ -200,6 +200,8 @@ public class HelloController {
     @FXML
     private TextField txtCPassword, txtVEmail, txtVFName, txtVLName, txtVNumber, txtVPassword;
 
+    public static int globalArtistID;
+
     @FXML
     protected void onHomeBtClick(ActionEvent event) throws IOException {
         switchContent("Manager/HomePage.fxml","homeContent");
@@ -1253,9 +1255,9 @@ public class HelloController {
 
     @FXML
     void LoginButtonClick(ActionEvent event) {
-        if (txtEmail.getText().isBlank() && txtPassword.getText().isBlank()) {
+        if (txtEmail.getText().isBlank() || txtPassword.getText().isBlank()) {
             txtLoginAlert.setText("Invalid Login! Try Again.");
-            txtLoginAlert.setTextAlignment(CENTER);
+            txtLoginAlert.setTextFill(RED);
         } else {
             String dataBaseURL = "jdbc:ucanaccess://MetVerse_Gallery11.accdb";
             try {
@@ -1298,6 +1300,13 @@ public class HelloController {
                         Stage stage = new Stage();
                         stage.setScene(scene);
                         stage.show();
+
+                        sqlStatement = newConnection.createStatement();
+                        sql = "SELECT * FROM Artist WHERE Email = '" + txtEmail.getText() + "'";
+                        queryResult = sqlStatement.executeQuery(sql);
+                        while(queryResult.next()){
+                            globalArtistID = queryResult.getInt("ArtistID");
+                        }
                     }
                 }
 
@@ -1320,7 +1329,7 @@ public class HelloController {
                         stage.show();
                     } else {
                         txtLoginAlert.setText("Invalid Login! Try Again.");
-                        txtLoginAlert.setTextAlignment(CENTER);
+                        txtLoginAlert.setTextFill(RED);
                     }
                 }
                 newConnection.close();
