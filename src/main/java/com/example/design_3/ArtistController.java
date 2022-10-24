@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.function.UnaryOperator;
 
+import static com.example.design_3.HelloController.globalArtistID;
+
 public class ArtistController {
 
 
@@ -51,6 +53,13 @@ public class ArtistController {
     public Label checkRequestMessageLb;
     public Label requestLandingError;
 
+    //Check art status fields
+    @FXML
+    private TableView artStatusTable;
+    public TableColumn artTitleCol;
+    public TableColumn artDisplayStatusCol;
+    public TableColumn artSaleStatusCol;
+
     //Tables to store data in
     ObservableList <Artist> artists = FXCollections.observableArrayList();
     ObservableList <Art> artworks = FXCollections.observableArrayList();
@@ -73,6 +82,18 @@ public class ArtistController {
     @FXML
     protected void onArtStatusBtClick(ActionEvent event) throws IOException {
         switchContent("Artist/ArtStatusLanding.fxml","artStatusLanding");
+        updateTable("Select * From Art WHERE Artist_ID =" + globalArtistID +";", "Art");
+        artStatusTable = (TableView) curContent.lookup("#artStatusTable");
+        artTitleCol = new TableColumn<>("Art Title");
+        artDisplayStatusCol = new TableColumn<>("Display Status");
+        artSaleStatusCol = new TableColumn<>("Sale Status");
+        artTitleCol.setCellValueFactory(new PropertyValueFactory<Art,String>("artTitle"));
+        artDisplayStatusCol.setCellValueFactory(new PropertyValueFactory<Art,String>("displayStatus"));
+        artSaleStatusCol.setCellValueFactory(new PropertyValueFactory<Art,String>("artSaleStatus"));
+        artStatusTable.getColumns().add(artTitleCol);
+        artStatusTable.getColumns().add(artDisplayStatusCol);
+        artStatusTable.getColumns().add(artSaleStatusCol);
+        artStatusTable.setItems(artworks);
     }
     @FXML
     protected void onRequestsBtClick(ActionEvent event) throws IOException {
