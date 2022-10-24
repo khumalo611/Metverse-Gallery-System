@@ -12,11 +12,6 @@
     <children>
         <VBox layoutY="79.0" prefHeight="463.0" prefWidth="200.0" style="-fx-background-color: #33334c;">
             <children>
-                <Button fx:id="myButton" mnemonicParsing="false" prefHeight="46.0" prefWidth="206.0" style="-fx-background-color: #33334c;" text="Register" textFill="#fafafa">
-                    <font>
-                        <Font name="Microsoft Sans Serif" size="12.0" />
-                    </font>
-                </Button>
                 <Button defaultButton="true" mnemonicParsing="false" prefHeight="46.0" prefWidth="206.0" style="-fx-background-color: #33334c;" text="Sign-In" textFill="#fafafa">
                     <font>
                         <Font name="Microsoft Sans Serif" size="12.0" />
@@ -49,17 +44,18 @@
          <children>
             <TextField fx:id="txtEmail" promptText="Email" />
             <TextField fx:id="txtPassword" promptText="Password" />
-            <Button fx:id="btnLogin" mnemonicParsing="false" onAction="#LoginButtonClick" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Sign-In" textFill="#fafafa">
-               <font>
-                  <Font name="MS Reference Sans Serif" size="12.0" />
-               </font>
-            </Button>
          </children>
       </VBox>
-      <Button fx:id="btnRegister" layoutX="507.0" layoutY="382.0" mnemonicParsing="false" onAction="#RegisterButtonClick" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Register" textFill="#fafafa">
+      <Button fx:id="btnRegister" layoutX="456.0" layoutY="372.0" mnemonicParsing="false" onAction="#RegisterButtonClick" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Register" textFill="#fafafa">
          <font>
             <Font name="MS Reference Sans Serif" size="12.0" />
          </font>
       </Button>
+      <Button fx:id="btnLogin" layoutX="558.0" layoutY="372.0" mnemonicParsing="false" onAction="#LoginButtonClick" prefWidth="80.0" style="-fx-background-color: #00968a;" text="Sign-In" textFill="#fafafa">
+         <font>
+            <Font name="MS Reference Sans Serif" size="12.0" />
+         </font>
+      </Button>
+      <Label fx:id="txtLoginAlert" layoutX="422.0" layoutY="344.0" text="Label" textFill="TRANSPARENT" />
     </children>
 </Pane>

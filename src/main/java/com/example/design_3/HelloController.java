@@ -1253,7 +1253,7 @@ public class HelloController {
     void LoginButtonClick(ActionEvent event) {
         if (txtEmail.getText().isBlank() && txtPassword.getText().isBlank()) {
             txtLoginAlert.setText("Invalid Login! Try Again.");
-            txtLoginAlert.setTextAlignment(CENTER);
+            txtLoginAlert.setTextFill(RED);
         } else {
             String dataBaseURL = "jdbc:ucanaccess://MetVerse_Gallery11.accdb";
             try {
@@ -1318,7 +1318,7 @@ public class HelloController {
                         stage.show();
                     } else {
                         txtLoginAlert.setText("Invalid Login! Try Again.");
-                        txtLoginAlert.setTextAlignment(CENTER);
+                        txtLoginAlert.setTextFill(RED);
                     }
                 }
                 newConnection.close();

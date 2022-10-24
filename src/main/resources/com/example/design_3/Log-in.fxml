@@ -56,5 +56,6 @@
             <Font name="MS Reference Sans Serif" size="12.0" />
          </font>
       </Button>
+      <Label fx:id="txtLoginAlert" layoutX="422.0" layoutY="344.0" text="Label" textFill="TRANSPARENT" />
     </children>
 </Pane>
