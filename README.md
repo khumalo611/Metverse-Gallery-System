@@ -1,8 +1,8 @@
-# Art Gallery Management System
+# MetVerse Gallery System
 
 ## Overview
 
-The Art Gallery Management System is a Java and JavaFX application designed for gallery management, catering to the needs of managers, artists, viewers, and clients. The system includes features such as artwork management, request handling, exhibition booking, and art purchasing.
+The MetVerse Gallery System is a Java and JavaFX application designed for gallery management, catering to the needs of managers, artists, viewers, and clients. The system includes features such as artwork management, request handling, exhibition booking, and art purchasing.
 
 ## Key Features
 
