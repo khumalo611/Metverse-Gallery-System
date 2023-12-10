@@ -37,4 +37,4 @@ The Art Gallery Management System is a Java and JavaFX application designed for 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/art-gallery-management.git
+   git clone https://github.com/khumalo611/metverse-gallery-system.git
